@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# Build outputs (screenshots, packaged apps, web/desktop builds)
+build/
+dist/
+*.pyxapp
+*.html.zip
+
+# OS / editor
+.DS_Store
+Thumbs.db
