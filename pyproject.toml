@@ -1,0 +1,14 @@
+[project]
+name = "fordham-campus-quest"
+version = "0.1.0"
+description = "A Pokemon-style campus exploration game for new Fordham students, built with Pyxel."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["pyxel>=2.9"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
