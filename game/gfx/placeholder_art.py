@@ -36,9 +36,15 @@ def _grass(img, x, y):
 
 
 def _path(img, x, y):
+    """Walkway: brick pavers, like the paths in front of Walsh Library."""
     img.rect(x, y, 16, 16, Col.PEACH)
-    for px, py in ((3, 2), (11, 6), (6, 12), (14, 14), (1, 9)):
-        img.pset(x + px, y + py, Col.GRAY)
+    for row in range(4):
+        by = y + row * 4 + 3
+        for px in range(0, 16, 2):
+            img.pset(x + px, by, Col.GRAY)
+        off = 0 if row % 2 == 0 else 4
+        for bx in range(off, 16, 8):
+            img.pset(x + bx, by - 2, Col.GRAY)
 
 
 def _wall(img, x, y):
@@ -252,6 +258,37 @@ def _dome(img, x, y):
     img.rect(x + 7, y + 11, 2, 4, Col.BROWN)
 
 
+def _road(img, x, y):
+    """Asphalt campus road. Deliberately darker and cooler than walkways."""
+    img.rect(x, y, 16, 16, Col.GRAY)
+    for px, py in ((2, 3), (9, 1), (13, 7), (5, 10), (11, 13), (1, 14), (7, 6)):
+        img.pset(x + px, y + py, Col.DARK_BLUE)
+    for px, py in ((4, 5), (12, 11)):
+        img.pset(x + px, y + py, Col.WHITE)
+
+
+def _crosswalk(vertical_stripes: bool):
+    def draw(img, x, y):
+        _road(img, x, y)
+        for s in range(1, 16, 5):
+            if vertical_stripes:
+                img.rect(x + s, y, 3, 16, Col.WHITE)
+            else:
+                img.rect(x, y + s, 16, 3, Col.WHITE)
+    return draw
+
+
+def _booth(img, x, y):
+    """Guard booth, from the Webster Avenue gate photo."""
+    _path(img, x, y)
+    img.rect(x + 3, y + 6, 10, 9, Col.WHITE)
+    img.rectb(x + 3, y + 6, 10, 9, Col.GRAY)
+    img.rect(x + 5, y + 8, 6, 3, Col.LIGHT_BLUE)
+    img.tri(x + 1, y + 6, x + 14, y + 6, x + 8, y + 1, Col.GREEN)
+    img.line(x + 1, y + 6, x + 14, y + 6, Col.NAVY)
+    img.rect(x + 7, y + 12, 2, 3, Col.BROWN)
+
+
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
     "door": _door, "window": _window, "tree": _tree, "flowers": _flowers,
@@ -263,6 +300,8 @@ TILE_ART = {
     "field": _field, "dirt": _dirt, "fence": _fence, "offcampus": _offcampus,
     "parking": _parking, "statue": _statue, "bell": _bell, "shuttle": _shuttle,
     "pillar": _pillar, "grave": _grave, "dome": _dome,
+    "road": _road, "crosswalk_h": _crosswalk(True), "crosswalk_v": _crosswalk(False),
+    "booth": _booth,
 }
 
 

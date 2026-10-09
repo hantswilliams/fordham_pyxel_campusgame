@@ -43,12 +43,13 @@ uv run python tools/render_map.py  # whole map as one picture: build/map_rose_hi
 
 `content/maps/rose_hill.txt` is the map. Each character is one 16×16 tile:
 
-- **Ground:** `.` grass, `:` path, `*` flowers, `P` parking
+- **Ground:** `.` grass, `:` walkway or sidewalk, `*` flowers, `P` parking
+- **Roads** (decision 0016): `=` road, `X` crosswalk on a left-right road, `Y` crosswalk on an up-down road
 - **Buildings:**
   - Roofs show the building type: `R` academic (slate), `O` residence hall (orange), `G` other campus building (gray), `M` Admission (maroon)
   - Walls: `W` wall, `w` window, `B` banner, `D` door
 - **Outdoors:** `T` tree, `h` hedge, `b` bench, `L` lamp, `~` water, `F` athletic field, `d` infield dirt, `+` graves
-- **Edges:** `|` campus fence, `I` gate pillar, `#` off campus
+- **Edges:** `|` campus fence, `I` gate pillar, `K` guard booth, `#` off campus
 - **Player start:** `@`
 
 Everything you can talk to or inspect goes in `content/maps/rose_hill.json` under `"objects"`, placed by `"at": [x, y]` tile coordinates. Column 0 is the left edge and row 0 is the top. An object can be:

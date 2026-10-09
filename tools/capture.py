@@ -35,7 +35,7 @@ def tap(action: Action) -> list[set[Action]]:
     return [{action}, set()]
 
 
-def read(pages: int, settle: int = 60) -> list[set[Action]]:
+def read(pages: int, settle: int = 120) -> list[set[Action]]:
     """Open/advance a text box `pages` times, letting each page finish."""
     out = []
     for _ in range(pages):
@@ -91,12 +91,17 @@ def main() -> None:
         if o.type == "door":
             door.setdefault(o.location, (o.x, o.y))
 
+    sx, sy = m.spawn
+    greeter = m.object_at(sx + m.spawn_facing.dx, sy + m.spawn_facing.dy)
+    assert greeter and greeter.type == "npc", "expected an NPC in front of the spawn"
+
     segments = [
         ("01_title", wait(20)),
         ("02_main_entrance", tap(Action.CONFIRM) + wait(30)),
         ("03_orientation_leader", read(1)),
         # finish the conversation, then walk to Keating Hall's door
-        ("04_edwards_parade_banner", read(3) + walk.to_face(*door["keating_hall"])),
+        ("04_edwards_parade_banner", read(len(greeter.lines))  # advance + close
+         + walk.to_face(*door["keating_hall"])),
         ("05_keating_card", tap(Action.CONFIRM) + wait(5)),
         ("06_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])
          + tap(Action.CONFIRM) + wait(5)),

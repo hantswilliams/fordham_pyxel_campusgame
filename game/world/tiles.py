@@ -46,6 +46,10 @@ TILES: dict[str, TileDef] = {
         TileDef("pillar", 25, True),       # gate pillar
         TileDef("grave", 26, True),
         TileDef("dome", 27, True),         # Seismic Observatory
+        TileDef("road", 28, False),        # campus road (asphalt), see decisions/0016
+        TileDef("crosswalk_h", 29, False), # crosswalk on a road running left-right
+        TileDef("crosswalk_v", 30, False), # crosswalk on a road running up-down
+        TileDef("booth", 31, True),        # guard booth at a gate
     ]
 }
 
@@ -54,7 +58,10 @@ TILES: dict[str, TileDef] = {
 # the map's .json file (like a Tiled object layer, see decisions/0005).
 LEGEND: dict[str, str] = {
     ".": "grass",
-    ":": "path",
+    ":": "path",          # walkway / sidewalk
+    "=": "road",
+    "X": "crosswalk_h",
+    "Y": "crosswalk_v",
     "*": "flowers",
     "P": "parking",
     "W": "wall",
@@ -76,6 +83,7 @@ LEGEND: dict[str, str] = {
     "#": "offcampus",
     "I": "pillar",
     "+": "grave",
+    "K": "booth",
 }
 
 SPAWN_CHAR = "@"

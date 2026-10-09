@@ -103,7 +103,7 @@
     {"at": [39, 64], "type": "sign", "tile": "sign", "location": "bathgate_gate"},
     {"at": [82, 57], "type": "sign", "tile": "sign", "location": "clavius_gate"},
     {
-      "at": [71, 42],
+      "at": [71, 43],
       "type": "npc",
       "name": "Orientation Leader",
       "sprite": 1,
@@ -111,15 +111,16 @@
       "lines": [
         "Welcome to Fordham! I'm one of your Orientation Leaders. You just came in the Main Entrance.",
         "West of here is Keating Hall, the big building with the tower, and Edwards Parade, the lawn at the heart of campus.",
+        "The gray roads are for the Ram Van shuttle and service vehicles, so stick to the sidewalks and cross at the striped crosswalks.",
         "Face any door or sign and press Z to see what's there. Try it, then go explore!"
       ]
     },
     {
-      "at": [41, 46],
+      "at": [42, 46],
       "type": "npc",
       "name": "Sophomore",
       "sprite": 2,
-      "facing": "right",
+      "facing": "left",
       "lines": [
         "See that maroon sign? That's a Ram Van shuttle stop, right here on Rose Hill Manor Drive by Dealy Hall."
       ]
