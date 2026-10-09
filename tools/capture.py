@@ -94,6 +94,7 @@ def main() -> None:
 
     greeter = next(o for o in m.objects if o.type == "npc" and o.auto)
     gate_steps = abs(m.spawn[1] - (greeter.y + 1))  # walk up through the gate
+    gate = next(o for o in m.objects if o.type == "checkpoint")  # Bert's ID check
 
     segments = [
         ("01_title", wait(20)),
@@ -106,20 +107,28 @@ def main() -> None:
         ("07_street_at_gate", wait(250)),
         ("08_controls", wait(60)),
         ("09_webster_ave_start", tap(Action.CONFIRM) + wait(20)),
-        ("10_through_gate_welcome", [{Action.UP}] * (FRAMES_PER_STEP * gate_steps) + wait(120)),
-        ("11_route_to_parade", tap(Action.CONFIRM) + wait(10) + tap(Action.CONFIRM) + wait(150)),
+        # Bert's ID check: walking into the closed gate starts it
+        ("10_bert_asks_for_id", [{Action.UP}] + wait(150)),
+        ("11_id_choose", read(len(paginate(gate.lines)))),
+        ("12_id_phone_beep", tap(Action.DOWN) + wait(4) + tap(Action.CONFIRM) + wait(38)),
+        ("13_access_granted", wait(20)),
+        ("14_bert_all_set", tap(Action.CONFIRM) + wait(150)),
+        # through the gate: welcome banner, then the Orientation Leader
+        ("15_through_gate_welcome", read(len(paginate(gate.after_lines)))
+         + [{Action.UP}] * (FRAMES_PER_STEP * gate_steps) + wait(120)),
+        ("16_route_to_parade", tap(Action.CONFIRM) + wait(10) + tap(Action.CONFIRM) + wait(150)),
     ]
     # close the rest of the welcome, then explore from just inside the gate
     walk.pos = (greeter.x, greeter.y + 1)
     segments += [
-        ("12_keating_card", read(len(paginate(greeter.lines)) - 1)
+        ("17_keating_card", read(len(paginate(greeter.lines)) - 1)
          + walk.to_face(*door["keating_hall"]) + tap(Action.CONFIRM) + wait(5)),
-        ("13_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])
+        ("18_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])
          + tap(Action.CONFIRM) + wait(5)),
         # campus map (decisions/0017): open, pick a place, open its card
-        ("14_campus_map", tap(Action.CONFIRM) + wait(4) + tap(Action.MAP) + wait(10)),
-        ("15_map_pin", tap(Action.LEFT) + wait(2) + tap(Action.LEFT) + wait(6)),
-        ("16_map_card", tap(Action.CONFIRM) + wait(5)),
+        ("19_campus_map", tap(Action.CONFIRM) + wait(4) + tap(Action.MAP) + wait(10)),
+        ("20_map_pin", tap(Action.LEFT) + wait(2) + tap(Action.LEFT) + wait(6)),
+        ("21_map_card", tap(Action.CONFIRM) + wait(5)),
     ]
     script: list[set[Action]] = []
     shot_at: dict[int, str] = {}

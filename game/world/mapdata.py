@@ -17,7 +17,7 @@ from pathlib import Path
 from .directions import Direction
 from .tiles import LEGEND, SPAWN_CHAR, SPAWN_GROUND, TILES
 
-OBJECT_TYPES = {"sign", "npc", "door"}
+OBJECT_TYPES = {"sign", "npc", "door", "checkpoint"}
 
 
 class MapError(ValueError):
@@ -36,6 +36,9 @@ class MapObject:
     sprite: int = 0  # character sheet row (npc)
     facing: Direction = Direction.DOWN
     auto: bool = False  # npc starts talking when the player walks up to it
+    # checkpoint only: a gate a guard opens after checking your ID
+    after_lines: list[str] = field(default_factory=list)
+    open_tile: str = "path"
 
 
 @dataclass
@@ -87,6 +90,20 @@ class MapData:
             if obj and obj.type == "npc" and obj.auto and (obj.x, obj.y) not in greeted:
                 return obj, d
         return None
+
+    def open_checkpoint(self, x: int, y: int) -> bool:
+        """Open the checkpoint at (x, y): it stops blocking and its tile
+        becomes `open_tile`. Returns False if there's no checkpoint there."""
+        obj = self._by_pos.get((x, y))
+        if obj is None or obj.type != "checkpoint":
+            return False
+        del self._by_pos[(x, y)]
+        self.objects.remove(obj)
+        self.tiles[y][x] = obj.open_tile
+        return True
+
+    def checkpoints(self) -> list[MapObject]:
+        return [o for o in self.objects if o.type == "checkpoint"]
 
     def area_at(self, x: int, y: int) -> Area | None:
         """First area (in file order) containing the tile, or None."""
@@ -184,6 +201,8 @@ def _make_object(map_id: str, i: int, d: dict, width: int, height: int) -> MapOb
         sprite=d.get("sprite", 0),
         facing=Direction.from_name(d.get("facing", "down")),
         auto=bool(d.get("auto", False)),
+        after_lines=list(d.get("after_lines", [])),
+        open_tile=d.get("open_tile", "path"),
     )
 
 

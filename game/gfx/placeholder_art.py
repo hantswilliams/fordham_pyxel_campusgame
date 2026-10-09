@@ -19,6 +19,7 @@ CHARACTERS = [
     (Col.LIGHT_BLUE, Col.ORANGE, Col.NAVY, Col.PEACH),  # 2 student
     (Col.GRAY, Col.WHITE, Col.DARK_BLUE, Col.PEACH),   # 3 staff
     (Col.YELLOW, Col.BROWN, Col.DARK_BLUE, Col.BROWN),  # 4 student
+    (Col.DARK_BLUE, Col.GRAY, Col.NAVY, Col.BROWN),    # 5 security guard (Bert)
 ]
 
 
@@ -289,6 +290,20 @@ def _booth(img, x, y):
     img.rect(x + 7, y + 12, 2, 3, Col.BROWN)
 
 
+def _reader_gate(img, x, y):
+    """Closed pedestrian gate (iron bars) with an ID card reader on a post.
+    Opens to a plain walkway once the guard has checked your ID."""
+    _path(img, x, y)
+    for bx in range(1, 12, 3):
+        img.line(x + bx, y + 2, x + bx, y + 15, Col.NAVY)
+    img.line(x, y + 3, x + 11, y + 3, Col.NAVY)
+    img.line(x, y + 12, x + 11, y + 12, Col.NAVY)
+    img.rect(x + 13, y + 6, 2, 10, Col.GRAY)            # reader post
+    img.rect(x + 12, y + 3, 4, 5, Col.NAVY)             # reader
+    img.pset(x + 13, y + 4, Col.RED)                    # red light: locked
+    img.pset(x + 14, y + 4, Col.RED)
+
+
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
     "door": _door, "window": _window, "tree": _tree, "flowers": _flowers,
@@ -301,7 +316,7 @@ TILE_ART = {
     "parking": _parking, "statue": _statue, "bell": _bell, "shuttle": _shuttle,
     "pillar": _pillar, "grave": _grave, "dome": _dome,
     "road": _road, "crosswalk_h": _crosswalk(True), "crosswalk_v": _crosswalk(False),
-    "booth": _booth,
+    "booth": _booth, "reader_gate": _reader_gate,
 }
 
 

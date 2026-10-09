@@ -2,7 +2,7 @@
 
 A Pokémon-style, top-down pixel game where new Fordham students explore campus and find its resources. It's built with [Pyxel](https://github.com/kitao/pyxel).
 
-**Status:** Milestone 2 (Real Rose Hill). The whole Rose Hill campus is one walkable map, laid out from the official campus map. The game opens with a short, skippable intro: you ride Metro-North to Fordham station, walk to the Third / Webster Avenue gate, learn the controls, then walk through the gate yourself. An Orientation Leader greets you inside. Area names pop up as you walk, and you can talk to students and open a card for any building, landmark, shuttle stop or gate. Art is placeholder art drawn in code. Building interiors are deferred (decision 0012).
+**Status:** Milestone 2 (Real Rose Hill). The whole Rose Hill campus is one walkable map, laid out from the official campus map. The game opens with a short, skippable intro: you ride Metro-North to Fordham station, walk to the Third / Webster Avenue gate, learn the controls, then walk up to the gate, where Bert the guard checks your Fordham ID (tap your card, or your phone with Apple Wallet or Google Wallet). An Orientation Leader greets you inside. Area names pop up as you walk, and you can talk to students and open a card for any building, landmark, shuttle stop or gate. Art is placeholder art drawn in code. Building interiors are deferred (decision 0012).
 
 ## Run it
 

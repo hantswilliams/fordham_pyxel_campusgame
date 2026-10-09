@@ -205,6 +205,8 @@ def draw_street(p: float, f: int, length: int) -> None:
         pyxel.rect(vx + 18, 115, 22, 6, Col.LIGHT_BLUE)
         pyxel.circ(vx + 9, 128, 3, Col.NAVY)
         pyxel.circ(vx + 35, 128, 3, Col.NAVY)
+    # Bert, the guard, waits by the gate to check IDs
+    _char(GATE_X + 26, 88, 5, Direction.LEFT)
     # the player walks to the gate, then turns to face it
     t = min(1.0, p / 0.7)
     x = -16 + (GATE_X - 2 + 16) * t

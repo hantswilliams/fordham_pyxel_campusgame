@@ -22,6 +22,11 @@ def game_map(request):
 
 
 def reachable_from_spawn(m) -> set[tuple[int, int]]:
+    """Tiles the player can reach, assuming every guarded gate gets opened.
+    Works on a fresh copy so the shared fixture map isn't changed."""
+    m = load_map(m.id, config.MAPS_DIR)
+    for gate in m.checkpoints():
+        m.open_checkpoint(gate.x, gate.y)
     seen = {m.spawn}
     frontier = [m.spawn]
     while frontier:
@@ -48,7 +53,9 @@ def test_start_greeter_is_through_the_gate():
     m = load_map(config.START_MAP, config.MAPS_DIR)
     sx, sy = m.spawn
     ahead = (sx + m.spawn_facing.dx, sy + m.spawn_facing.dy)
-    assert not m.is_blocked(*ahead), "the gate in front of the start must be open"
+    gate = m.object_at(*ahead)
+    assert gate and gate.type == "checkpoint", "Bert's ID-check gate should be right in front of the start"
+    assert any(o.type == "npc" and o.name == gate.name for o in m.objects), "the guard NPC must exist"
     greeters = [o for o in m.objects if o.type == "npc" and o.auto]
     assert greeters, "expected an auto-greeting Orientation Leader"
     seen = reachable_from_spawn(m)
@@ -93,6 +100,11 @@ def test_object_locations_exist(game_map):
     for obj in game_map.objects:
         if obj.location:
             assert obj.location in LOCATIONS, f"unknown location {obj.location!r} at {(obj.x, obj.y)}"
+
+
+def test_checkpoints_have_guard_lines(game_map):
+    for gate in game_map.checkpoints():
+        assert gate.name and gate.lines and gate.after_lines, f"checkpoint at {(gate.x, gate.y)}"
 
 
 def test_npcs_have_dialogue(game_map):

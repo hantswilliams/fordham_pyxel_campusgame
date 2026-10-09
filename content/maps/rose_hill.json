@@ -111,6 +111,21 @@
     {"at": [39, 64], "type": "sign", "tile": "sign", "location": "bathgate_gate"},
     {"at": [82, 57], "type": "sign", "tile": "sign", "location": "clavius_gate"},
     {
+      "at": [5, 73],
+      "type": "checkpoint",
+      "name": "Bert",
+      "tile": "reader_gate",
+      "open_tile": "path",
+      "lines": [
+        "Hi there, welcome! I'm Bert. I look after the Webster Avenue gate.",
+        "Before you head in, I need to see your Fordham ID. Tap your ID card on the reader, or your phone if your ID is in Apple Wallet or Google Wallet."
+      ],
+      "after_lines": [
+        "Perfect, you're all set! Keep your ID handy. You'll tap in like that whenever you come through this gate.",
+        "Welcome to Rose Hill. Have a great first week!"
+      ]
+    },
+    {
       "at": [5, 71],
       "type": "npc",
       "name": "Orientation Leader",
@@ -124,6 +139,17 @@
         "Face any door or sign and press Z to see what's there. Have fun exploring!"
       ],
       "auto": true
+    },
+    {
+      "at": [4, 74],
+      "type": "npc",
+      "name": "Bert",
+      "sprite": 5,
+      "facing": "right",
+      "lines": [
+        "I'm Bert. I check IDs here at the Webster Avenue gate, so have your Fordham ID card or your phone wallet ready when you come in.",
+        "Have a good one!"
+      ]
     },
     {
       "at": [71, 43],

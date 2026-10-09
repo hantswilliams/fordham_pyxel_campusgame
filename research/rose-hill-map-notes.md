@@ -136,3 +136,7 @@ The official map draws named roads as wider white bands than walkways:
 Ram Van stops sit on Rose Hill Manor Drive and Edgar Allan Poeway, and at the Alumni Court circle. The map labels the Main Entrance "Vehicular Entrance." It labels the Bathgate Avenue and Clavius Way / Belmont gates "Pedestrian Entrance."
 
 **Label conflict:** Google Maps shows "Old Elm Rd" near Martyrs' Court and between Collins Hall and Alpha House. The official map puts Old Elm Road in the southwest, across Walsh Lawn. The game follows the official map. **Ask Fordham.**
+
+## Real people in the game
+
+- **Bert**, the security guard at the Third / Webster Avenue gate, who checks student IDs: Fordham ID cards, or IDs in Apple Wallet or Google Wallet. He appears in the intro and at the gate, by first name only. **Before any public release, check that Bert is happy to be in the game** (and with Fordham, alongside D-0009). His name and lines are in `content/maps/rose_hill.json` if they need to change.

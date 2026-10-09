@@ -16,6 +16,7 @@ from game.world.tiles import TILES, slot_to_pixel
 from .campus_map import CampusMapScene
 from .card import BuildingCardScene
 from .dialogue import DialogueScene
+from .id_check import IdCheckScene
 from .base import Scene
 
 TILEMAP_INDEX = 0
@@ -29,6 +30,15 @@ DIRECTION_ACTIONS = [
     (Action.LEFT, Direction.LEFT),
     (Action.RIGHT, Direction.RIGHT),
 ]
+
+
+def bake_cell(game_map: MapData, index: int, x: int, y: int) -> None:
+    """Re-draw one map cell into the Pyxel tilemap (e.g. a gate that opened)."""
+    tm = pyxel.tilemaps[index]
+    u, v = slot_to_pixel(TILES[game_map.tiles[y][x]].slot)
+    for j in range(2):
+        for i in range(2):
+            tm.pset(x * 2 + i, y * 2 + j, (u // 8 + i, v // 8 + j))
 
 
 def bake_tilemap(game_map: MapData, index: int) -> None:
@@ -75,7 +85,12 @@ class OverworldScene(Scene):
                 return
             for action, direction in DIRECTION_ACTIONS:
                 if self.input.held(action):
-                    p.try_move(direction, self.map.is_blocked)
+                    if not p.try_move(direction, self.map.is_blocked):
+                        # walking into a closed gate starts the guard's ID check
+                        ahead = self.map.object_at(*p.front_tile)
+                        if ahead and ahead.type == "checkpoint":
+                            self._start_checkpoint(ahead)
+                            return
                     break
         if p.update():
             self._check_area()
@@ -108,12 +123,34 @@ class OverworldScene(Scene):
         obj.facing = direction.opposite
         self.app.scenes.push(DialogueScene(self.app, obj.lines, obj.name))
 
+    def _start_checkpoint(self, gate) -> None:
+        """Guard's lines -> ID tap -> guard's 'all set' lines -> gate opens.
+        The guard (an NPC whose name matches the checkpoint's) turns to you."""
+        for o in self.map.objects:
+            if o.type == "npc" and o.name == gate.name:
+                dx, dy = self.player.tile_x - o.x, self.player.tile_y - o.y
+                o.facing = (Direction.RIGHT if dx > 0 else Direction.LEFT) if abs(dx) >= abs(dy) \
+                    else (Direction.DOWN if dy > 0 else Direction.UP)
+
+        def open_gate():
+            self.map.open_checkpoint(gate.x, gate.y)
+            bake_cell(self.map, TILEMAP_INDEX, gate.x, gate.y)
+            if gate.after_lines:
+                self.app.scenes.push(DialogueScene(self.app, gate.after_lines, gate.name))
+
+        def tap_in():
+            self.app.scenes.push(IdCheckScene(self.app, on_done=open_gate))
+
+        self.app.scenes.push(DialogueScene(self.app, gate.lines, gate.name, on_close=tap_in))
+
     def _interact(self) -> None:
         fx, fy = self.player.front_tile
         obj = self.map.object_at(fx, fy)
         if obj is None:
             return
-        if obj.type == "npc":
+        if obj.type == "checkpoint":
+            self._start_checkpoint(obj)
+        elif obj.type == "npc":
             obj.facing = self.player.facing.opposite
             self.app.scenes.push(DialogueScene(self.app, obj.lines, obj.name))
         elif obj.location:

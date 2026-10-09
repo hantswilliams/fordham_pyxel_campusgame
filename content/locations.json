@@ -277,7 +277,7 @@
   "webster_gate": {
     "name": "Third / Webster Avenue Gate",
     "kind": "transit",
-    "blurb": "The southwest gate. The Fordham Metro-North station is just outside, and the Fordham Road subway station is on Webster Avenue.",
+    "blurb": "The southwest gate. The Fordham Metro-North station is just outside, and the Fordham Road subway station is on Webster Avenue. A guard checks IDs here: tap your Fordham ID card, or your phone with Apple Wallet or Google Wallet.",
     "guide": true
   },
   "bathgate_gate": {

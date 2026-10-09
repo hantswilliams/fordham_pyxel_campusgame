@@ -50,6 +50,7 @@ TILES: dict[str, TileDef] = {
         TileDef("crosswalk_h", 29, False), # crosswalk on a road running left-right
         TileDef("crosswalk_v", 30, False), # crosswalk on a road running up-down
         TileDef("booth", 31, True),        # guard booth at a gate
+        TileDef("reader_gate", 32, True),  # closed pedestrian gate with an ID card reader
     ]
 }
 
