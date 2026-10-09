@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Approved, Option A (2026-10-09). Built in M2. |
+| **Status** | Approved, Option A (2026-10-09). Built in M2. **Would be superseded** if D-0016 Part 2 (arriving by train at the Webster Ave gate) is approved. |
 | **Raised** | 2026-10-09 |
 | **Affects** | The opening scene, the first NPC, the first checklist step |
 | **Built provisionally?** | No. The prototype starts south of a made-up Edwards Parade. |
