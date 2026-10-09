@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review (two parts, each with its own decision box) |
+| **Status** | Approved, both parts Option A (2026-10-09). Part 1 built earlier. Part 2 built the same day and **supersedes D-0015** |
 | **Raised** | 2026-10-09. Part 2 added the same day at your request |
 | **Affects** | Part 1: the map, tiles, Orientation Leader dialogue, a possible moving Ram Van later. Part 2: the opening of the game, the start point (**would replace D-0015**), Orientation Leader placement |
-| **Built provisionally?** | Part 1: yes, Option A. Part 2: no, waiting for your decision |
+| **Built?** | Yes, both parts. Part 2: `content/intro.json`, `game/scenes/intro.py`, `game/gfx/intro_art.py`, and the start moved to the Webster Ave gate |
 
 Both parts are about **how students get around and arrive on campus**, so they share this file.
 
@@ -81,7 +81,7 @@ On the real campus, students need to tell **roads** (Ram Van shuttle, service an
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**: go with Option A (C revisited after M4)
+- [x] **Approve**: go with Option A (C revisited after M4)
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -164,7 +164,7 @@ This would change **where the game starts**. D-0015 (approved) put the start at 
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: go with Option A (and D-0015 is superseded)
+- [x] **Approve**: go with Option A (and D-0015 is superseded)
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below (for example, changes to the storyboard or captions)
 

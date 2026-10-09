@@ -36,10 +36,10 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0009](0009-branding-and-ip.md) | Fordham branding and Pokémon IP | Use Fordham name/maroon, get Marketing sign-off before launch; no Pokémon assets | Yes | Approved |
 | [0010](0010-campus-map-accuracy.md) | How faithful the map is to the real campus | Recognizable layout, compressed distances | No (current map is illustrative) | Approved |
 | [0011](0011-git-hosting.md) | Where the code is hosted | Private GitHub repo now | No (git is local only) | Approved |
-| [0012](0012-building-interiors.md) | Going inside buildings | Defer, outdoors only with building cards; revisit after playtest | No | Deferred (placeholder) |
+| [0012](0012-building-interiors.md) | Going inside buildings | Defer, outdoors only with building cards; revisit after playtest | Building cards: yes | Approved, deferred until after playtest |
 | [0013](0013-campus-map-structure.md) | One big campus map, or zones | One continuous compressed Rose Hill map | No | Approved |
 | [0014](0014-v1-locations-and-checklist.md) | Places in v1 and the First Week Checklist | 7-step checklist, about 20 Campus Guide entries | No | Approved |
-| [0015](0015-starting-point.md) | Where the player starts | Main Entrance at Matteo Ricci Circle | Yes | Approved (may be superseded by 0016 Part 2) |
-| [0016](0016-roads-vs-walkways.md) | Part 1: roads vs. walkways. Part 2: opening sequence arriving by train | 1: asphalt roads with sidewalks and crosswalks, walkable. 2: animated train arrival ending at the Webster Ave gate (replaces 0015) | Part 1 yes, Part 2 no | Awaiting review |
+| [0015](0015-starting-point.md) | Where the player starts | Main Entrance at Matteo Ricci Circle | Replaced | Superseded by 0016 Part 2 |
+| [0016](0016-roads-vs-walkways.md) | Part 1: roads vs. walkways. Part 2: opening sequence arriving by train | 1: asphalt roads with sidewalks and crosswalks, walkable. 2: animated train arrival ending at the Webster Ave gate (replaces 0015) | Yes, both | Approved |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

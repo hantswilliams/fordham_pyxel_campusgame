@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Deferred. The game stays outdoors for now. Revisit after the first playtest. |
+| **Status** | Approved, deferred (2026-10-09). The game stays outdoors with building cards. Revisit Option A after the first playtest. |
 | **Raised** | 2026-10-09 |
 | **Affects** | Scope, art, the Campus Guide, the old milestone "M3 Enter" (removed from the plan) |
 | **Built provisionally?** | No. Doors currently show a short description. |
@@ -46,7 +46,7 @@ Walking into buildings would be fun, but it needs:
 
 ## Your decision
 
-- [ ] **Approve**: defer interiors and use building cards for now. Revisit Option A after the first playtest.
+- [x] **Approve**: defer interiors and use building cards for now. Revisit Option A after the first playtest.
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
