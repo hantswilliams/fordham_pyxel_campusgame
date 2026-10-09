@@ -35,6 +35,7 @@ class MapObject:
     tile: str | None = None  # art drawn at this cell (sign, statue...)
     sprite: int = 0  # character sheet row (npc)
     facing: Direction = Direction.DOWN
+    auto: bool = False  # npc starts talking when the player walks up to it
 
 
 @dataclass
@@ -77,6 +78,15 @@ class MapData:
         if TILES[self.tiles[y][x]].solid:
             return True
         return (x, y) in self._by_pos
+
+    def auto_npc_next_to(self, x: int, y: int, greeted: set) -> tuple[MapObject, Direction] | None:
+        """An 'auto' NPC beside (x, y) that hasn't greeted the player yet,
+        and the direction from the player to it."""
+        for d in Direction:
+            obj = self.object_at(x + d.dx, y + d.dy)
+            if obj and obj.type == "npc" and obj.auto and (obj.x, obj.y) not in greeted:
+                return obj, d
+        return None
 
     def area_at(self, x: int, y: int) -> Area | None:
         """First area (in file order) containing the tile, or None."""
@@ -173,6 +183,7 @@ def _make_object(map_id: str, i: int, d: dict, width: int, height: int) -> MapOb
         tile=tile,
         sprite=d.get("sprite", 0),
         facing=Direction.from_name(d.get("facing", "down")),
+        auto=bool(d.get("auto", False)),
     )
 
 

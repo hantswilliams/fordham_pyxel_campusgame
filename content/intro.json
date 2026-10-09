@@ -1,0 +1,22 @@
+{
+  "_note": "Opening sequence (decisions/0016 Part 2). DRAFT captions for Fordham staff to check. 'frames' is how long a caption stays up at 30 frames per second; players can press Z to move on sooner or X to skip to the controls. Consecutive beats with the same 'scene' play as one continuous animation.",
+  "beats": [
+    {"scene": "train", "frames": 120, "caption": "Metro-North. Next stop: Fordham."},
+    {"scene": "train", "frames": 150, "caption": "Your first week at Fordham University starts today."},
+    {"scene": "station", "frames": 210, "caption": "Fordham is a Jesuit university, founded in 1841."},
+    {"scene": "street", "frames": 150, "caption": "Rose Hill, here in the Bronx, is Fordham's original campus."},
+    {"scene": "street", "frames": 150, "caption": "Fordham also has campuses at Lincoln Center in Manhattan and in Westchester."},
+    {"scene": "street", "frames": 150, "caption": "Fordham's teams are the Rams. You'll see the Ram all over campus."}
+  ],
+  "controls": {
+    "title": "HOW TO PLAY",
+    "rows": [
+      ["ARROWS / WASD", "Move"],
+      ["Z / SPACE / ENTER", "Talk, read, open a card"],
+      ["X", "Back, skip text"],
+      ["TAB", "Campus Guide (coming soon)"]
+    ],
+    "tip": "Gray = road, tan = walkway. Cross at the crosswalks.",
+    "prompt": "Press Z, then walk through the gate to begin!"
+  }
+}

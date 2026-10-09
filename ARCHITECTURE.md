@@ -206,7 +206,7 @@ The web build is what students will actually use. Test it on a phone early (touc
 |---|---|---|
 | M0 | Setup | `uv` env with Python 3.12 + Pyxel, git repo, decisions log. **Done** |
 | M1 | **Walk** | Grid movement, collision, camera, NPCs, signs, dialogue box on a test map. **Done** (text maps, D-0005) |
-| M2 | **Real Rose Hill** | One continuous, compressed map of Rose Hill built from the official campus map (D-0010, D-0013), with area-name banners as you cross zones, building cards on doors, and the start at the Main Entrance (D-0015). **Done** (draft content pending staff review) |
+| M2 | **Real Rose Hill** | One continuous, compressed map of Rose Hill built from the official campus map (D-0010, D-0013), with area-name banners as you cross zones, building cards on doors, and the start at the Main Entrance (D-0015). **Done** (draft content pending staff review). Later additions: roads vs. walkways, and the train-arrival intro that starts the game at the Webster Ave gate (D-0016) |
 | M3 | **Collect** | `locations.json` drives the Campus Guide menu, discovery zones and save/load |
 | M4 | **Quest** | First Week Checklist (D-0014), trivia challenges, badges, end card |
 | M5 | **Ship** | Title screen, music/sfx, web build, playtest with 5–10 students, content review by orientation staff |

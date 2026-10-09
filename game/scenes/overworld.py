@@ -52,6 +52,7 @@ class OverworldScene(Scene):
         area = self.map.area_at(sx, sy)
         self.area_name = area.name if area else self.map.display_name
         self.banner_timer = BANNER_FRAMES
+        self.greeted: set[tuple[int, int]] = set()
         self.cam = (0, 0)
         bake_tilemap(self.map, TILEMAP_INDEX)
         self._update_camera()
@@ -72,6 +73,7 @@ class OverworldScene(Scene):
                     break
         if p.update():
             self._check_area()
+            self._check_auto_npc()
         self._update_camera()
 
     def _update_camera(self) -> None:
@@ -87,6 +89,18 @@ class OverworldScene(Scene):
         if area and area.name != self.area_name:
             self.area_name = area.name
             self.banner_timer = BANNER_FRAMES
+
+    def _check_auto_npc(self) -> None:
+        """NPCs marked "auto" walk-up greet the player once, Pokemon-style."""
+        p = self.player
+        found = self.map.auto_npc_next_to(p.tile_x, p.tile_y, self.greeted)
+        if not found:
+            return
+        obj, direction = found
+        self.greeted.add((obj.x, obj.y))
+        p.facing = direction
+        obj.facing = direction.opposite
+        self.app.scenes.push(DialogueScene(self.app, obj.lines, obj.name))
 
     def _interact(self) -> None:
         fx, fy = self.player.front_tile

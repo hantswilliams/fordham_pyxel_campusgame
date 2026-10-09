@@ -1,8 +1,16 @@
 {
   "_note": "DRAFT. Layout follows research/Rose-Hill-Campus-Map.pdf (D-0010, D-0013): relative positions are real, distances compressed. Objects are placed by [x, y] tile coordinates. Facts need Fordham staff review.",
   "display_name": "Rose Hill",
-  "spawn_facing": "left",
+  "spawn_facing": "up",
   "areas": [
+    {
+      "name": "Webster Avenue",
+      "rect": [1, 74, 12, 1]
+    },
+    {
+      "name": "Welcome to Rose Hill!",
+      "rect": [2, 70, 6, 4]
+    },
     {
       "name": "McShane Center & Athletics",
       "rect": [24, 2, 53, 29]
@@ -103,16 +111,29 @@
     {"at": [39, 64], "type": "sign", "tile": "sign", "location": "bathgate_gate"},
     {"at": [82, 57], "type": "sign", "tile": "sign", "location": "clavius_gate"},
     {
+      "at": [5, 71],
+      "type": "npc",
+      "name": "Orientation Leader",
+      "sprite": 1,
+      "facing": "down",
+      "lines": [
+        "Hey, you made it! Welcome to Fordham. I'm one of your Orientation Leaders.",
+        "This is the Third Avenue / Webster Avenue gate. Whenever you take Metro-North, this is your way in.",
+        "Edwards Parade, the big lawn at the heart of campus, is northeast of here. Follow Old Elm Road across Walsh Lawn, then go past Dealy Hall.",
+        "The gray roads are for the Ram Van shuttle and service vehicles, so stick to the sidewalks and cross at the striped crosswalks.",
+        "Face any door or sign and press Z to see what's there. Have fun exploring!"
+      ],
+      "auto": true
+    },
+    {
       "at": [71, 43],
       "type": "npc",
       "name": "Orientation Leader",
       "sprite": 1,
       "facing": "right",
       "lines": [
-        "Welcome to Fordham! I'm one of your Orientation Leaders. You just came in the Main Entrance.",
-        "West of here is Keating Hall, the big building with the tower, and Edwards Parade, the lawn at the heart of campus.",
-        "The gray roads are for the Ram Van shuttle and service vehicles, so stick to the sidewalks and cross at the striped crosswalks.",
-        "Face any door or sign and press Z to see what's there. Try it, then go explore!"
+        "This is the Main Entrance on Southern Boulevard. Cars and visitors drive in here, past the guard booth in Matteo Ricci Circle.",
+        "Keating Hall, the big building with the tower, and Edwards Parade are just west of here."
       ]
     },
     {
@@ -175,8 +196,8 @@
       "sprite": 2,
       "facing": "down",
       "lines": [
-        "This is the Third Avenue / Webster Avenue gate. The Fordham Metro-North station is right outside.",
-        "The Fordham Road subway station is on Webster Avenue too."
+        "I commute in every day. The Metro-North station is right outside this gate.",
+        "If you take the subway instead, the Fordham Road station is on Webster Avenue."
       ]
     },
     {

@@ -91,23 +91,30 @@ def main() -> None:
         if o.type == "door":
             door.setdefault(o.location, (o.x, o.y))
 
-    sx, sy = m.spawn
-    greeter = m.object_at(sx + m.spawn_facing.dx, sy + m.spawn_facing.dy)
-    assert greeter and greeter.type == "npc", "expected an NPC in front of the spawn"
+    greeter = next(o for o in m.objects if o.type == "npc" and o.auto)
+    gate_steps = abs(m.spawn[1] - (greeter.y + 1))  # walk up through the gate
 
     segments = [
         ("01_title", wait(20)),
-        ("02_main_entrance", tap(Action.CONFIRM) + wait(30)),
-        ("03_orientation_leader", read(1)),
-        # finish the conversation, then walk to Keating Hall's door
-        ("04_edwards_parade_banner", read(len(greeter.lines))  # advance + close
-         + walk.to_face(*door["keating_hall"])),
-        ("05_keating_card", tap(Action.CONFIRM) + wait(5)),
-        ("06_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])
+        # opening sequence (content/intro.json): train 270f, station 210f, street 450f
+        ("02_train", tap(Action.CONFIRM) + wait(88)),
+        ("03_train_arrives", wait(177)),
+        ("04_station_doors", wait(60)),
+        ("05_station_walk_out", wait(80)),
+        ("06_street_ram_van", wait(230)),
+        ("07_street_at_gate", wait(250)),
+        ("08_controls", wait(60)),
+        ("09_webster_ave_start", tap(Action.CONFIRM) + wait(20)),
+        ("10_through_gate_welcome", [{Action.UP}] * (FRAMES_PER_STEP * gate_steps) + wait(120)),
+        ("11_route_to_parade", tap(Action.CONFIRM) + wait(10) + tap(Action.CONFIRM) + wait(150)),
+    ]
+    # close the rest of the welcome, then explore from just inside the gate
+    walk.pos = (greeter.x, greeter.y + 1)
+    segments += [
+        ("12_keating_card", read(len(greeter.lines) - 1)
+         + walk.to_face(*door["keating_hall"]) + tap(Action.CONFIRM) + wait(5)),
+        ("13_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])
          + tap(Action.CONFIRM) + wait(5)),
-        ("07_ram_statue", tap(Action.CONFIRM) + walk.to_face(39, 42)
-         + tap(Action.CONFIRM) + wait(5)),
-        ("08_library", tap(Action.CONFIRM) + walk.to_face(*door["walsh_library"]) + wait(2)),
     ]
     script: list[set[Action]] = []
     shot_at: dict[int, str] = {}

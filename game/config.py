@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = ROOT / "content"
 MAPS_DIR = CONTENT_DIR / "maps"
 LOCATIONS_FILE = CONTENT_DIR / "locations.json"
+INTRO_FILE = CONTENT_DIR / "intro.json"
 
 START_MAP = "rose_hill"
 

@@ -4,7 +4,7 @@ from game.config import SCREEN_H, SCREEN_W, Col
 from game.systems.input import Action
 
 from .base import Scene
-from .overworld import OverworldScene
+from .intro import IntroScene
 
 
 def centered_text(y: int, s: str, col: int) -> None:
@@ -14,7 +14,7 @@ def centered_text(y: int, s: str, col: int) -> None:
 class TitleScene(Scene):
     def update(self) -> None:
         if self.input.pressed(Action.CONFIRM):
-            self.app.scenes.replace(OverworldScene(self.app))
+            self.app.scenes.replace(IntroScene(self.app))
 
     def draw(self) -> None:
         pyxel.cls(Col.MAROON)

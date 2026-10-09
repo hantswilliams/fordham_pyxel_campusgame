@@ -2,7 +2,7 @@
 
 A Pokémon-style, top-down pixel game where new Fordham students explore campus and find its resources. It's built with [Pyxel](https://github.com/kitao/pyxel).
 
-**Status:** Milestone 2 (Real Rose Hill). The whole Rose Hill campus is one walkable map, laid out from the official campus map. You start at the Main Entrance, area names pop up as you walk, and you can talk to students and open a card for any building, landmark, shuttle stop or gate. Art is placeholder art drawn in code. Building interiors are deferred (decision 0012).
+**Status:** Milestone 2 (Real Rose Hill). The whole Rose Hill campus is one walkable map, laid out from the official campus map. The game opens with a short, skippable intro: you ride Metro-North to Fordham station, walk to the Third / Webster Avenue gate, learn the controls, then walk through the gate yourself. An Orientation Leader greets you inside. Area names pop up as you walk, and you can talk to students and open a card for any building, landmark, shuttle stop or gate. Art is placeholder art drawn in code. Building interiors are deferred (decision 0012).
 
 ## Run it
 
@@ -20,7 +20,7 @@ uv run python tools/render_map.py  # whole map as one picture: build/map_rose_hi
 **Controls:**
 - Arrows or WASD move.
 - **Z**, Space or Enter talks to people and reads signs.
-- **X** skips text or closes a card.
+- **X** skips text, closes a card, or skips the intro.
 - Up and Down scroll a long card.
 - Esc quits.
 
@@ -32,6 +32,7 @@ uv run python tools/render_map.py  # whole map as one picture: build/map_rose_hi
 | `decisions/` | **Decisions for review.** Each one has options, a recommendation, and Approve / Not approve / Other boxes |
 | `content/maps/*.txt` | Maps as text grids (see the legend in `game/world/tiles.py`) |
 | `content/maps/*.json` | Area names, plus everything placed on the map: NPCs and what they say, signs, landmarks, doors |
+| `content/intro.json` | The opening sequence: captions, how long each stays up, and the controls card. Edit the text here |
 | `content/locations.json` | Building cards: name, type, description, what's inside. Will feed the Campus Guide in M3 |
 | `research/` | The official Rose Hill campus map and notes taken from it |
 | `game/` | Engine code: `scenes/` (title, overworld, dialogue), `world/` (map, movement, camera), `systems/` (input), `gfx/` (placeholder art) |

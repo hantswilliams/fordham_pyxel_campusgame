@@ -42,6 +42,20 @@ def test_spawn_is_walkable(game_map):
     assert not game_map.is_blocked(*game_map.spawn)
 
 
+def test_start_greeter_is_through_the_gate():
+    """D-0016 Part 2: start outside the Webster Ave gate; an Orientation
+    Leader greets you automatically just inside."""
+    m = load_map(config.START_MAP, config.MAPS_DIR)
+    sx, sy = m.spawn
+    ahead = (sx + m.spawn_facing.dx, sy + m.spawn_facing.dy)
+    assert not m.is_blocked(*ahead), "the gate in front of the start must be open"
+    greeters = [o for o in m.objects if o.type == "npc" and o.auto]
+    assert greeters, "expected an auto-greeting Orientation Leader"
+    seen = reachable_from_spawn(m)
+    for g in greeters:
+        assert any((g.x + dx, g.y + dy) in seen for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+
+
 def test_map_edges_are_solid(game_map):
     """Players must never walk off the edge of a map."""
     m = game_map

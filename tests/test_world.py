@@ -114,3 +114,17 @@ def test_wrap_respects_width_and_newlines():
 
 def test_wrap_splits_long_words():
     assert wrap("abcdefghij", 4) == ["abcd", "efgh", "ij"]
+
+
+# --- auto-greeting NPCs --------------------------------------------------------
+
+def test_auto_npc_greets_once_from_any_side():
+    meta = {"objects": [{"at": [2, 0], "type": "npc", "name": "OL", "lines": ["hi"], "auto": True},
+                        {"at": [0, 0], "type": "npc", "name": "Quiet", "lines": ["..."]}]}
+    m = parse_map("t", ".@...\n", meta)
+    found = m.auto_npc_next_to(1, 0, set())
+    assert found is not None
+    obj, direction = found
+    assert obj.name == "OL" and direction == Direction.RIGHT
+    assert m.auto_npc_next_to(1, 0, {(2, 0)}) is None  # already greeted
+    assert m.auto_npc_next_to(4, 0, set()) is None      # not adjacent
