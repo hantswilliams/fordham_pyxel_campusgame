@@ -150,11 +150,119 @@ def _lamp(img, x, y):
     img.rect(x + 5, y + 14, 6, 2, Col.NAVY)
 
 
+def _roof_colored(base, line, highlight):
+    """Roof variants; colour tells the player what kind of building it is."""
+    def draw(img, x, y):
+        img.rect(x, y, 16, 16, base)
+        for row in range(0, 16, 4):
+            img.line(x, y + row + 3, x + 15, y + row + 3, line)
+            off = 0 if (row // 4) % 2 == 0 else 3
+            for bx in range(off, 16, 6):
+                img.pset(x + bx, y + row + 1, highlight)
+    return draw
+
+
+def _field(img, x, y):
+    for sx in range(0, 16, 4):
+        img.rect(x + sx, y, 4, 16, Col.GREEN if (sx // 4) % 2 == 0 else Col.LIME)
+
+
+def _dirt(img, x, y):
+    img.rect(x, y, 16, 16, Col.ORANGE)
+    for px, py in ((2, 3), (11, 2), (6, 10), (13, 12), (4, 14)):
+        img.pset(x + px, y + py, Col.BROWN)
+
+
+def _fence(img, x, y):
+    _grass(img, x, y)
+    img.line(x, y + 5, x + 15, y + 5, Col.NAVY)
+    img.line(x, y + 11, x + 15, y + 11, Col.NAVY)
+    for px in range(1, 16, 4):
+        img.line(x + px, y + 3, x + px, y + 13, Col.NAVY)
+        img.pset(x + px, y + 2, Col.NAVY)
+
+
+def _offcampus(img, x, y):
+    img.rect(x, y, 16, 16, Col.NAVY)
+    img.line(x, y + 7, x + 15, y + 7, Col.DARK_BLUE)
+    img.line(x + 7, y, x + 7, y + 15, Col.DARK_BLUE)
+
+
+def _parking(img, x, y):
+    img.rect(x, y, 16, 16, Col.GRAY)
+    img.rect(x, y + 1, 1, 14, Col.WHITE)
+    img.pset(x + 9, y + 5, Col.DARK_BLUE)
+    img.pset(x + 4, y + 12, Col.DARK_BLUE)
+
+
+def _statue(img, x, y):
+    _grass(img, x, y)
+    img.rect(x + 3, y + 11, 10, 5, Col.GRAY)
+    img.line(x + 3, y + 11, x + 12, y + 11, Col.WHITE)
+    img.circ(x + 8, y + 3, 2, Col.DARK_BLUE)
+    img.rect(x + 6, y + 5, 5, 6, Col.DARK_BLUE)
+    img.pset(x + 7, y + 6, Col.LIGHT_BLUE)
+
+
+def _bell(img, x, y):
+    _grass(img, x, y)
+    img.rect(x + 2, y + 2, 2, 14, Col.BROWN)
+    img.rect(x + 12, y + 2, 2, 14, Col.BROWN)
+    img.rect(x + 2, y + 2, 12, 2, Col.BROWN)
+    img.rect(x + 5, y + 5, 6, 6, Col.YELLOW)
+    img.rect(x + 4, y + 10, 8, 2, Col.YELLOW)
+    img.pset(x + 8, y + 12, Col.ORANGE)
+    img.pset(x + 6, y + 6, Col.WHITE)
+
+
+def _shuttle(img, x, y):
+    _grass(img, x, y)
+    img.rect(x + 7, y + 9, 2, 7, Col.NAVY)
+    img.rect(x + 2, y + 1, 12, 9, Col.MAROON)
+    img.rect(x + 4, y + 3, 8, 4, Col.WHITE)
+    img.line(x + 5, y + 4, x + 10, y + 4, Col.LIGHT_BLUE)
+    img.pset(x + 5, y + 7, Col.WHITE)
+    img.pset(x + 10, y + 7, Col.WHITE)
+
+
+def _pillar(img, x, y):
+    _path(img, x, y)
+    img.rect(x + 3, y + 2, 10, 14, Col.GRAY)
+    img.rect(x + 2, y, 12, 3, Col.WHITE)
+    img.line(x + 11, y + 3, x + 11, y + 15, Col.DARK_BLUE)
+    img.line(x + 5, y + 8, x + 9, y + 8, Col.DARK_BLUE)
+
+
+def _grave(img, x, y):
+    _grass(img, x, y)
+    for gx, gy in ((2, 4), (9, 7)):
+        img.rect(x + gx, y + gy + 2, 5, 6, Col.GRAY)
+        img.circ(x + gx + 2, y + gy + 2, 2, Col.GRAY)
+        img.line(x + gx + 2, y + gy + 2, x + gx + 2, y + gy + 5, Col.DARK_BLUE)
+        img.line(x + gx + 1, y + gy + 3, x + gx + 3, y + gy + 3, Col.DARK_BLUE)
+
+
+def _dome(img, x, y):
+    _grass(img, x, y)
+    img.rect(x + 3, y + 8, 10, 7, Col.WHITE)
+    img.rectb(x + 3, y + 8, 10, 7, Col.GRAY)
+    img.circ(x + 8, y + 8, 5, Col.LIGHT_BLUE)
+    img.rect(x + 3, y + 9, 10, 1, Col.GRAY)
+    img.line(x + 8, y + 3, x + 8, y + 8, Col.NAVY)
+    img.rect(x + 7, y + 11, 2, 4, Col.BROWN)
+
+
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
     "door": _door, "window": _window, "tree": _tree, "flowers": _flowers,
     "hedge": _hedge, "water": _water, "bench": _bench, "sign": _sign,
     "banner": _banner, "lamp": _lamp,
+    "roof_res": _roof_colored(Col.ORANGE, Col.BROWN, Col.PEACH),
+    "roof_other": _roof_colored(Col.GRAY, Col.DARK_BLUE, Col.WHITE),
+    "roof_maroon": _roof_colored(Col.MAROON, Col.NAVY, Col.PINK),
+    "field": _field, "dirt": _dirt, "fence": _fence, "offcampus": _offcampus,
+    "parking": _parking, "statue": _statue, "bell": _bell, "shuttle": _shuttle,
+    "pillar": _pillar, "grave": _grave, "dome": _dome,
 }
 
 

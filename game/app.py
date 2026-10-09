@@ -5,6 +5,7 @@ from game.gfx.placeholder_art import build_all
 from game.scenes.base import SceneManager
 from game.scenes.title import TitleScene
 from game.systems.input import PyxelInput
+from game.world.locations import load_locations
 
 
 class App:
@@ -17,6 +18,7 @@ class App:
         build_all()
 
         self.input = input_source or PyxelInput()
+        self.locations = load_locations(config.LOCATIONS_FILE)
         self.scenes = SceneManager()
         self.scenes.push(start_scene(self) if start_scene else TitleScene(self))
 

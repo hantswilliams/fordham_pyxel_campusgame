@@ -14,8 +14,9 @@ WALK_SPEED = 2  # pixels per frame -> 8 frames per tile (~3.75 tiles/sec)
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = ROOT / "content"
 MAPS_DIR = CONTENT_DIR / "maps"
+LOCATIONS_FILE = CONTENT_DIR / "locations.json"
 
-START_MAP = "edwards_parade"
+START_MAP = "rose_hill"
 
 # Palette: Pyxel's default 16 colors with four slots swapped:
 #   2 purple -> Fordham maroon (approximation; confirm with Fordham brand

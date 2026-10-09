@@ -1,0 +1,203 @@
+{
+  "_note": "DRAFT. Layout follows research/Rose-Hill-Campus-Map.pdf (D-0010, D-0013): relative positions are real, distances compressed. Objects are placed by [x, y] tile coordinates. Facts need Fordham staff review.",
+  "display_name": "Rose Hill",
+  "spawn_facing": "left",
+  "areas": [
+    {
+      "name": "McShane Center & Athletics",
+      "rect": [24, 2, 53, 29]
+    },
+    {
+      "name": "Main Entrance",
+      "rect": [69, 22, 30, 22]
+    },
+    {
+      "name": "Edwards Parade",
+      "rect": [42, 31, 27, 23]
+    },
+    {
+      "name": "University Church",
+      "rect": [1, 18, 23, 9]
+    },
+    {
+      "name": "Academic Quad",
+      "rect": [22, 27, 20, 26]
+    },
+    {
+      "name": "Queen's Court & Alumni Court",
+      "rect": [1, 27, 21, 12]
+    },
+    {
+      "name": "Martyrs' Lawn",
+      "rect": [1, 39, 21, 14]
+    },
+    {
+      "name": "Walsh Lawn & Library",
+      "rect": [1, 53, 28, 22]
+    },
+    {
+      "name": "South Campus",
+      "rect": [29, 53, 40, 14]
+    },
+    {
+      "name": "East Campus",
+      "rect": [69, 44, 30, 23]
+    }
+  ],
+  "objects": [
+    {"at": [48, 19], "type": "door", "location": "lombardi_center"},
+    {"at": [49, 19], "type": "door", "location": "lombardi_center"},
+    {"at": [43, 26], "type": "door", "location": "mcshane_center"},
+    {"at": [44, 26], "type": "door", "location": "mcshane_center"},
+    {"at": [53, 26], "type": "door", "location": "rose_hill_gym"},
+    {"at": [59, 27], "type": "door", "location": "moglia_stadium"},
+    {"at": [11, 25], "type": "door", "location": "loschert_hall"},
+    {"at": [18, 26], "type": "door", "location": "university_church"},
+    {"at": [25, 27], "type": "door", "location": "faber_hall"},
+    {"at": [31, 31], "type": "door", "location": "loyola_hall"},
+    {"at": [24, 35], "type": "door", "location": "collins_hall"},
+    {"at": [14, 33], "type": "door", "location": "queens_court"},
+    {"at": [7, 34], "type": "door", "location": "alumni_court_south"},
+    {"at": [17, 42], "type": "door", "location": "martyrs_court"},
+    {"at": [8, 49], "type": "door", "location": "martyrs_court"},
+    {"at": [4, 50], "type": "door", "location": "conley_salice"},
+    {"at": [4, 60], "type": "door", "location": "campbell_hall"},
+    {"at": [37, 38], "type": "door", "location": "hughes_hall"},
+    {"at": [30, 45], "type": "door", "location": "cunniffe_house"},
+    {"at": [36, 51], "type": "door", "location": "dealy_hall"},
+    {"at": [62, 48], "type": "door", "location": "keating_hall"},
+    {"at": [63, 48], "type": "door", "location": "keating_hall"},
+    {"at": [69, 56], "type": "door", "location": "spellman_hall"},
+    {"at": [49, 57], "type": "door", "location": "freeman_hall"},
+    {"at": [80, 52], "type": "door", "location": "ohare_hall"},
+    {"at": [83, 52], "type": "door", "location": "ohare_hall"},
+    {"at": [78, 57], "type": "door", "location": "tierney_hall"},
+    {"at": [92, 54], "type": "door", "location": "regional_parking"},
+    {"at": [93, 54], "type": "door", "location": "regional_parking"},
+    {"at": [87, 64], "type": "door", "location": "faculty_memorial_hall"},
+    {"at": [36, 58], "type": "door", "location": "thebaud_hall"},
+    {"at": [28, 58], "type": "door", "location": "admissions"},
+    {"at": [12, 70], "type": "door", "location": "walsh_library"},
+    {"at": [13, 70], "type": "door", "location": "walsh_library"},
+    {"at": [23, 67], "type": "door", "location": "larkin_hall"},
+    {"at": [43, 64], "type": "door", "location": "finlay_hall"},
+    {"at": [54, 64], "type": "door", "location": "walsh_hall"},
+    {"at": [60, 64], "type": "door", "location": "mulcahy_hall"},
+    {"at": [54, 30], "type": "sign", "tile": "bell", "location": "victory_bell"},
+    {"at": [39, 42], "type": "sign", "tile": "statue", "location": "ram_statue"},
+    {"at": [38, 33], "type": "sign", "tile": "statue", "location": "st_ignatius_statue"},
+    {"at": [26, 42], "type": "sign", "tile": "statue", "location": "archbishop_hughes_statue"},
+    {"at": [35, 42], "type": "sign", "tile": "water", "location": "cunniffe_fountain"},
+    {"at": [54, 56], "type": "sign", "tile": "dome", "location": "seismic_observatory"},
+    {"at": [36, 61], "type": "sign", "tile": "sign", "location": "memorial_garden"},
+    {"at": [17, 45], "type": "sign", "tile": "sign", "location": "martyrs_lawn"},
+    {"at": [42, 38], "type": "sign", "tile": "sign", "location": "edwards_parade"},
+    {"at": [63, 31], "type": "sign", "tile": "sign", "location": "jack_coffey_field"},
+    {"at": [20, 61], "type": "sign", "tile": "sign", "location": "walsh_lawn"},
+    {"at": [42, 49], "type": "sign", "tile": "shuttle", "location": "ram_van"},
+    {"at": [33, 35], "type": "sign", "tile": "shuttle", "location": "ram_van"},
+    {"at": [11, 38], "type": "sign", "tile": "shuttle", "location": "ram_van"},
+    {"at": [90, 56], "type": "sign", "tile": "shuttle", "location": "ram_van"},
+    {"at": [78, 24], "type": "sign", "tile": "sign", "location": "main_entrance"},
+    {"at": [4, 71], "type": "sign", "tile": "sign", "location": "webster_gate"},
+    {"at": [39, 64], "type": "sign", "tile": "sign", "location": "bathgate_gate"},
+    {"at": [82, 57], "type": "sign", "tile": "sign", "location": "clavius_gate"},
+    {
+      "at": [71, 42],
+      "type": "npc",
+      "name": "Orientation Leader",
+      "sprite": 1,
+      "facing": "right",
+      "lines": [
+        "Welcome to Fordham! I'm one of your Orientation Leaders. You just came in the Main Entrance.",
+        "West of here is Keating Hall, the big building with the tower, and Edwards Parade, the lawn at the heart of campus.",
+        "Face any door or sign and press Z to see what's there. Try it, then go explore!"
+      ]
+    },
+    {
+      "at": [41, 46],
+      "type": "npc",
+      "name": "Sophomore",
+      "sprite": 2,
+      "facing": "right",
+      "lines": [
+        "See that maroon sign? That's a Ram Van shuttle stop, right here on Rose Hill Manor Drive by Dealy Hall."
+      ]
+    },
+    {
+      "at": [46, 29],
+      "type": "npc",
+      "name": "Junior",
+      "sprite": 4,
+      "facing": "down",
+      "lines": [
+        "McShane Campus Center is the place for food. There's dining in Keating, Dealy, O'Hare and Queen's Court too."
+      ]
+    },
+    {
+      "at": [86, 52],
+      "type": "npc",
+      "name": "Senior",
+      "sprite": 2,
+      "facing": "left",
+      "lines": [
+        "O'Hare Hall has the Health Center and the Counseling Center. Good to know where they are before you need them.",
+        "The Fordham Store is in O'Hare too."
+      ]
+    },
+    {
+      "at": [19, 62],
+      "type": "npc",
+      "name": "Sophomore",
+      "sprite": 4,
+      "facing": "down",
+      "lines": [
+        "Walsh Library is the big one in the southwest corner of campus.",
+        "Don't mix it up with Walsh Hall. That's a residence hall over on the south side!"
+      ]
+    },
+    {
+      "at": [33, 57],
+      "type": "npc",
+      "name": "Staff Member",
+      "sprite": 3,
+      "facing": "right",
+      "lines": [
+        "Public Safety's office is here in Thebaud Hall.",
+        "Look up their number and save it in your phone today. You'll be glad you did."
+      ]
+    },
+    {
+      "at": [7, 69],
+      "type": "npc",
+      "name": "Commuter",
+      "sprite": 2,
+      "facing": "down",
+      "lines": [
+        "This is the Third Avenue / Webster Avenue gate. The Fordham Metro-North station is right outside.",
+        "The Fordham Road subway station is on Webster Avenue too."
+      ]
+    },
+    {
+      "at": [14, 47],
+      "type": "npc",
+      "name": "First-Year",
+      "sprite": 4,
+      "facing": "down",
+      "lines": [
+        "I live in Martyrs' Court. This big lawn is Martyrs' Lawn, the heart of the residential side of campus."
+      ]
+    },
+    {
+      "at": [50, 44],
+      "type": "npc",
+      "name": "Orientation Leader",
+      "sprite": 1,
+      "facing": "down",
+      "lines": [
+        "This is Edwards Parade! Big campus events happen right here on this lawn.",
+        "Keating Hall is just east of here. Dealy and Hughes Halls are across Rose Hill Manor Drive to the west."
+      ]
+    }
+  ]
+}

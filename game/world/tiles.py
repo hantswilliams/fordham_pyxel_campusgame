@@ -21,7 +21,7 @@ TILES: dict[str, TileDef] = {
         TileDef("grass", 0, False),
         TileDef("path", 1, False),
         TileDef("wall", 2, True),
-        TileDef("roof", 3, True),
+        TileDef("roof", 3, True),          # academic building (slate)
         TileDef("door", 4, True),
         TileDef("window", 5, True),
         TileDef("tree", 6, True),
@@ -32,24 +32,50 @@ TILES: dict[str, TileDef] = {
         TileDef("sign", 11, True),
         TileDef("banner", 12, True),
         TileDef("lamp", 13, True),
+        TileDef("roof_res", 14, True),     # residence hall (terracotta)
+        TileDef("roof_other", 15, True),   # library, church, campus center...
+        TileDef("roof_maroon", 16, True),  # Office of Undergraduate Admission
+        TileDef("field", 17, True),        # athletic turf (fenced)
+        TileDef("dirt", 18, True),         # baseball infield
+        TileDef("fence", 19, True),        # campus boundary
+        TileDef("offcampus", 20, True),    # outside the campus
+        TileDef("parking", 21, False),
+        TileDef("statue", 22, True),
+        TileDef("bell", 23, True),
+        TileDef("shuttle", 24, True),      # Ram Van shuttle stop sign
+        TileDef("pillar", 25, True),       # gate pillar
+        TileDef("grave", 26, True),
+        TileDef("dome", 27, True),         # Seismic Observatory
     ]
 }
 
-# Characters used in content/maps/*.txt. Digits and letters NOT listed here
-# are object ids defined in the map's .json file. '@' is the player spawn.
+# Characters used in content/maps/*.txt. '@' is the player spawn.
+# Signs, NPCs, landmarks and door destinations are placed by coordinates in
+# the map's .json file (like a Tiled object layer, see decisions/0005).
 LEGEND: dict[str, str] = {
     ".": "grass",
     ":": "path",
-    "W": "wall",
-    "R": "roof",
-    "w": "window",
-    "B": "banner",
-    "T": "tree",
     "*": "flowers",
+    "P": "parking",
+    "W": "wall",
+    "w": "window",
+    "D": "door",
+    "B": "banner",
+    "R": "roof",
+    "O": "roof_res",
+    "G": "roof_other",
+    "M": "roof_maroon",
+    "T": "tree",
     "h": "hedge",
     "~": "water",
     "b": "bench",
     "L": "lamp",
+    "F": "field",
+    "d": "dirt",
+    "|": "fence",
+    "#": "offcampus",
+    "I": "pillar",
+    "+": "grave",
 }
 
 SPAWN_CHAR = "@"

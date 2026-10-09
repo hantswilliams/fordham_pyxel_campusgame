@@ -1,4 +1,4 @@
-"""The walkable campus map: tiles, player, NPCs, signs, doors."""
+"""The walkable campus map: tiles, player, NPCs, signs, doors, area banners."""
 
 import pyxel
 
@@ -12,6 +12,7 @@ from game.world.mapdata import MapData, MapObject, load_map
 from game.world.movement import GridMover
 from game.world.tiles import TILES, slot_to_pixel
 
+from .card import BuildingCardScene
 from .dialogue import DialogueScene
 from .base import Scene
 
@@ -28,28 +29,32 @@ DIRECTION_ACTIONS = [
 ]
 
 
+def bake_tilemap(game_map: MapData, index: int) -> None:
+    """Copy a map into a Pyxel tilemap so it draws in one bltm call.
+    Each 16px game tile = 2x2 Pyxel 8px tiles."""
+    tm = pyxel.tilemaps[index]
+    tm.imgsrc = TILE_IMAGE_BANK
+    for y, row in enumerate(game_map.tiles):
+        for x, name in enumerate(row):
+            u, v = slot_to_pixel(TILES[name].slot)
+            for j in range(2):
+                for i in range(2):
+                    tm.pset(x * 2 + i, y * 2 + j, (u // 8 + i, v // 8 + j))
+
+
 class OverworldScene(Scene):
     def __init__(self, app, map_id: str = config.START_MAP):
         super().__init__(app)
         self.map: MapData = load_map(map_id, config.MAPS_DIR)
         sx, sy = self.map.spawn
-        self.player = GridMover(sx, sy, TILE, config.WALK_SPEED, Direction.UP)
+        self.player = GridMover(sx, sy, TILE, config.WALK_SPEED,
+                                self.map.spawn_facing)
+        area = self.map.area_at(sx, sy)
+        self.area_name = area.name if area else self.map.display_name
         self.banner_timer = BANNER_FRAMES
         self.cam = (0, 0)
-        self._build_tilemap()
-
-    # --- setup -------------------------------------------------------------
-    def _build_tilemap(self) -> None:
-        """Bake the map into a Pyxel tilemap so it draws in one bltm call.
-        Each 16px game tile = 2x2 Pyxel 8px tiles."""
-        tm = pyxel.tilemaps[TILEMAP_INDEX]
-        tm.imgsrc = TILE_IMAGE_BANK
-        for y, row in enumerate(self.map.tiles):
-            for x, name in enumerate(row):
-                u, v = slot_to_pixel(TILES[name].slot)
-                for j in range(2):
-                    for i in range(2):
-                        tm.pset(x * 2 + i, y * 2 + j, (u // 8 + i, v // 8 + j))
+        bake_tilemap(self.map, TILEMAP_INDEX)
+        self._update_camera()
 
     # --- update ------------------------------------------------------------
     def update(self) -> None:
@@ -65,12 +70,23 @@ class OverworldScene(Scene):
                 if self.input.held(action):
                     p.try_move(direction, self.map.is_blocked)
                     break
-        p.update()
+        if p.update():
+            self._check_area()
+        self._update_camera()
 
+    def _update_camera(self) -> None:
+        p = self.player
         self.cam = follow(
             p.pixel_x + TILE / 2, p.pixel_y + TILE / 2,
             SCREEN_W, SCREEN_H, self.map.width * TILE, self.map.height * TILE,
         )
+
+    def _check_area(self) -> None:
+        """Show the area banner when the player walks into a new area."""
+        area = self.map.area_at(self.player.tile_x, self.player.tile_y)
+        if area and area.name != self.area_name:
+            self.area_name = area.name
+            self.banner_timer = BANNER_FRAMES
 
     def _interact(self) -> None:
         fx, fy = self.player.front_tile
@@ -79,8 +95,12 @@ class OverworldScene(Scene):
             return
         if obj.type == "npc":
             obj.facing = self.player.facing.opposite
-        speaker = obj.name if obj.type == "npc" else ""
-        self.app.scenes.push(DialogueScene(self.app, obj.lines, speaker))
+            self.app.scenes.push(DialogueScene(self.app, obj.lines, obj.name))
+        elif obj.location:
+            self.app.scenes.push(
+                BuildingCardScene(self.app, self.app.locations[obj.location]))
+        else:
+            self.app.scenes.push(DialogueScene(self.app, obj.lines))
 
     # --- draw --------------------------------------------------------------
     def draw(self) -> None:
@@ -106,7 +126,7 @@ class OverworldScene(Scene):
     def _draw_hud(self) -> None:
         if self.banner_timer <= 0:
             return
-        name = self.map.display_name
+        name = self.area_name
         w = len(name) * 4 + 16
         # slide in from the top, then hold
         y = min(4, -14 + (BANNER_FRAMES - self.banner_timer) * 2)

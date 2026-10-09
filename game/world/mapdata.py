@@ -1,7 +1,10 @@
 """Load a map from a pair of content files:
 
     content/maps/<name>.txt   - ASCII grid, one character per 16x16 tile
-    content/maps/<name>.json  - display name + objects (signs, NPCs, doors)
+                                (legend in game/world/tiles.py)
+    content/maps/<name>.json  - display name, named areas, and objects
+                                (signs, NPCs, doors, landmarks) placed by
+                                x/y tile coordinates
 
 Pure Python (no Pyxel) so it can be unit-tested.
 See decisions/0005-map-authoring.md for why maps are text files for now.
@@ -23,16 +26,27 @@ class MapError(ValueError):
 
 @dataclass
 class MapObject:
-    id: str
     type: str  # "sign" | "npc" | "door"
     x: int
     y: int
     name: str = ""
     lines: list[str] = field(default_factory=list)
-    tile: str | None = None  # tile art drawn at this cell (sign, door)
-    ground: str = "path"  # tile drawn underneath (npc)
+    location: str | None = None  # id in content/locations.json -> building card
+    tile: str | None = None  # art drawn at this cell (sign, statue...)
     sprite: int = 0  # character sheet row (npc)
     facing: Direction = Direction.DOWN
+
+
+@dataclass
+class Area:
+    name: str
+    x: int
+    y: int
+    w: int
+    h: int
+
+    def contains(self, x: int, y: int) -> bool:
+        return self.x <= x < self.x + self.w and self.y <= y < self.y + self.h
 
 
 @dataclass
@@ -44,22 +58,32 @@ class MapData:
     tiles: list[list[str]]  # tile names, [y][x]
     objects: list[MapObject]
     spawn: tuple[int, int]
+    spawn_facing: Direction = Direction.DOWN
+    areas: list[Area] = field(default_factory=list)
+    _by_pos: dict = field(default_factory=dict, repr=False)
+
+    def __post_init__(self):
+        self._by_pos = {(o.x, o.y): o for o in self.objects}
 
     def in_bounds(self, x: int, y: int) -> bool:
         return 0 <= x < self.width and 0 <= y < self.height
 
     def object_at(self, x: int, y: int) -> MapObject | None:
-        for obj in self.objects:
-            if obj.x == x and obj.y == y:
-                return obj
-        return None
+        return self._by_pos.get((x, y))
 
     def is_blocked(self, x: int, y: int) -> bool:
         if not self.in_bounds(x, y):
             return True
         if TILES[self.tiles[y][x]].solid:
             return True
-        return self.object_at(x, y) is not None
+        return (x, y) in self._by_pos
+
+    def area_at(self, x: int, y: int) -> Area | None:
+        """First area (in file order) containing the tile, or None."""
+        for area in self.areas:
+            if area.contains(x, y):
+                return area
+        return None
 
 
 def parse_map(map_id: str, text: str, meta: dict) -> MapData:
@@ -73,11 +97,8 @@ def parse_map(map_id: str, text: str, meta: dict) -> MapData:
                 f"{map_id}: row {y} has {len(row)} chars, expected {width}"
             )
 
-    object_defs: dict = meta.get("objects", {})
     tiles: list[list[str]] = []
-    objects: list[MapObject] = []
     spawn = None
-
     for y, row in enumerate(rows):
         tile_row = []
         for x, ch in enumerate(row):
@@ -88,52 +109,68 @@ def parse_map(map_id: str, text: str, meta: dict) -> MapData:
                     raise MapError(f"{map_id}: more than one spawn '@'")
                 spawn = (x, y)
                 tile_row.append(SPAWN_GROUND)
-            elif ch in object_defs:
-                obj = _make_object(map_id, ch, object_defs[ch], x, y)
-                objects.append(obj)
-                tile_row.append(obj.tile or obj.ground)
             else:
                 raise MapError(
                     f"{map_id}: unknown character {ch!r} at ({x}, {y}). "
-                    "Add it to the legend or define it under 'objects' in the .json"
+                    "See LEGEND in game/world/tiles.py"
                 )
         tiles.append(tile_row)
-
     if spawn is None:
         raise MapError(f"{map_id}: no player spawn '@'")
+
+    height = len(rows)
+    objects = []
+    seen: set[tuple[int, int]] = set()
+    for i, d in enumerate(meta.get("objects", [])):
+        obj = _make_object(map_id, i, d, width, height)
+        if (obj.x, obj.y) in seen:
+            raise MapError(f"{map_id}: two objects at {(obj.x, obj.y)}")
+        seen.add((obj.x, obj.y))
+        if obj.tile:
+            tiles[obj.y][obj.x] = obj.tile
+        objects.append(obj)
+
+    areas = [Area(a["name"], *a["rect"]) for a in meta.get("areas", [])]
 
     return MapData(
         id=map_id,
         display_name=meta.get("display_name", map_id),
         width=width,
-        height=len(rows),
+        height=height,
         tiles=tiles,
         objects=objects,
         spawn=spawn,
+        spawn_facing=Direction.from_name(meta.get("spawn_facing", "down")),
+        areas=areas,
     )
 
 
-def _make_object(map_id: str, ch: str, d: dict, x: int, y: int) -> MapObject:
+def _make_object(map_id: str, i: int, d: dict, width: int, height: int) -> MapObject:
+    where = f"{map_id}: object #{i}"
     kind = d.get("type")
     if kind not in OBJECT_TYPES:
-        raise MapError(f"{map_id}: object {ch!r} has unknown type {kind!r}")
+        raise MapError(f"{where} has unknown type {kind!r}")
+    try:
+        x, y = d["at"]
+    except (KeyError, ValueError, TypeError):
+        raise MapError(f'{where} needs "at": [x, y]')
+    if not (0 <= x < width and 0 <= y < height):
+        raise MapError(f"{where} at {(x, y)} is outside the map")
     tile = d.get("tile")
-    ground = d.get("ground", "path")
-    for t in (tile, ground):
-        if t is not None and t not in TILES:
-            raise MapError(f"{map_id}: object {ch!r} uses unknown tile {t!r}")
-    lines = d.get("lines", [])
-    if not lines:
-        raise MapError(f"{map_id}: object {ch!r} has no 'lines' to show")
+    if tile is not None and tile not in TILES:
+        raise MapError(f"{where} uses unknown tile {tile!r}")
+    lines = list(d.get("lines", []))
+    location = d.get("location")
+    if not lines and not location:
+        raise MapError(f"{where} at {(x, y)} needs 'lines' or a 'location'")
     return MapObject(
-        id=ch,
         type=kind,
         x=x,
         y=y,
         name=d.get("name", ""),
-        lines=list(lines),
+        lines=lines,
+        location=location,
         tile=tile,
-        ground=ground,
         sprite=d.get("sprite", 0),
         facing=Direction.from_name(d.get("facing", "down")),
     )

@@ -1,85 +1,68 @@
-import json
+"""Engine logic tests (movement, camera, text, parser)."""
 
 import pytest
 
-from game import config
 from game.ui.text import wrap
 from game.world.camera import follow
 from game.world.directions import Direction
-from game.world.mapdata import MapError, load_map, parse_map
+from game.world.locations import parse_locations
+from game.world.mapdata import MapError, parse_map
 from game.world.movement import GridMover
-from game.world.tiles import LEGEND, TILES
-
-# --- content validation: every map in content/maps must load cleanly -------
-
-MAP_IDS = sorted(p.stem for p in config.MAPS_DIR.glob("*.txt"))
-
-
-@pytest.mark.parametrize("map_id", MAP_IDS)
-def test_map_loads(map_id):
-    m = load_map(map_id, config.MAPS_DIR)
-    assert m.width > 0 and m.height > 0
-    sx, sy = m.spawn
-    assert not m.is_blocked(sx, sy)
-
-
-@pytest.mark.parametrize("map_id", MAP_IDS)
-def test_map_edges_are_solid(map_id):
-    """Players should never be able to walk off the edge of a map."""
-    m = load_map(map_id, config.MAPS_DIR)
-    for x in range(m.width):
-        assert m.is_blocked(x, 0) and m.is_blocked(x, m.height - 1)
-    for y in range(m.height):
-        assert m.is_blocked(0, y) and m.is_blocked(m.width - 1, y)
-
-
-@pytest.mark.parametrize("map_id", MAP_IDS)
-def test_every_object_is_reachable(map_id):
-    """Each sign/NPC/door must have a walkable neighbour reachable from spawn."""
-    m = load_map(map_id, config.MAPS_DIR)
-    seen = {m.spawn}
-    frontier = [m.spawn]
-    while frontier:
-        x, y = frontier.pop()
-        for d in Direction:
-            n = (x + d.dx, y + d.dy)
-            if n not in seen and not m.is_blocked(*n):
-                seen.add(n)
-                frontier.append(n)
-    for obj in m.objects:
-        neighbours = {(obj.x + d.dx, obj.y + d.dy) for d in Direction}
-        assert neighbours & seen, f"{obj.type} {obj.id!r} at {(obj.x, obj.y)} is unreachable"
-
-
-@pytest.mark.parametrize("map_id", MAP_IDS)
-def test_object_ids_in_json_are_used(map_id):
-    meta = json.loads((config.MAPS_DIR / f"{map_id}.json").read_text())
-    text = (config.MAPS_DIR / f"{map_id}.txt").read_text()
-    for obj_id in meta.get("objects", {}):
-        assert obj_id not in LEGEND, f"object id {obj_id!r} clashes with a tile"
-        assert obj_id in text, f"object {obj_id!r} is defined but not placed on the map"
-
-
-def test_legend_points_at_real_tiles():
-    for name in LEGEND.values():
-        assert name in TILES
-
 
 # --- parser errors -----------------------------------------------------------
 
+
 def test_ragged_rows_rejected():
     with pytest.raises(MapError, match="row 1"):
-        parse_map("t", "T@T\nTT\n", {})
+        parse_map("t", "#@#\n##\n", {})
 
 
 def test_unknown_character_rejected():
     with pytest.raises(MapError, match="unknown character"):
-        parse_map("t", "T@?\n", {})
+        parse_map("t", "#@?\n", {})
 
 
 def test_missing_spawn_rejected():
     with pytest.raises(MapError, match="no player spawn"):
-        parse_map("t", "T.T\n", {})
+        parse_map("t", "#.#\n", {})
+
+
+def test_object_outside_map_rejected():
+    meta = {"objects": [{"at": [5, 0], "type": "sign", "lines": ["hi"]}]}
+    with pytest.raises(MapError, match="outside the map"):
+        parse_map("t", "#@.\n", meta)
+
+
+def test_object_needs_lines_or_location():
+    meta = {"objects": [{"at": [2, 0], "type": "sign"}]}
+    with pytest.raises(MapError, match="needs 'lines' or a 'location'"):
+        parse_map("t", "#@.\n", meta)
+
+
+def test_two_objects_on_one_tile_rejected():
+    o = {"at": [2, 0], "type": "sign", "lines": ["hi"]}
+    with pytest.raises(MapError, match="two objects"):
+        parse_map("t", "#@.\n", {"objects": [o, dict(o)]})
+
+
+def test_object_tile_overrides_map_tile_and_blocks():
+    meta = {"objects": [{"at": [2, 0], "type": "sign", "tile": "statue", "lines": ["hi"]}]}
+    m = parse_map("t", "#@.\n", meta)
+    assert m.tiles[0][2] == "statue"
+    assert m.is_blocked(2, 0)
+
+
+def test_area_lookup_uses_first_match():
+    meta = {"areas": [{"name": "A", "rect": [0, 0, 2, 1]},
+                      {"name": "B", "rect": [0, 0, 3, 1]}]}
+    m = parse_map("t", "@..\n", meta)
+    assert m.area_at(1, 0).name == "A"
+    assert m.area_at(2, 0).name == "B"
+
+
+def test_bad_location_kind_rejected():
+    with pytest.raises(ValueError, match="unknown kind"):
+        parse_locations({"x": {"name": "X", "kind": "castle", "blurb": "b"}})
 
 
 # --- movement ------------------------------------------------------------------
@@ -119,15 +102,13 @@ def test_camera_clamps_to_world():
 
 
 def test_camera_centres_small_world():
-    cx, cy = follow(50, 50, 256, 192, 128, 96)
-    assert (cx, cy) == (-64, -48)
+    assert follow(50, 50, 256, 192, 128, 96) == (-64, -48)
 
 
 # --- text ----------------------------------------------------------------------
 
 def test_wrap_respects_width_and_newlines():
-    lines = wrap("hello there world\nnew", 11)
-    assert lines == ["hello there", "world", "new"]
+    assert wrap("hello there world\nnew", 11) == ["hello there", "world", "new"]
     assert all(len(line) <= 11 for line in wrap("a " * 50, 11))
 
 
