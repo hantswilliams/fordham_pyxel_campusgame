@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09). Built in M2. |
 | **Raised** | 2026-10-09 |
 | **Affects** | The next milestone (building the real Rose Hill), the camera, map files |
 | **Built provisionally?** | No |
@@ -48,7 +48,7 @@ Pyxel's limit: one tilemap holds 256×256 small tiles, which is **128×128 of ou
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

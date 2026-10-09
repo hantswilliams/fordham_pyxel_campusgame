@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09). Built in M2. |
 | **Raised** | 2026-10-09 |
 | **Affects** | The opening scene, the first NPC, the first checklist step |
 | **Built provisionally?** | No. The prototype starts south of a made-up Edwards Parade. |
@@ -39,7 +39,7 @@ The first 30 seconds set the tone. Where does a new student appear when the game
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

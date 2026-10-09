@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09). Locations built in M2; checklist comes in M4. |
 | **Raised** | 2026-10-09 |
 | **Affects** | The map (what gets drawn with detail), the Campus Guide, the checklist quest, badges (D-0003) |
 | **Built provisionally?** | No |
@@ -75,7 +75,7 @@ Rose Hill has more than 50 buildings on the map. Which ones get a **Campus Guide
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below (for example, steps to add or remove)
 

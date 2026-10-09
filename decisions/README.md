@@ -37,8 +37,8 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0010](0010-campus-map-accuracy.md) | How faithful the map is to the real campus | Recognizable layout, compressed distances | No (current map is illustrative) | Approved |
 | [0011](0011-git-hosting.md) | Where the code is hosted | Private GitHub repo now | No (git is local only) | Approved |
 | [0012](0012-building-interiors.md) | Going inside buildings | Defer, outdoors only with building cards; revisit after playtest | No | Deferred (placeholder) |
-| [0013](0013-campus-map-structure.md) | One big campus map, or zones | One continuous compressed Rose Hill map | No | Awaiting review |
-| [0014](0014-v1-locations-and-checklist.md) | Places in v1 and the First Week Checklist | 7-step checklist, about 20 Campus Guide entries | No | Awaiting review |
-| [0015](0015-starting-point.md) | Where the player starts | Main Entrance at Matteo Ricci Circle | No | Awaiting review |
+| [0013](0013-campus-map-structure.md) | One big campus map, or zones | One continuous compressed Rose Hill map | No | Approved |
+| [0014](0014-v1-locations-and-checklist.md) | Places in v1 and the First Week Checklist | 7-step checklist, about 20 Campus Guide entries | No | Approved |
+| [0015](0015-starting-point.md) | Where the player starts | Main Entrance at Matteo Ricci Circle | No | Approved |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).
