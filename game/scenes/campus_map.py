@@ -7,7 +7,8 @@ import pyxel
 
 from game.config import SCREEN_H, SCREEN_W, Col
 from game.systems.input import Action
-from game.ui.text import CHAR_W
+from game.ui import font
+from game.ui.text import BIG_CHAR_W
 from game.world.directions import Direction
 from game.world.mapdata import MapData
 from game.world.minimap import SCALE, Pin, build_pins, next_pin, tile_colors
@@ -16,6 +17,8 @@ from .base import Scene
 from .card import BuildingCardScene
 
 MAP_X, MAP_Y = 4, 18
+FOOTER_H = 26
+SKIP_ROWS = 2  # top rows of the campus map are all off-campus; trimmed to fit
 DIRECTION_ACTIONS = [(Action.UP, Direction.UP), (Action.DOWN, Direction.DOWN),
                      (Action.LEFT, Direction.LEFT), (Action.RIGHT, Direction.RIGHT)]
 PIN_COLORS = {"transit": Col.MAROON, "landmark": Col.PINK, "building": Col.YELLOW}
@@ -36,7 +39,7 @@ def map_image(m: MapData) -> pyxel.Image:
 
 def _screen_xy(x: int, y: int) -> tuple[int, int]:
     """Screen position of the centre of tile (x, y) on the map."""
-    return MAP_X + x * SCALE + SCALE // 2, MAP_Y + y * SCALE + SCALE // 2
+    return MAP_X + x * SCALE + SCALE // 2, MAP_Y + (y - SKIP_ROWS) * SCALE + SCALE // 2
 
 
 class CampusMapScene(Scene):
@@ -70,12 +73,12 @@ class CampusMapScene(Scene):
     # --- drawing ---------------------------------------------------------------
     def draw(self) -> None:
         pyxel.cls(Col.NAVY)
-        pyxel.rect(0, 0, SCREEN_W, 14, Col.MAROON)
-        pyxel.text(6, 5, "ROSE HILL CAMPUS MAP", Col.WHITE)
-        pyxel.text(SCREEN_W - 6 - len("M: CLOSE") * CHAR_W, 5, "M: CLOSE", Col.PEACH)
+        pyxel.rect(0, 0, SCREEN_W, 16, Col.MAROON)
+        font.text(6, 2, "ROSE HILL CAMPUS MAP", Col.WHITE)
+        font.text(SCREEN_W - 6 - font.width("M: CLOSE"), 2, "M: CLOSE", Col.PEACH)
 
-        w, h = self.image.width, self.image.height
-        pyxel.blt(MAP_X, MAP_Y, self.image, 0, 0, w, h)
+        w, h = self.image.width, self.image.height - SKIP_ROWS * SCALE
+        pyxel.blt(MAP_X, MAP_Y, self.image, 0, SKIP_ROWS * SCALE, w, h)
         pyxel.rectb(MAP_X - 1, MAP_Y - 1, w + 2, h + 2, Col.WHITE)
 
         blink = (pyxel.frame_count // 8) % 2 == 0
@@ -125,12 +128,14 @@ class CampusMapScene(Scene):
                 pyxel.text(x + 9, ry, label, Col.WHITE)
 
     def _draw_footer(self) -> None:
-        y = SCREEN_H - 19
-        pyxel.rect(0, y - 2, SCREEN_W, 21, Col.WHITE)
+        y = SCREEN_H - FOOTER_H
+        pyxel.rect(0, y, SCREEN_W, FOOTER_H, Col.WHITE)
+        pyxel.line(0, y, SCREEN_W, y, Col.NAVY)
+        max_chars = (SCREEN_W - 12) // BIG_CHAR_W
         if self.selected is None:
-            pyxel.text(6, y + 1, f"YOU ARE HERE: {self.area_name}", Col.NAVY)
-            pyxel.text(6, y + 9, "ARROWS: PICK A PLACE", Col.GRAY)
+            font.text(6, y + 2, f"You are here: {self.area_name}"[:max_chars], Col.BLACK)
+            pyxel.text(6, y + 17, "ARROWS: PICK A PLACE", Col.DARK_BLUE)
         else:
             pin = self.pins[self.selected]
-            pyxel.text(6, y + 1, pin.name[:60], Col.MAROON)
-            pyxel.text(6, y + 9, "Z: DETAILS   ARROWS: NEXT PLACE", Col.GRAY)
+            font.text(6, y + 2, pin.name[:max_chars], Col.MAROON)
+            pyxel.text(6, y + 17, "Z: DETAILS   ARROWS: NEXT PLACE", Col.DARK_BLUE)

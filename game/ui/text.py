@@ -1,7 +1,12 @@
 """Text helpers. Pure Python (no Pyxel)."""
 
-CHAR_W = 4  # Pyxel's built-in font is 4px wide per character
+CHAR_W = 4  # Pyxel's built-in font: small labels (map legend, hints)
 LINE_H = 8
+
+# Main reading font: PixelMplus 12 (assets/fonts), monospace 6x12 for ASCII.
+# Used for dialogue, captions, cards and banners (decisions/0018).
+BIG_CHAR_W = 6
+BIG_LINE_H = 14
 
 
 def wrap(text: str, max_chars: int) -> list[str]:

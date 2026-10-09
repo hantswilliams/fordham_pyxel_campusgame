@@ -49,3 +49,9 @@ def test_next_pin_prefers_the_pressed_direction():
     assert pins[next_pin(pins, 10, 10, Direction.UP)].name == "C"
     assert pins[next_pin(pins, 10, 10, Direction.LEFT)].name == "D"
     assert next_pin(pins, 10, 10, Direction.DOWN) is None
+
+
+def test_trimmed_map_rows_are_off_campus():
+    from game.scenes.campus_map import SKIP_ROWS
+    for y in range(SKIP_ROWS):
+        assert all(t == "offcampus" for t in M.tiles[y]), f"row {y} has campus on it"

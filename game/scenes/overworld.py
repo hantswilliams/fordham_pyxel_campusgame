@@ -6,6 +6,7 @@ from game import config
 from game.config import SCREEN_H, SCREEN_W, TILE, Col
 from game.gfx.placeholder_art import CHAR_IMAGE_BANK, TILE_IMAGE_BANK, character_uv
 from game.systems.input import Action
+from game.ui import font
 from game.world.camera import follow
 from game.world.directions import Direction
 from game.world.mapdata import MapData, MapObject, load_map
@@ -146,9 +147,9 @@ class OverworldScene(Scene):
         if self.banner_timer <= 0:
             return
         name = self.area_name
-        w = len(name) * 4 + 16
+        w = font.width(name) + 16
         # slide in from the top, then hold
-        y = min(4, -14 + (BANNER_FRAMES - self.banner_timer) * 2)
-        pyxel.rect(4, y, w, 14, Col.MAROON)
-        pyxel.rectb(4, y, w, 14, Col.WHITE)
-        pyxel.text(12, y + 4, name, Col.WHITE)
+        y = min(4, -18 + (BANNER_FRAMES - self.banner_timer) * 2)
+        pyxel.rect(4, y, w, 18, Col.MAROON)
+        pyxel.rectb(4, y, w, 18, Col.WHITE)
+        font.text(12, y + 3, name, Col.WHITE)

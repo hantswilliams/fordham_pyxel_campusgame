@@ -11,13 +11,13 @@
   "controls": {
     "title": "HOW TO PLAY",
     "rows": [
-      ["ARROWS / WASD", "Move"],
-      ["Z / SPACE / ENTER", "Talk, read, open a card"],
+      ["ARROWS/WASD", "Move"],
+      ["Z/SPACE/ENTER", "Talk, read, open a card"],
       ["X", "Back, skip text"],
       ["M", "Campus map"],
-      ["TAB", "Campus Guide (coming soon)"]
+      ["TAB", "Campus Guide (soon)"]
     ],
     "tip": "Gray = road, tan = walkway. Cross at the crosswalks.",
-    "prompt": "Press Z, then walk through the gate to begin!"
+    "prompt": "Press Z, then walk through the gate!"
   }
 }

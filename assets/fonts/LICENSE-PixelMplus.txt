@@ -1,0 +1,18 @@
+PixelMplus12-Regular.ttf
+========================
+
+PixelMplus by itouhiro, based on M+ BITMAP FONTS.
+Font metadata: "Copyright (C) 2013 M+ Font Project".
+Copied from the font assets that ship with Pyxel's examples
+(https://github.com/kitao/pyxel).
+
+PixelMplus inherits the M+ FONTS license:
+
+    These fonts are free softwares. Unlimited permission is granted to use,
+    copy, and distribute it, with or without modification, either
+    commercially and noncommercially.
+    THESE FONTS ARE PROVIDED "AS IS" WITHOUT WARRANTY.
+
+References:
+- https://spdx.org/licenses/mplus
+- https://forest.watch.impress.co.jp/docs/review/20130829_613180.html

@@ -63,9 +63,9 @@ def draw_train(p: float, f: int, length: int) -> None:
     pyxel.rect(0, 0, SCREEN_W, 20, Col.WHITE)
     pyxel.line(0, 20, SCREEN_W, 20, Col.DARK_BLUE)
     # LED next-stop sign
-    pyxel.rect(50, 4, 116, 12, Col.NAVY)
+    pyxel.rect(6, 4, 116, 12, Col.NAVY)   # left, clear of the "Z: NEXT X: SKIP" hint
     if (f // 20) % 4 != 3:
-        _centered(7, "NEXT STOP: FORDHAM", Col.ORANGE, cx=108)
+        _centered(7, "NEXT STOP: FORDHAM", Col.ORANGE, cx=64)
     off = scroll_offset(p, length, speed=5.0)
     for wx in (12, 134):
         _window(wx, 28 + bob, 110, 46, off)

@@ -61,3 +61,12 @@ def test_intro_content_loads_and_captions_fit():
         assert len(wrap(beat.caption, MAX_CHARS)) <= 3, beat.caption
         assert beat.frames >= len(beat.caption) // 2 + 30, "caption leaves too little time to read"
     assert data.controls_rows
+
+
+def test_controls_card_text_fits():
+    from game.ui.text import BIG_CHAR_W
+    data = load_intro(config.INTRO_FILE)
+    for keys, action in data.controls_rows:
+        assert len(keys) * BIG_CHAR_W <= 88, keys
+        assert 100 + len(action) * BIG_CHAR_W <= 244, action
+    assert len(data.prompt) * BIG_CHAR_W <= 244

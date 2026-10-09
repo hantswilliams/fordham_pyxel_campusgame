@@ -17,6 +17,7 @@ import pyxel  # noqa: E402
 
 from game import config  # noqa: E402
 from game.app import App  # noqa: E402
+from game.scenes.dialogue import paginate  # noqa: E402
 from game.systems.input import Action, ScriptedInput  # noqa: E402
 from game.world.directions import Direction  # noqa: E402
 from game.world.mapdata import load_map  # noqa: E402
@@ -111,7 +112,7 @@ def main() -> None:
     # close the rest of the welcome, then explore from just inside the gate
     walk.pos = (greeter.x, greeter.y + 1)
     segments += [
-        ("12_keating_card", read(len(greeter.lines) - 1)
+        ("12_keating_card", read(len(paginate(greeter.lines)) - 1)
          + walk.to_face(*door["keating_hall"]) + tap(Action.CONFIRM) + wait(5)),
         ("13_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])
          + tap(Action.CONFIRM) + wait(5)),

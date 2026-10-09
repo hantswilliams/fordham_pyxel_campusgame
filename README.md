@@ -35,6 +35,7 @@ uv run python tools/render_map.py  # whole map as one picture: build/map_rose_hi
 | `content/maps/*.json` | Area names, plus everything placed on the map: NPCs and what they say, signs, landmarks, doors |
 | `content/intro.json` | The opening sequence: captions, how long each stays up, and the controls card. Edit the text here |
 | `content/locations.json` | Building cards: name, type, description, what's inside. Will feed the Campus Guide in M3 |
+| `assets/fonts/` | The reading font (PixelMplus 12, free M+ license, decision 0018) |
 | `research/` | The official Rose Hill campus map and notes taken from it |
 | `game/` | Engine code: `scenes/` (title, overworld, dialogue), `world/` (map, movement, camera), `systems/` (input), `gfx/` (placeholder art) |
 | `tests/` | Unit tests plus content checks (`test_content.py`: every map loads, everything is reachable, every door has a building card) |

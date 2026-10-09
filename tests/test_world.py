@@ -128,3 +128,14 @@ def test_auto_npc_greets_once_from_any_side():
     assert obj.name == "OL" and direction == Direction.RIGHT
     assert m.auto_npc_next_to(1, 0, {(2, 0)}) is None  # already greeted
     assert m.auto_npc_next_to(4, 0, set()) is None      # not adjacent
+
+
+# --- text box pagination ---------------------------------------------------------
+
+def test_dialogue_pages_fit_the_text_box():
+    from game.scenes.dialogue import paginate
+    from game.ui.textbox import LINES, MAX_CHARS
+    pages = paginate(["word " * 60, "short"])
+    assert all(len(p) <= LINES for p in pages)
+    assert all(len(line) <= MAX_CHARS for p in pages for line in p)
+    assert pages[-1] == ["short"]  # each source line starts a new page
