@@ -115,6 +115,10 @@ def main() -> None:
          + walk.to_face(*door["keating_hall"]) + tap(Action.CONFIRM) + wait(5)),
         ("13_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])
          + tap(Action.CONFIRM) + wait(5)),
+        # campus map (decisions/0017): open, pick a place, open its card
+        ("14_campus_map", tap(Action.CONFIRM) + wait(4) + tap(Action.MAP) + wait(10)),
+        ("15_map_pin", tap(Action.LEFT) + wait(2) + tap(Action.LEFT) + wait(6)),
+        ("16_map_card", tap(Action.CONFIRM) + wait(5)),
     ]
     script: list[set[Action]] = []
     shot_at: dict[int, str] = {}

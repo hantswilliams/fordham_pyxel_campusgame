@@ -21,6 +21,7 @@ uv run python tools/render_map.py  # whole map as one picture: build/map_rose_hi
 - Arrows or WASD move.
 - **Z**, Space or Enter talks to people and reads signs.
 - **X** skips text, closes a card, or skips the intro.
+- **M** opens the campus map. Arrow keys jump between places, Z shows a place's card, and M or X closes it.
 - Up and Down scroll a long card.
 - Esc quits.
 

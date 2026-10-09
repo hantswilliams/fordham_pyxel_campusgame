@@ -14,6 +14,7 @@
       ["ARROWS / WASD", "Move"],
       ["Z / SPACE / ENTER", "Talk, read, open a card"],
       ["X", "Back, skip text"],
+      ["M", "Campus map"],
       ["TAB", "Campus Guide (coming soon)"]
     ],
     "tip": "Gray = road, tan = walkway. Cross at the crosswalks.",

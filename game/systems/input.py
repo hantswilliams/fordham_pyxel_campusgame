@@ -13,7 +13,8 @@ class Action(Enum):
     RIGHT = auto()
     CONFIRM = auto()
     CANCEL = auto()
-    MENU = auto()
+    MENU = auto()  # Campus Guide (M3)
+    MAP = auto()   # campus map (decisions/0017)
 
 
 BINDINGS: dict[Action, list[int]] = {
@@ -24,7 +25,8 @@ BINDINGS: dict[Action, list[int]] = {
     Action.CONFIRM: [pyxel.KEY_Z, pyxel.KEY_SPACE, pyxel.KEY_RETURN,
                      pyxel.GAMEPAD1_BUTTON_A],
     Action.CANCEL: [pyxel.KEY_X, pyxel.KEY_BACKSPACE, pyxel.GAMEPAD1_BUTTON_B],
-    Action.MENU: [pyxel.KEY_TAB, pyxel.KEY_M, pyxel.GAMEPAD1_BUTTON_START],
+    Action.MENU: [pyxel.KEY_TAB, pyxel.GAMEPAD1_BUTTON_START],
+    Action.MAP: [pyxel.KEY_M, pyxel.GAMEPAD1_BUTTON_BACK],
 }
 
 

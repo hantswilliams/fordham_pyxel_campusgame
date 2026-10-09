@@ -12,6 +12,7 @@ from game.world.mapdata import MapData, MapObject, load_map
 from game.world.movement import GridMover
 from game.world.tiles import TILES, slot_to_pixel
 
+from .campus_map import CampusMapScene
 from .card import BuildingCardScene
 from .dialogue import DialogueScene
 from .base import Scene
@@ -66,6 +67,10 @@ class OverworldScene(Scene):
         if not p.moving:
             if self.input.pressed(Action.CONFIRM):
                 self._interact()
+                return
+            if self.input.pressed(Action.MAP):
+                self.app.scenes.push(CampusMapScene(
+                    self.app, self.map, (p.tile_x, p.tile_y), self.area_name))
                 return
             for action, direction in DIRECTION_ACTIONS:
                 if self.input.held(action):
