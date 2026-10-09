@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09) |
 | **Raised** | 2026-10-08 |
 | **Affects** | `content/`, how orientation staff contribute, how facts stay accurate |
 | **Built provisionally?** | Yes: JSON files in `content/maps/`. M4 adds `locations.json`, `quests.json` and similar. |
@@ -44,7 +44,7 @@ The game is full of facts that change every year: office locations, services, li
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A (B revisited at M4)
+- [x] **Approve**: go with Option A (B revisited at M4)
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

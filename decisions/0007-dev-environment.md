@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09) |
 | **Raised** | 2026-10-08 |
 | **Affects** | `pyproject.toml`, `uv.lock`, how anyone runs the project |
 | **Built provisionally?** | Yes: `pyproject.toml` + `uv.lock`, tested with Python 3.12 and Pyxel 2.9.9. |
@@ -38,7 +38,7 @@ How do we install Python and Pyxel so the project runs the same on every machine
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09) |
 | **Raised** | 2026-10-08 |
 | **Affects** | `game/gfx/`, `assets/`, visual quality, timeline |
 | **Built provisionally?** | Yes: placeholder tiles and characters drawn in code (`game/gfx/placeholder_art.py`). They will be replaced whichever option you choose. |
@@ -38,7 +38,7 @@ Art is usually the slowest part of a game like this. Who makes the real tiles (g
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

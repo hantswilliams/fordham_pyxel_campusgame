@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09) |
 | **Raised** | 2026-10-08 |
 | **Affects** | Backups, collaboration, where the web build is hosted (D-0002) |
 | **Built provisionally?** | No. Git is set up locally in this folder only, with no remote. |
@@ -41,7 +41,7 @@ If you approve, create an empty private repo on GitHub and send me the URL, or a
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

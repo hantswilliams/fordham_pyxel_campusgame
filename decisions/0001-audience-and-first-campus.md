@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09) |
 | **Raised** | 2026-10-08 |
 | **Affects** | All content: maps, NPC dialogue, quests |
 | **Built provisionally?** | Yes, content only. The first map is Edwards Parade at Rose Hill. The engine works for any campus. |
@@ -39,7 +39,7 @@ Who is the player, and which campus do we build first? This decides which buildi
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

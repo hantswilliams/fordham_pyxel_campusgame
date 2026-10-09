@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09) |
 | **Raised** | 2026-10-08 |
 | **Affects** | Every map, and whether players can transfer what they learn to the real campus |
 | **Built provisionally?** | No. The current Edwards Parade map is **illustrative only**: Keating Hall, Dealy Hall and University Church are placed for gameplay, not where they really are. |
@@ -45,7 +45,7 @@ If you can share or point me to a campus map you trust, I'll draft a layout sket
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

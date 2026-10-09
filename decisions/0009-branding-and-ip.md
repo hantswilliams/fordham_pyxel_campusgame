@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09) |
 | **Raised** | 2026-10-08 |
 | **Affects** | Title, art, palette, names, public release |
 | **Built provisionally?** | Yes. The prototype uses the Fordham name, building names and an approximate maroon (`#860038`, in `game/config.py`), and nothing from Pokémon. |
@@ -42,7 +42,7 @@ Two IP questions:
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

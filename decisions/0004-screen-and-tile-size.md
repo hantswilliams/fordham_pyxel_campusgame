@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09) |
 | **Raised** | 2026-10-08 |
 | **Affects** | All art, text box layout, how much campus is visible at once |
 | **Built provisionally?** | Yes: 256×192, 16px tiles, 30 fps. The values are in `game/config.py`. Changing them later means redrawing art, so it's best decided before real art starts. |
@@ -40,7 +40,7 @@ Pyxel draws at a low internal resolution and scales it up to the window. The res
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

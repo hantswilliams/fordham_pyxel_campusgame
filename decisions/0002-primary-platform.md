@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09) |
 | **Raised** | 2026-10-08 |
 | **Affects** | Distribution, controls (keyboard vs touch), save system, testing |
 | **Built provisionally?** | No. Today it runs as a desktop Python program, which is the development setup under any option. |
@@ -41,7 +41,7 @@ How does a student actually get the game? Pyxel can export to a single web page 
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 

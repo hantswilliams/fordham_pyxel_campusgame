@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved, Option A (2026-10-09) |
 | **Raised** | 2026-10-08 |
 | **Affects** | `content/maps/`, `game/world/mapdata.py`, who can edit maps |
 | **Built provisionally?** | Yes: text maps. This deviates from ARCHITECTURE.md, which assumed Tiled from M1. Switching to Tiled later is about a day of work, and the rest of the engine doesn't change. |
@@ -50,7 +50,7 @@ What tool do we use to draw the campus maps?
 
 ## Your decision
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
