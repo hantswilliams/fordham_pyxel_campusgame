@@ -8,7 +8,7 @@
       "name": "Keating Hall",
       "lines": [
         "KEATING HALL\nThe gothic building with the big central tower, one of the best-known sights at Rose Hill.",
-        "(Building interiors open in a later milestone.)"
+        "(Building details are coming soon.)"
       ]
     },
     "2": {
@@ -17,7 +17,7 @@
       "name": "Dealy Hall",
       "lines": [
         "DEALY HALL\nClassrooms and faculty offices.",
-        "(Building interiors open in a later milestone.)"
+        "(Building details are coming soon.)"
       ]
     },
     "3": {
@@ -26,7 +26,7 @@
       "name": "University Church",
       "lines": [
         "UNIVERSITY CHURCH\nFordham is a Jesuit university. Everyone is welcome here, whatever your faith.",
-        "(Building interiors open in a later milestone.)"
+        "(Building details are coming soon.)"
       ]
     },
     "4": {
@@ -44,7 +44,7 @@
       "facing": "left",
       "lines": [
         "Hey, welcome to Fordham! I'm one of your Orientation Leaders.",
-        "This big lawn is Edwards Parade. Keating Hall is the building with the tower up north.",
+        "This big lawn is Edwards Parade. Keating Hall is the big building with the tower.",
         "Look around and talk to people. Press Z when you're facing someone or a sign."
       ]
     },
@@ -63,8 +63,8 @@
       "type": "sign",
       "tile": "sign",
       "lines": [
-        "SOUTH: Walsh Library and McGinley Center",
-        "(These areas are coming in a later milestone.)"
+        "THIS WAY: the rest of Rose Hill",
+        "(The full campus map arrives in the next milestone.)"
       ]
     },
     "8": {

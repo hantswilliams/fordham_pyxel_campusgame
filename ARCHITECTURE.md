@@ -157,18 +157,11 @@ A `tests/test_content.py` check validates the data: every NPC's dialogue exists,
 | Town map | Fly-free **campus map** with discovered pins | Spatial memory |
 | Signs and NPCs | Real tips: "Shuttle to Lincoln Center leaves from…" | Practical knowledge |
 
-**Starter quest, "First Week Checklist":**
-1. Get your ID card.
-2. Find Walsh Library.
-3. Eat at the student center (McGinley).
-4. Visit a wellness or counseling resource.
-5. Visit career services.
-6. Find University Church.
-7. Talk to 3 student-club NPCs on Edwards Parade.
+**Starter quest, "First Week Checklist":** the proposed steps and locations are in [D-0014](decisions/0014-v1-locations-and-checklist.md). Real places are taken from the official campus map ([research notes](research/rose-hill-map-notes.md)).
 
 Finishing the checklist unlocks an end card that links to the real orientation page.
 
-**Suggested Rose Hill zones for v1:** Edwards Parade (hub), Keating Hall, Walsh Library, McGinley Center, University Church, Dealy Hall, Hughes Hall (Gabelli), Rose Hill Gym, and a residence hall. *Have someone from Fordham check which offices sit in which buildings before you write the dialogue.*
+**Outdoors only for v1.** Doors open a *building card* (name, what's inside, official link) instead of an interior. Interiors are deferred, see [D-0012](decisions/0012-building-interiors.md). *Have someone from Fordham check which offices sit in which buildings before the dialogue is final.*
 
 ---
 
@@ -181,7 +174,7 @@ fordham_pyxel_campusgame/
 ├── game/
 │   ├── app.py               # init, SceneManager, global systems
 │   ├── config.py            # screen size, tile size, palette, fps
-│   ├── scenes/              # base.py, title.py, overworld.py, interior.py,
+│   ├── scenes/              # base.py, title.py, overworld.py,
 │   │                        # dialogue.py, guide_menu.py, quiz.py, quest_log.py
 │   ├── world/               # map.py (tmx + objects), entity.py, player.py,
 │   │                        # npc.py, camera.py, triggers.py
@@ -211,15 +204,15 @@ The web build is what students will actually use. Test it on a phone early (touc
 
 | # | Milestone | Done when… |
 |---|---|---|
-| M0 | Setup | `uv` env with Python 3.12 + Pyxel, `pyxel watch` running "hello world," git repo |
-| M1 | **Walk** | One outdoor map (Edwards Parade), grid movement, collision, camera follow. **Prototype done** (text map instead of Tiled, see D-0005; basic dialogue pulled forward from M2) |
-| M2 | **Talk** | NPCs and signs, dialogue box with BDF font, choices |
-| M3 | **Enter** | Door warps into 2–3 interiors (Walsh, McGinley), fade transitions |
-| M4 | **Collect** | `locations.json` drives the Campus Guide menu, discovery zones, save/load |
-| M5 | **Quest** | First Week Checklist, trivia challenges, badges, end card |
-| M6 | **Ship** | Title screen, music/sfx, web build, playtest with 5–10 students, content review by orientation staff |
+| M0 | Setup | `uv` env with Python 3.12 + Pyxel, git repo, decisions log. **Done** |
+| M1 | **Walk** | Grid movement, collision, camera, NPCs, signs, dialogue box on a test map. **Done** (text maps, D-0005) |
+| M2 | **Real Rose Hill** | One continuous, compressed map of Rose Hill built from the official campus map (D-0010, D-0013), with area-name banners as you cross zones, building cards on doors, and the start at the Main Entrance (D-0015) |
+| M3 | **Collect** | `locations.json` drives the Campus Guide menu, discovery zones and save/load |
+| M4 | **Quest** | First Week Checklist (D-0014), trivia challenges, badges, end card |
+| M5 | **Ship** | Title screen, music/sfx, web build, playtest with 5–10 students, content review by orientation staff |
+| (deferred) | Enter | Building interiors, see D-0012 |
 
-Get M1 → M2 → M3 working end to end with placeholder art before investing in real pixel art.
+Get M2 and M3 working with placeholder art before investing in real pixel art (D-0008).
 
 ---
 
