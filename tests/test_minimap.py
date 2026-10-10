@@ -5,7 +5,8 @@ from game.config import Col
 from game.world.directions import Direction
 from game.world.locations import load_locations
 from game.world.mapdata import load_map
-from game.world.minimap import ROOF_COLORS, TILE_COLORS, Pin, build_pins, next_pin, tile_colors
+from game.world.minimap import (BUILDING_PARTS, ROOF_COLORS, TILE_COLORS, Pin, build_pins,
+                                next_pin, tile_colors)
 from game.world.tiles import TILES
 
 M = load_map(config.START_MAP, config.MAPS_DIR)
@@ -13,7 +14,7 @@ LOCATIONS = load_locations(config.LOCATIONS_FILE)
 
 
 def test_every_tile_has_a_map_colour():
-    missing = set(TILES) - set(TILE_COLORS) - {"wall", "window", "door", "banner"}
+    missing = set(TILES) - set(TILE_COLORS) - BUILDING_PARTS
     assert not missing, f"add these tiles to TILE_COLORS: {sorted(missing)}"
 
 
@@ -35,7 +36,8 @@ def test_pins_cover_gates_shuttles_and_guide_places():
     ids = [p.location for p in pins]
     for gate in ("webster_gate", "main_entrance", "bathgate_gate", "clavius_gate"):
         assert gate in ids
-    assert ids.count("ram_van") == 4  # every stop gets its own pin
+    stops = sum(1 for o in M.objects if o.location == "ram_van")
+    assert ids.count("ram_van") == stops >= 6  # every stop gets its own pin
     for loc in LOCATIONS.values():
         if loc.guide:
             assert loc.id in ids, f"Campus Guide place {loc.id} has no pin"

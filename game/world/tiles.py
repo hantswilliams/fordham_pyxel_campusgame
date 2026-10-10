@@ -51,6 +51,16 @@ TILES: dict[str, TileDef] = {
         TileDef("crosswalk_v", 30, False), # crosswalk on a road running up-down
         TileDef("booth", 31, True),        # guard booth at a gate
         TileDef("reader_gate", 32, True),  # closed pedestrian gate with an ID card reader
+        # Walsh Library, facing north onto Walsh Lawn (decisions/0019)
+        TileDef("lib_stone", 33, True),    # light stone façade with piers
+        TileDef("glass_arch", 34, True),   # tall glass entrance arch (a door)
+        TileDef("lib_window", 35, True),   # stone with upper-floor windows
+        TileDef("lib_tower", 36, True),    # the slatted stone tower
+        # Campbell Hall, the newer residence hall (decisions/0019)
+        TileDef("modern_roof", 37, True),
+        TileDef("modern_wall", 38, True),  # dark brick with tall windows
+        TileDef("glass_tower", 39, True),  # glass stair tower
+        TileDef("glass_door", 40, True),   # glass entrance (a door)
     ]
 }
 
@@ -85,7 +95,19 @@ LEGEND: dict[str, str] = {
     "I": "pillar",
     "+": "grave",
     "K": "booth",
+    "S": "lib_stone",
+    "A": "glass_arch",
+    "s": "lib_window",
+    "t": "lib_tower",
+    "Q": "modern_roof",
+    "q": "modern_wall",
+    "g": "glass_tower",
+    "J": "glass_door",
 }
+
+# Tiles that are building entrances: each one needs a door object (with a
+# location) so pressing Z on it opens the building card.
+DOOR_TILES = {"door", "glass_arch", "glass_door"}
 
 SPAWN_CHAR = "@"
 SPAWN_GROUND = "path"

@@ -14,11 +14,17 @@ from .placeholder_art import CHAR_IMAGE_BANK, character_uv
 from game.world.directions import Direction
 
 PLAYER = 0
+CHAR_SCALE = 2           # people are drawn 2x in the intro (decisions/0019 Part 1)
+CHAR_SIZE = 16 * CHAR_SCALE
 
 
 def _char(x: float, y: float, sprite: int, facing: Direction, frame: int = 0) -> None:
+    """Draw a character with its top-left at (x, y), CHAR_SIZE pixels square.
+    Pyxel scales around the centre of the source rectangle, hence the offset."""
     u, v = character_uv(sprite, facing, frame)
-    pyxel.blt(int(x), int(y), CHAR_IMAGE_BANK, u, v, 16, 16, Col.BLACK)
+    off = (CHAR_SIZE - 16) / 2
+    pyxel.blt(int(x + off), int(y + off), CHAR_IMAGE_BANK, u, v, 16, 16, Col.BLACK,
+              scale=CHAR_SCALE)
 
 
 def _walk_frame(f: int) -> int:
@@ -68,20 +74,21 @@ def draw_train(p: float, f: int, length: int) -> None:
         _centered(7, "NEXT STOP: FORDHAM", Col.ORANGE, cx=64)
     off = scroll_offset(p, length, speed=5.0)
     for wx in (12, 134):
-        _window(wx, 28 + bob, 110, 46, off)
-    pyxel.rect(0, 80, SCREEN_W, 3, Col.DARK_BLUE)
-    pyxel.rect(0, 112, SCREEN_W, 30, Col.BROWN)
-    pyxel.line(0, 112, SCREEN_W, 112, Col.NAVY)
+        _window(wx, 26 + bob, 110, 40, off)
+    pyxel.rect(0, 70, SCREEN_W, 3, Col.DARK_BLUE)
+    pyxel.rect(0, 114, SCREEN_W, 30, Col.BROWN)
+    pyxel.line(0, 114, SCREEN_W, 114, Col.NAVY)
     # rows of seats, passengers facing right (direction of travel)
-    seats = [(14, 2), (74, None), (134, PLAYER), (194, 3)]
+    seats = [(6, 2), (70, None), (134, PLAYER), (198, 3)]
     for sx, who in seats:
-        pyxel.rect(sx, 84 + bob, 5, 26, Col.DARK_BLUE)        # seat back
+        pyxel.rect(sx, 72 + bob, 7, 40, Col.DARK_BLUE)        # seat back
+        pyxel.rect(sx + 1, 73 + bob, 2, 38, Col.LIGHT_BLUE)   # highlight
         if who is not None:
-            _char(sx + 6, 86 + bob, who, Direction.RIGHT)
-        pyxel.rect(sx, 101 + bob, 26, 7, Col.DARK_BLUE)        # cushion
-        pyxel.rect(sx + 20, 108 + bob, 3, 4, Col.NAVY)        # leg
+            _char(sx + 6, 72 + bob, who, Direction.RIGHT)
+        pyxel.rect(sx, 100 + bob, 46, 8, Col.DARK_BLUE)       # cushion
+        pyxel.rect(sx + 38, 108 + bob, 4, 6, Col.NAVY)        # leg
     if not moving:
-        _centered(64, "FORDHAM", Col.WHITE, cx=189)
+        _centered(44, "FORDHAM", Col.WHITE, cx=189)
 
 
 # --- 2. Fordham station -------------------------------------------------------
@@ -103,20 +110,20 @@ def draw_station(p: float, f: int, length: int) -> None:
     pyxel.rect(154, 26, 58, 13, Col.DARK_BLUE)
     pyxel.rectb(154, 26, 58, 13, Col.WHITE)
     _centered(30, "FORDHAM", Col.WHITE, cx=183)
-    # the train, stopped at the platform
-    pyxel.rect(-4, 34, 128, 64, Col.WHITE)
-    pyxel.rect(-4, 36, 128, 2, Col.GRAY)
-    pyxel.rect(-4, 76, 128, 4, Col.DARK_BLUE)
-    for wx in (4, 34, 104):
-        pyxel.rect(wx, 46, 22, 16, Col.NAVY)
-        pyxel.line(wx + 2, 48, wx + 8, 48, Col.LIGHT_BLUE)
+    # the train, stopped at the platform (doors sized for 2x people)
+    pyxel.rect(-4, 28, 130, 70, Col.WHITE)
+    pyxel.rect(-4, 30, 130, 2, Col.GRAY)
+    pyxel.rect(-4, 80, 130, 4, Col.DARK_BLUE)
+    for wx in (4, 32, 102):
+        pyxel.rect(wx, 40, 22, 18, Col.NAVY)
+        pyxel.line(wx + 2, 42, wx + 8, 42, Col.LIGHT_BLUE)
     door_open = p > 0.12
-    pyxel.rect(66, 42, 30, 56, Col.NAVY if door_open else Col.GRAY)
+    pyxel.rect(60, 34, 38, 64, Col.NAVY if door_open else Col.GRAY)
     if not door_open:
-        pyxel.line(81, 42, 81, 97, Col.DARK_BLUE)
-        pyxel.rect(70, 48, 8, 14, Col.NAVY)
-        pyxel.rect(84, 48, 8, 14, Col.NAVY)
-    pyxel.rect(-4, 98, 128, 6, Col.NAVY)
+        pyxel.line(79, 34, 79, 97, Col.DARK_BLUE)
+        pyxel.rect(64, 42, 10, 16, Col.NAVY)
+        pyxel.rect(84, 42, 10, 16, Col.NAVY)
+    pyxel.rect(-4, 98, 130, 6, Col.NAVY)
     # platform with the yellow safety edge
     pyxel.rect(0, 104, SCREEN_W, 40, Col.GRAY)
     pyxel.rect(0, 104, SCREEN_W, 2, Col.YELLOW)
@@ -126,21 +133,22 @@ def draw_station(p: float, f: int, length: int) -> None:
         pyxel.line(226, sy, 255, sy, Col.NAVY)
     pyxel.rect(228, 52, 24, 9, Col.DARK_BLUE)
     pyxel.text(232, 54, "EXIT", Col.WHITE)
-    # people
-    _char(170, 90, 4, Direction.LEFT)
+    # people (feet on the platform at y = 104)
+    _char(160, 72, 4, Direction.LEFT)
     if 0.12 < p <= 0.26:
-        _char(73, 82, PLAYER, Direction.DOWN)
+        _char(63, 64, PLAYER, Direction.DOWN)                 # in the doorway
     elif p > 0.26:
         t = min(1.0, (p - 0.26) / 0.66)
-        x = 73 + (236 - 73) * t
-        y = 82 + min(8.0, t * 60)
+        x = 63 + (236 - 63) * t
+        y = 64 + min(8.0, t * 60)                              # step down onto the platform
         if t < 1.0:
             _char(x, y, PLAYER, Direction.RIGHT, _walk_frame(f))
 
 
 # --- 3. Webster Avenue, outside the gate -------------------------------------
 
-GATE_X = 197  # pedestrian gate opening, between the first two pillars
+GATE_X = 192  # pedestrian gate opening (20 px), between the first two pillars
+GATE_W = 20
 
 
 def _pillar(x: int) -> None:
@@ -179,7 +187,7 @@ def draw_street(p: float, f: int, length: int) -> None:
     pyxel.line(96, 72, SCREEN_W, 72, Col.NAVY)
     pyxel.line(96, 96, SCREEN_W, 96, Col.NAVY)
     for fx in range(96, SCREEN_W, 4):
-        if not (GATE_X - 1 < fx < GATE_X + 12):  # keep the pedestrian gate open
+        if not (GATE_X - 1 < fx < GATE_X + GATE_W):  # keep the pedestrian gate open
             pyxel.line(fx, 68, fx, 100, Col.NAVY)
     # maroon Fordham sign on the fence
     pyxel.rect(100, 76, 44, 18, Col.MAROON)
@@ -187,7 +195,7 @@ def draw_street(p: float, f: int, length: int) -> None:
     _centered(79, "FORDHAM", Col.WHITE, cx=122)
     _centered(87, "ROSE HILL", Col.PEACH, cx=122)
     # stone pillars: pedestrian gate between the first two, vehicle gate after
-    for px in (186, GATE_X + 12, 244):
+    for px in (GATE_X - 11, GATE_X + GATE_W, 244):
         _pillar(px)
     # sidewalk (tan, like walkways in the game) and road (gray)
     pyxel.rect(0, 100, SCREEN_W, 18, Col.PEACH)
@@ -205,15 +213,16 @@ def draw_street(p: float, f: int, length: int) -> None:
         pyxel.rect(vx + 18, 115, 22, 6, Col.LIGHT_BLUE)
         pyxel.circ(vx + 9, 128, 3, Col.NAVY)
         pyxel.circ(vx + 35, 128, 3, Col.NAVY)
-    # Bert, the guard, waits by the gate to check IDs
-    _char(GATE_X + 26, 88, 5, Direction.LEFT)
+    # Bert, the guard, waits by the gate to check IDs (feet on the sidewalk)
+    _char(GATE_X + GATE_W + 4, 80, 5, Direction.LEFT)
     # the player walks to the gate, then turns to face it
     t = min(1.0, p / 0.7)
-    x = -16 + (GATE_X - 2 + 16) * t
+    stop_x = GATE_X + GATE_W / 2 - CHAR_SIZE / 2
+    x = -CHAR_SIZE + (stop_x + CHAR_SIZE) * t
     if t < 1.0:
-        _char(x, 88, PLAYER, Direction.RIGHT, _walk_frame(f))
+        _char(x, 80, PLAYER, Direction.RIGHT, _walk_frame(f))
     else:
-        _char(x, 88, PLAYER, Direction.UP)
+        _char(x, 80, PLAYER, Direction.UP)
 
 
 SCENE_ART = {"train": draw_train, "station": draw_station, "street": draw_street}

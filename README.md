@@ -51,6 +51,9 @@ uv run python tools/render_map.py  # whole map as one picture: build/map_rose_hi
 - **Buildings:**
   - Roofs show the building type: `R` academic (slate), `O` residence hall (orange), `G` other campus building (gray), `M` Admission (maroon)
   - Walls: `W` wall, `w` window, `B` banner, `D` door
+  - Walsh Library (faces north): `S` stone, `A` glass-arch entrance, `s` upper windows, `t` tower
+  - Campbell Hall (modern): `Q` flat roof, `q` dark brick wall, `g` glass stair tower, `J` glass entrance
+  - Entrances (`D`, `A`, `J`) each need a door object in the `.json`
 - **Outdoors:** `T` tree, `h` hedge, `b` bench, `L` lamp, `~` water, `F` athletic field, `d` infield dirt, `+` graves
 - **Edges:** `|` campus fence, `I` gate pillar, `K` guard booth, `#` off campus
 - **Player start:** `@`

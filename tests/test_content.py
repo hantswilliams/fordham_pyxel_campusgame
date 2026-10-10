@@ -11,6 +11,7 @@ from game.scenes.card import MAX_CHARS, card_lines
 from game.world.directions import Direction
 from game.world.locations import load_locations
 from game.world.mapdata import load_map
+from game.world.tiles import DOOR_TILES
 
 MAP_IDS = sorted(p.stem for p in config.MAPS_DIR.glob("*.txt"))
 LOCATIONS = load_locations(config.LOCATIONS_FILE)
@@ -85,7 +86,7 @@ def test_every_door_tile_has_a_door_object(game_map):
     m = game_map
     for y, row in enumerate(m.tiles):
         for x, name in enumerate(row):
-            if name == "door":
+            if name in DOOR_TILES:
                 obj = m.object_at(x, y)
                 assert obj and obj.type == "door", f"door tile at {(x, y)} has no door object"
 
@@ -93,7 +94,7 @@ def test_every_door_tile_has_a_door_object(game_map):
 def test_door_objects_sit_on_door_tiles(game_map):
     for obj in game_map.objects:
         if obj.type == "door":
-            assert game_map.tiles[obj.y][obj.x] == "door", f"{obj.location} door at {(obj.x, obj.y)}"
+            assert game_map.tiles[obj.y][obj.x] in DOOR_TILES, f"{obj.location} door at {(obj.x, obj.y)}"
 
 
 def test_object_locations_exist(game_map):
@@ -134,3 +135,24 @@ def test_building_card_fits(loc_id):
     lines = card_lines(LOCATIONS[loc_id])
     assert all(len(s) <= MAX_CHARS for s, _ in lines)
     assert len(lines) <= 16, "card text is very long; trim the blurb"
+
+
+def test_southwest_corner_matches_the_close_up_map():
+    """D-0019: Walsh Library and Larkin open to the north, there's no walkway
+    between the library and the south fence, Campbell opens to the east."""
+    m = load_map(config.START_MAP, config.MAPS_DIR)
+    doors = {}
+    for o in m.objects:
+        if o.type == "door":
+            doors.setdefault(o.location, []).append((o.x, o.y))
+    for loc in ("walsh_library", "larkin_hall"):
+        for x, y in doors[loc]:
+            assert not m.is_blocked(x, y - 1), f"{loc}: entrance at {(x, y)} should open to the north"
+    for x, y in doors["campbell_hall"]:
+        assert not m.is_blocked(x + 1, y), "Campbell's entrance should open east onto Mill River Road"
+    lib = [(o.x, o.y) for o in m.objects if o.location == "walsh_library"]
+    lib_x = range(min(x for x, _ in lib), max(x for x, _ in lib) + 1)
+    fence_y = next(y for y in range(max(y for _, y in lib), m.height) if m.tiles[y][lib_x[0]] == "fence")
+    for y in range(max(y for _, y in lib) + 1, fence_y):
+        for x in lib_x:
+            assert m.tiles[y][x] not in ("path",), f"walkway south of the library at {(x, y)}"

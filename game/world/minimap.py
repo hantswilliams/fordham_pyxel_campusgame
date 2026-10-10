@@ -17,8 +17,12 @@ ROOF_COLORS = {
     "roof_res": Col.ORANGE,        # residence hall
     "roof_other": Col.LIGHT_BLUE,  # other campus building
     "roof_maroon": Col.MAROON,     # Office of Undergraduate Admission
+    "modern_roof": Col.ORANGE,     # Campbell (a residence hall)
+    "lib_tower": Col.LIGHT_BLUE,   # Walsh Library's tower sits on its roof
 }
-BUILDING_PARTS = {"wall", "window", "door", "banner"}
+BUILDING_PARTS = {"wall", "window", "door", "banner",
+                  "lib_stone", "glass_arch", "lib_window",
+                  "modern_wall", "glass_tower", "glass_door"}
 
 TILE_COLORS = {
     "grass": Col.LIME, "flowers": Col.LIME, "lamp": Col.LIME, "bench": Col.PEACH,
@@ -37,25 +41,40 @@ PIN_KINDS = ("transit", "landmark", "building")
 
 def tile_colors(m: MapData) -> list[list[int]]:
     """One colour per tile. Walls, windows and doors take the colour of the
-    roof above them, so each building reads as one solid footprint."""
+    nearest roof of the same building (above, below or beside them, since
+    some buildings face north or east), so each building reads as one
+    solid footprint."""
     out = []
     for y, row in enumerate(m.tiles):
         out_row = []
         for x, name in enumerate(row):
             if name in BUILDING_PARTS:
-                col = Col.GRAY
-                for yy in range(y - 1, max(-1, y - 12), -1):
-                    above = m.tiles[yy][x]
-                    if above in ROOF_COLORS:
-                        col = ROOF_COLORS[above]
-                        break
-                    if above not in BUILDING_PARTS:
-                        break
-                out_row.append(col)
+                out_row.append(_building_color(m, x, y))
             else:
                 out_row.append(TILE_COLORS[name])
         out.append(out_row)
     return out
+
+
+def _building_color(m: MapData, x: int, y: int) -> int:
+    """Breadth-first search through the building's own wall tiles for a roof."""
+    seen = {(x, y)}
+    frontier = [(x, y)]
+    for _ in range(12):
+        nxt = []
+        for cx, cy in frontier:
+            for dx, dy in ((0, -1), (0, 1), (-1, 0), (1, 0)):
+                nx, ny = cx + dx, cy + dy
+                if (nx, ny) in seen or not m.in_bounds(nx, ny):
+                    continue
+                seen.add((nx, ny))
+                t = m.tiles[ny][nx]
+                if t in ROOF_COLORS:
+                    return ROOF_COLORS[t]
+                if t in BUILDING_PARTS:
+                    nxt.append((nx, ny))
+        frontier = nxt
+    return Col.GRAY
 
 
 @dataclass

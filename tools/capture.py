@@ -121,8 +121,13 @@ def main() -> None:
     # close the rest of the welcome, then explore from just inside the gate
     walk.pos = (greeter.x, greeter.y + 1)
     segments += [
-        ("17_keating_card", read(len(paginate(greeter.lines)) - 1)
-         + walk.to_face(*door["keating_hall"]) + tap(Action.CONFIRM) + wait(5)),
+        # Walsh Library's north entrance, seen from the walkway (D-0019)
+        ("17_walsh_library_front", read(len(paginate(greeter.lines)) - 1)
+         + walk.to_face(*door["walsh_library"]) + wait(4)),
+        ("17b_walsh_library_card", tap(Action.CONFIRM) + wait(5)),
+        ("17c_campbell_entrance", tap(Action.CONFIRM) + walk.to_face(*door["campbell_hall"]) + wait(4)),
+        ("17d_keating_card", tap(Action.CONFIRM) + walk.to_face(*door["keating_hall"])
+         + tap(Action.CONFIRM) + wait(5)),
         ("18_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])
          + tap(Action.CONFIRM) + wait(5)),
         # campus map (decisions/0017): open, pick a place, open its card

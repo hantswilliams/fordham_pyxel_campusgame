@@ -304,6 +304,85 @@ def _reader_gate(img, x, y):
     img.pset(x + 14, y + 4, Col.RED)
 
 
+# --- Walsh Library (from research/images/Walsh-1078_lookingSouth.jpg) ----------
+
+def _lib_stone(img, x, y):
+    img.rect(x, y, 16, 16, Col.WHITE)
+    for row in range(0, 16, 4):
+        img.line(x, y + row + 3, x + 15, y + row + 3, Col.GRAY)
+        off = 2 if (row // 4) % 2 == 0 else 6
+        for bx in range(off, 16, 8):
+            img.line(x + bx, y + row, x + bx, y + row + 3, Col.GRAY)
+    img.rect(x, y, 2, 16, Col.GRAY)          # stone piers
+    img.rect(x + 14, y, 2, 16, Col.GRAY)
+
+
+def _glass_arch(img, x, y):
+    _lib_stone(img, x, y)
+    img.rect(x + 3, y + 4, 10, 12, Col.NAVY)
+    img.circ(x + 8, y + 4, 5, Col.NAVY)
+    img.rect(x + 3, y + 5, 10, 11, Col.NAVY)
+    img.line(x + 8, y + 1, x + 8, y + 15, Col.DARK_BLUE)
+    img.line(x + 3, y + 9, x + 12, y + 9, Col.DARK_BLUE)
+    img.line(x + 5, y + 3, x + 5, y + 7, Col.LIGHT_BLUE)   # reflection
+
+
+def _lib_window(img, x, y):
+    _lib_stone(img, x, y)
+    for wx in (3, 9):
+        img.rect(x + wx, y + 3, 4, 8, Col.NAVY)
+        img.line(x + wx, y + 7, x + wx + 3, y + 7, Col.DARK_BLUE)
+        img.line(x + wx - 1, y + 11, x + wx + 4, y + 11, Col.GRAY)
+
+
+def _lib_tower(img, x, y):
+    _roof_colored(Col.GRAY, Col.DARK_BLUE, Col.WHITE)(img, x, y)
+    img.rect(x + 2, y, 12, 16, Col.WHITE)
+    img.rectb(x + 2, y, 12, 16, Col.GRAY)
+    for sx in range(4, 13, 2):
+        img.line(x + sx, y + 2, x + sx, y + 11, Col.NAVY)     # the tower's slats
+    img.rect(x + 2, y + 12, 12, 4, Col.GRAY)
+
+
+# --- Campbell Hall (from research/images/campbell_dorms_facingWest.png) ------
+
+def _modern_roof(img, x, y):
+    """Flat gray panel roof: reads as 'modern', distinct from the slate
+    (academic), orange (residence) and pale gray (campus) roofs."""
+    img.rect(x, y, 16, 16, Col.GRAY)
+    for g in range(0, 16, 8):
+        img.line(x, y + g, x + 15, y + g, Col.NAVY)
+        img.line(x + g, y, x + g, y + 15, Col.NAVY)
+    img.rect(x + 3, y + 3, 2, 2, Col.DARK_BLUE)     # rooftop vents
+    img.rect(x + 11, y + 11, 2, 2, Col.DARK_BLUE)
+
+
+def _modern_wall(img, x, y):
+    img.rect(x, y, 16, 16, Col.NAVY)
+    for row in range(0, 16, 4):
+        img.line(x, y + row, x + 15, y + row, Col.DARK_BLUE)
+    for wx in (2, 7, 12):
+        img.rect(x + wx, y + 2, 2, 11, Col.LIGHT_BLUE)       # tall narrow windows
+        img.pset(x + wx, y + 3, Col.WHITE)
+
+
+def _glass_tower(img, x, y):
+    img.rect(x, y, 16, 16, Col.LIGHT_BLUE)
+    for gx in range(0, 16, 4):
+        img.line(x + gx, y, x + gx, y + 15, Col.WHITE)
+    for gy in range(0, 16, 5):
+        img.line(x, y + gy, x + 15, y + gy, Col.WHITE)
+    img.line(x + 1, y + 1, x + 3, y + 3, Col.CYAN)
+
+
+def _glass_door(img, x, y):
+    _modern_wall(img, x, y)
+    img.rect(x + 2, y + 2, 12, 2, Col.GRAY)                  # canopy
+    img.rect(x + 3, y + 4, 10, 12, Col.CYAN)
+    img.rectb(x + 3, y + 4, 10, 12, Col.WHITE)
+    img.line(x + 8, y + 4, x + 8, y + 15, Col.WHITE)
+
+
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
     "door": _door, "window": _window, "tree": _tree, "flowers": _flowers,
@@ -317,6 +396,9 @@ TILE_ART = {
     "pillar": _pillar, "grave": _grave, "dome": _dome,
     "road": _road, "crosswalk_h": _crosswalk(True), "crosswalk_v": _crosswalk(False),
     "booth": _booth, "reader_gate": _reader_gate,
+    "lib_stone": _lib_stone, "glass_arch": _glass_arch, "lib_window": _lib_window,
+    "lib_tower": _lib_tower, "modern_roof": _modern_roof, "modern_wall": _modern_wall,
+    "glass_tower": _glass_tower, "glass_door": _glass_door,
 }
 
 
