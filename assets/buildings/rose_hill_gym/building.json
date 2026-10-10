@@ -1,5 +1,5 @@
 {
-  "_about": "Rose Hill Gymnasium (decisions/0023, updated), home of Fordham basketball since 1925 and the Gothic end of the complex: a big slate roof with a raised clerestory along the ridge, and a fieldstone gable front with a great pointed window over three wooden doors.",
+  "_about": "Rose Hill Gymnasium (decisions/0023, updated), home of Fordham basketball since 1925 and the Gothic end of the complex, about a third the size of McShane: a slate roof with a raised clerestory along the ridge, and a fieldstone gable front with a pointed window over three wooden doors.",
   "id": "rose_hill_gym",
   "name": "Rose Hill Gymnasium",
   "map": "rose_hill",
@@ -8,23 +8,21 @@
   "status": "in review",
   "origin": [
     50,
-    21
+    23
   ],
   "sprite_offset": [
     0,
     -6
   ],
   "nameplate": [
-    56,
-    75
+    40,
+    42
   ],
   "footprint": [
-    "GGGGGGG",
-    "GGGGGGG",
-    "GGGGGGG",
-    "WwWBWwW",
-    "wWwWwWw",
-    "WwWDWwW"
+    "GGGGG",
+    "WwWWW",
+    "wWwWw",
+    "WwDwW"
   ],
   "sources": [
     "research/images/arial.png (aerial rendering of the complex; owner unknown, tracing reference only)",

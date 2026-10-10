@@ -20,11 +20,11 @@
 ########||||||||||||||||::.....FFFFFFF...:WwWwWwWwWwWwWwWwWw..GGGGGGGGGG||##########################
 ########|.....:===========::...FFFFFFF::::WwWwWwWwWwWwWwWwDW..GGGGGGGGGG..|||#######################
 #######|.OOOOOO:GGGGG:::===X:..FFFFFFF:.GGGGGGGGGGGGGGGGG.:...GGGGGGGGGG.....|||####################
-#######|.OOOOOO.GGGGG++.:==X=::.......:.GGGGGGGGGGGGGGGGG.:...FFFFFFFFFFFFFF...I==##################
-#######|.OOOOOO.GGGGG++.OOOX===:......:.WwWwWwWwWGGGGGGGG.:.T.FFFFFFFFFFFFFF...:==I|################
-######|..WwWwWW.GGGGG++.OOO:====::....:.wWwWwWwWwGWwWBWwW.:...FFFFFFFFFFFFFF...:==:.|||#############
-######|..WwDWwW.WwWwW++.OOO:::====:...:.WwWwWwWwWWwWwWwWw.:...FFFFFFFFFFFFFF..:===:....||###########
-######|....:....WwDWw...WwW:..:====::.:.WwWwWwWwWJWwWDWwW.:...FFFFFFFFFFFFFF..:==:.......|##########
+#######|.OOOOOO.GGGGG++.:==X=::.......:.GGGGGGGGGGWwWwWwW.:...FFFFFFFFFFFFFF...I==##################
+#######|.OOOOOO.GGGGG++.OOOX===:......:.WwWwWwWwWGGGGGG...:.T.FFFFFFFFFFFFFF...:==I|################
+######|..WwWwWW.GGGGG++.OOO:====::....:.wWwWwWwWwGWwWWW.T.:...FFFFFFFFFFFFFF...:==:.|||#############
+######|..WwDWwW.WwWwW++.OOO:::====:...:.WwWwWwWwWWwWwWw...:...FFFFFFFFFFFFFF..:===:....||###########
+######|....:....WwDWw...WwW:..:====::.:.WwWwWwWwWJWwDwW...:...FFFFFFFFFFFFFF..:==:.......|##########
 ######OOO..:......:.....WDW:...::====:::::::::::::::::::::::::FFFFFFFFFFFFFF..:==:PPPPPPPP|#########
 #####|OOO..:OOOOOO:......:::OOOOOOO====::::..............:::::::::::::::::::..:==:PPPPPPPP.|########
 #####|OOO..:OOOOOO:........:OOOOOOO:=======::::...............FFFFFFFF.......:===:PPPPPPPP..|#######

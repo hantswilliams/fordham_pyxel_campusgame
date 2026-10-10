@@ -18,3 +18,4 @@ Found online for this batch (decisions/0023). Photos are tracing references only
 
 - v1, 2026-10-10: first draft drawn in code (`../_style/draw_athletics.py`).
 - v2, 2026-10-10: redrawn as the Gothic end of the complex. It has a big slate roof with a raised clerestory along the ridge, and a fieldstone gable front with the great pointed window over three wooden doors (no more battlements across the front).
+- v3, 2026-10-10: made smaller at your request, about a third of McShane: 5 × 4 tiles at the front corner of the complex, beside the glass link. The door is centred on its front.

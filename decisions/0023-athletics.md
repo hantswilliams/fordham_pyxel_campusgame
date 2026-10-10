@@ -105,3 +105,5 @@ You added `research/images/mcshane_lombardi_oldgym.jpg` and `research/images/ari
 - **Lombardi** is its own block behind both, in two big cream boxes, with white barrel vaults behind McShane. Its entrance is where it pokes out east of the gym, with a path down to the walkway.
 
 The walkways that used to run between the three buildings are gone. Each building keeps its own door, signpost and card.
+
+*Later the same day:* the gym is now about a third the size of McShane, at 5 × 4 tiles. A low cream Lombardi wing fills the space behind it, and the grass to its east is open lawn.

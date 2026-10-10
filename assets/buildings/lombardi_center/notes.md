@@ -18,3 +18,4 @@ Found online for this batch (decisions/0023). Photos are tracing references only
 
 - v1, 2026-10-10: first draft drawn in code (`../_style/draw_athletics.py`).
 - v2, 2026-10-10: joined to McShane and the gym as one complex, from your aerial view (`research/images/arial.png`). It's now 18 × 7 tiles: two big cream boxes plus white barrel vaults behind McShane. Its entrance moved to where it pokes out east of the gym, with a new path down to the walkway.
+- v3, 2026-10-10: a low cream wing now fills the space behind the smaller gym, so the complex stays joined.

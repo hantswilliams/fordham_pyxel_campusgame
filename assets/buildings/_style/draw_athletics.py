@@ -20,7 +20,8 @@ def lombardi():
     fieldhouse and pool, white barrel vaults behind McShane, and the
     Lombardi entrance where the building pokes out east of the gym."""
     im, d, ox, oy = canvas("lombardi_center")
-    W, H = im.size                                                        # 288 x 112
+    W, H = im.size                                                        # 288 x 144
+    H = 112                                     # the main block; the low wing below is drawn last
     # white barrel vaults (behind McShane), running front to back
     for vx in range(0, 128, 16):
         d.rectangle([vx, 4, vx + 15, 92], fill=ST)
@@ -52,6 +53,13 @@ def lombardi():
     door(d, 258, H - 14, 12, 14, frame=NAVY, glass=True)
     outline(d, 128, 0, W - 1, H - 1)
     d.line([207, 0, 207, 79], fill=NAVY)
+    # the low cream wing that joins Lombardi to the back of the gym
+    flat_roof(d, 128, 112, 239, 125, rim=ST_HI, fill=ST_HI, seam=ST)
+    eave(d, 128, 239, 126)
+    ashlar(d, 128, 128, 239, 143, base=ST_HI, joint=ST, step=6)
+    for wx in range(214, 236, 12):                                        # windows beside the gym
+        window(d, wx, 131, 8, 8)
+    outline(d, 128, 112, 239, 143)
     return im
 
 
@@ -143,44 +151,40 @@ def mcshane_card():
 
 
 def gym():
-    """Rose Hill Gym (1925), the old Gothic end of the complex: a big slate
-    roof with its ridge running back from the front, a raised clerestory
-    along the ridge, and the fieldstone gable front (D-0023 update)."""
+    """Rose Hill Gym (1925), the old Gothic end of the complex, about a third
+    the size of McShane: a slate roof with a raised clerestory along the
+    ridge, and the fieldstone gable front (D-0023 update)."""
     im, d, ox, oy = canvas("rose_hill_gym")
-    W, H = im.size                                                        # 112 x 102
+    W, H = im.size                                                        # 80 x 70
     cx = W // 2
-    roof_bottom = oy + 46
-    # the two slopes of the big pitched roof, ridge down the middle
-    slope_left, slope_right = ROOF_SH, ROOF
-    d.rectangle([2, 0, cx - 1, roof_bottom], fill=slope_left)
-    d.rectangle([cx, 0, W - 3, roof_bottom], fill=slope_right)
-    for x in range(6, W - 4, 6):                                          # slate courses
+    roof_bottom = oy + 26
+    d.rectangle([2, 0, cx - 1, roof_bottom], fill=ROOF_SH)                # two slopes, ridge in the middle
+    d.rectangle([cx, 0, W - 3, roof_bottom], fill=ROOF)
+    for x in range(6, W - 4, 5):
         d.line([x, 0, x, roof_bottom], fill=NAVY if x < cx else ROOF_SH)
-    # the raised clerestory monitor along the ridge
-    d.rectangle([cx - 12, 0, cx + 11, roof_bottom - 6], fill=ST_DK)
-    d.rectangle([cx - 10, 2, cx + 9, roof_bottom - 8], fill=ROOF)
-    d.line([cx, 2, cx, roof_bottom - 8], fill=GRAY)
-    d.rectangle([cx - 12, 4, cx - 11, roof_bottom - 8], fill=LBLUE)       # its glass sides
-    d.rectangle([cx + 10, 4, cx + 11, roof_bottom - 8], fill=LBLUE)
+    d.rectangle([cx - 8, 0, cx + 7, roof_bottom - 4], fill=ST_DK)          # raised clerestory
+    d.rectangle([cx - 6, 2, cx + 5, roof_bottom - 6], fill=ROOF)
+    d.line([cx, 2, cx, roof_bottom - 6], fill=GRAY)
+    d.line([cx - 8, 3, cx - 8, roof_bottom - 6], fill=LBLUE)
+    d.line([cx + 7, 3, cx + 7, roof_bottom - 6], fill=LBLUE)
     outline(d, 2, 0, W - 3, roof_bottom)
-    # dark fieldstone front with the pointed gable over the entrance
     front_top = roof_bottom + 2
     fieldstone(d, 0, front_top, W - 1, H - 1, base=ST_SH, light=ST, dark=ST_DK)
-    d.polygon([(cx - 30, front_top + 2), (cx, front_top - 18), (cx + 29, front_top + 2)], fill=ST_SH)
-    d.polygon([(cx - 26, front_top + 2), (cx, front_top - 14), (cx + 25, front_top + 2)], fill=ST_DK)
-    d.line([cx - 30, front_top + 2, cx, front_top - 18], fill=ST_HI)       # stone coping
-    d.line([cx, front_top - 18, cx + 29, front_top + 2], fill=ST_HI)
-    d.line([cx, front_top - 24, cx, front_top - 18], fill=ST_HI)           # stone cross
-    d.line([cx - 2, front_top - 22, cx + 2, front_top - 22], fill=ST_HI)
-    gothic_window(d, cx - 13, front_top - 6, 26, 24)                      # the great window, lit
-    for gy in range(front_top + 8, front_top + 17, 3):
-        d.line([cx - 12, gy, cx + 11, gy], fill=YELLOW)
-    for x0 in (8, 22, 82, 96):                                            # side windows
-        arched_window(d, x0, front_top + 8, 7, 11, frame=ST_HI, glass=NAVY)
-    d.rectangle([0, front_top, 3, H - 1], fill=ST_SH)                     # corner buttresses
-    d.rectangle([W - 4, front_top, W - 1, H - 1], fill=ST_SH)
-    for dx in (cx - 18, cx - 6, cx + 6):                                  # three wooden doors
-        door(d, dx, H - 14, 10, 14, frame=ST_SH, leaf=BROWN)
+    d.polygon([(cx - 22, front_top + 2), (cx, front_top - 14), (cx + 21, front_top + 2)], fill=ST_SH)
+    d.polygon([(cx - 18, front_top + 2), (cx, front_top - 10), (cx + 17, front_top + 2)], fill=ST_DK)
+    d.line([cx - 22, front_top + 2, cx, front_top - 14], fill=ST_HI)       # stone coping
+    d.line([cx, front_top - 14, cx + 21, front_top + 2], fill=ST_HI)
+    d.line([cx, front_top - 19, cx, front_top - 14], fill=ST_HI)           # stone cross
+    d.line([cx - 2, front_top - 17, cx + 2, front_top - 17], fill=ST_HI)
+    gothic_window(d, cx - 9, front_top - 4, 18, 16)                       # the great window, lit
+    for gy in range(front_top + 5, front_top + 11, 3):
+        d.line([cx - 8, gy, cx + 7, gy], fill=YELLOW)
+    for x0 in (6, 67):                                                    # side windows
+        arched_window(d, x0, front_top + 6, 6, 10, frame=ST_HI, glass=NAVY)
+    d.rectangle([0, front_top, 2, H - 1], fill=ST_HI)                     # corner buttresses
+    d.rectangle([W - 3, front_top, W - 1, H - 1], fill=ST_HI)
+    for dx in (cx - 14, cx - 4, cx + 6):                                  # three wooden doors
+        door(d, dx, H - 13, 8, 13, frame=ST_SH, leaf=BROWN)
     outline(d, 0, front_top, W - 1, H - 1)
     return im
 
