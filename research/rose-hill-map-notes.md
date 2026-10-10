@@ -118,6 +118,12 @@ Source: `research/Rose-Hill-Campus-Map.pdf` (Fordham's Rose Hill Campus Map). I 
 | `cunniffee_facing_west.png` | Cunniffe House | Pink stucco wings, a gray center section, and a straight walkway lined with low hedges and short lamp posts |
 | `fasting_east_cunniffee(...)_dealey(...).png` | Cunniffe House, then Dealy Hall behind it | Road with a curb and sidewalk, black lamp posts. Dealy is dark stone with white trim and arched windows |
 | `keating_hall_facing_east.png` | Keating Hall across Edwards Parade | A big open lawn edged with trees, and Keating's tall central tower. The game's Parade now has a tree border |
+| `zoomin_southwest.png` | Close-up of the official map's southwest corner | Campbell between Archer Drive and Mill River Road, Walsh Library's entrances on its north side, no walkway south of it, extra Ram Van stops, "Duane" on the Admission building. See D-0019 |
+| `Walsh-1078_lookingSouth.jpg` | Walsh Library from Walsh Lawn | Light gray stone façade, tall dark glass entrance arches, a slatted tower. The entrance faces north onto the lawn (D-0019) |
+| `campbell_dorms_facingWest.png` | Campbell Hall, the new residence hall | Modern dark brick, a glass stair tower, a stepped plaza with birch trees. Its entrance faces east toward Mill River Road |
+| `dealey_hall_facingEast.png` | Dealy Hall | Dark stone with white trim, and a columned entrance that faces west onto Rose Hill Manor Drive |
+| `rosehill_manor_drive_facingNorth.png` | Rose Hill Manor Drive | Tree-lined road with sidewalks on both sides, and a post-and-rail fence along Edwards Parade |
+| `person_shouldbe_bigger*.png` | Screenshots of the intro | Characters look too small in the train and station scenes (D-0019) |
 
 **For the art pass (D-0008):** buildings are not all gray stone. Cunniffe is pink stucco, McShane is beige with arches, and Dealy is dark stone with white trim. Keating's tower is the campus's signature skyline. Wall variants per building would make them recognizable.
 
