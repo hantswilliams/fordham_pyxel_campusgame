@@ -1,0 +1,33 @@
+{
+  "_about": "Martyrs' Court's west wing (decisions/0024), in the same tan brick.",
+  "id": "martyrs_court_west",
+  "name": "Martyrs' Court (west wing)",
+  "map": "rose_hill",
+  "location": "martyrs_court",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    7,
+    43
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    24,
+    84
+  ],
+  "footprint": [
+    "OOO",
+    "OOO",
+    "OOO",
+    "OOO",
+    "OOO",
+    "WwW",
+    "WDW"
+  ],
+  "sources": [
+    "research/images/web/residence_commons_west.jpg (Wikimedia Commons contact sheet)"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "_about": "Martyrs' Court (decisions/0024), 1950: a long four-storey block of tan brick with a white-stone clock tower and cross over the entrance steps.",
+  "id": "martyrs_court",
+  "name": "Martyrs' Court",
+  "map": "rose_hill",
+  "location": "martyrs_court",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    12,
+    39
+  ],
+  "sprite_offset": [
+    0,
+    -10
+  ],
+  "nameplate": [
+    88,
+    36
+  ],
+  "footprint": [
+    "OOOOOOOOOOO",
+    "OOOOOOOOOOO",
+    "WwWwWwWwWwW",
+    "WwWWwDWwWWw"
+  ],
+  "sources": [
+    "research/images/web/residence_commons_west.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Martyrs'_Court (Martyrs' Court Fordham entrance.jpg CC BY-SA 2.0; Martyrs Court Rose Hill.jpg CC BY-SA 2.0; Fordham University 12.JPG CC BY-SA 3.0)"
+  ]
+}

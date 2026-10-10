@@ -133,3 +133,16 @@ def test_extra_colors_are_few():
     from 8 to 10 for Cunniffe's pink brick. More needs a decision."""
     assert len(config.EXTRA_COLORS) <= 10
     assert len(config.palette()) == 16 + len(config.EXTRA_COLORS)
+
+
+def test_a_place_drawn_as_several_buildings_has_one_card_picture():
+    """Martyrs' Court is two drawn buildings (decisions/0024); its card uses
+    the main block's picture, and each wing gets its own name plaque."""
+    from collections import defaultdict
+    by_loc = defaultdict(list)
+    for b in load_buildings(config.BUILDINGS_DIR):
+        by_loc[b.location].append(b)
+    for loc, bs in by_loc.items():
+        if len(bs) > 1:
+            assert sum(1 for b in bs if b.card_png) == 1, loc
+            assert all(b.nameplate for b in bs), loc

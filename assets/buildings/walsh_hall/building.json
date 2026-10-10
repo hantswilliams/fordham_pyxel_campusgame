@@ -1,0 +1,32 @@
+{
+  "_about": "Walsh Hall (decisions/0024), 1972, thirteen storeys on East 191st Street: brown brick with vertical piers and a glass lobby.",
+  "id": "walsh_hall",
+  "name": "Walsh Hall",
+  "map": "rose_hill",
+  "location": "walsh_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    52,
+    60
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    40,
+    52
+  ],
+  "footprint": [
+    "OOOOO",
+    "OOOOO",
+    "OOOOO",
+    "WwWwW",
+    "WwDWw"
+  ],
+  "sources": [
+    "research/images/web/residence_search_walsh_hall.jpg (image search, reference only)",
+    "https://commons.wikimedia.org/wiki/File:Walsh_Hall,_Fordham_University.jpg (CC BY-SA 2.0)"
+  ]
+}

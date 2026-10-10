@@ -1,0 +1,31 @@
+{
+  "_about": "Tierney Hall (decisions/0024), 1986: three storeys of white panels with a dark brick end wall and big windows.",
+  "id": "tierney_hall",
+  "name": "Tierney Hall",
+  "map": "rose_hill",
+  "location": "tierney_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    76,
+    54
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    40,
+    36
+  ],
+  "footprint": [
+    "OOOOOO",
+    "OOOOOO",
+    "WwWwWW",
+    "WwDWwW"
+  ],
+  "sources": [
+    "research/images/web/residence_search_tierney.jpg (image search, reference only)",
+    "https://commons.wikimedia.org/wiki/Category:Tierney_Hall (Tierney Hall, Fordham University.jpg CC BY-SA 4.0)"
+  ]
+}

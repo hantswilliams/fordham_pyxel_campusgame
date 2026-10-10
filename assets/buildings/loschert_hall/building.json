@@ -1,0 +1,33 @@
+{
+  "_about": "Loschert Hall (decisions/0024), formally Alumni Court North (1987): pinkish-tan brick with a stone coping and a tall glass bay under a pointed stone gable over the entrance.",
+  "id": "loschert_hall",
+  "name": "Loschert Hall",
+  "map": "rose_hill",
+  "location": "loschert_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    9,
+    21
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    40,
+    52
+  ],
+  "footprint": [
+    "OOOOOO",
+    "OOOOOO",
+    "OOOOOO",
+    "WwWwWW",
+    "WwDWwW"
+  ],
+  "sources": [
+    "research/images/web/residence_commons_west.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Loschert_Hall (Loschert Hall, Fordham.jpg CC BY-SA 4.0)",
+    "research/images/web/residence_search_alumni_court_south.jpg (image search, reference only)"
+  ]
+}

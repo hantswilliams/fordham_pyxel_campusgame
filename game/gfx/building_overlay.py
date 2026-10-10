@@ -56,7 +56,9 @@ def plaque_spot(m: MapData, loc: str, group: list[tuple[int, int]]) -> tuple[int
     """(centre x, top y, room) in map pixels for a door group's plaque;
     `room` is the width of wall it has to fit on."""
     for b in m.buildings:
-        if b.location == loc and b.nameplate:
+        # a place can span several drawn buildings (Martyrs' Court's wings):
+        # use the one this door group belongs to
+        if b.location == loc and b.nameplate and tuple(group[0]) in b.entrances():
             ox, oy = b.origin
             return ox * TILE + b.nameplate[0], oy * TILE + b.nameplate[1], b.size[0] * TILE
     y = group[0][1]

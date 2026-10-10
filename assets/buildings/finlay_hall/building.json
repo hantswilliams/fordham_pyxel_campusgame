@@ -1,0 +1,32 @@
+{
+  "_about": "Finlay Hall (decisions/0024), 1913, once the medical school: dark fieldstone, a green copper mansard roof with dormers, and a limestone Gothic entrance.",
+  "id": "finlay_hall",
+  "name": "Finlay Hall",
+  "map": "rose_hill",
+  "location": "finlay_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    42,
+    60
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    24,
+    52
+  ],
+  "footprint": [
+    "OOOO",
+    "OOOO",
+    "OOOO",
+    "WwWW",
+    "WDWW"
+  ],
+  "sources": [
+    "research/images/web/residence_search_finlay_walsh.jpg (image search, reference only)",
+    "https://commons.wikimedia.org/wiki/Category:Finlay_Hall (Fordham U south jeh.jpg CC0)"
+  ]
+}

@@ -20,7 +20,11 @@ class App:
         self.input = input_source or PyxelInput()
         self.locations = load_locations(config.LOCATIONS_FILE)
         # drawn buildings by location id, for card pictures (decisions/0020)
-        self.buildings = {b.location: b for b in load_buildings(config.BUILDINGS_DIR)}
+        # (a place drawn as several buildings uses the one with a card picture)
+        self.buildings = {}
+        for b in load_buildings(config.BUILDINGS_DIR):
+            if b.location not in self.buildings or not self.buildings[b.location].card_png:
+                self.buildings[b.location] = b
         self.scenes = SceneManager()
         self.scenes.push(start_scene(self) if start_scene else TitleScene(self))
 

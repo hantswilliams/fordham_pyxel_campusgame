@@ -267,7 +267,7 @@
     "name": "O'Hare Hall",
     "short_name": "O'HARE",
     "kind": "residence",
-    "blurb": "Residence hall on the east side of campus, near the Main Entrance. It also houses important student services.",
+    "blurb": "Opened in 2000 and named for former president Joseph A. O'Hare, S.J.: three wings for up to 560 upperclass students, on the east side near the Main Entrance. It also houses important student services.",
     "inside": [
       "Health Center",
       "Counseling Center",
@@ -281,7 +281,7 @@
     "name": "Tierney Hall",
     "short_name": "TIERNEY",
     "kind": "residence",
-    "blurb": "Residence hall next to O'Hare Hall on the east side of campus.",
+    "blurb": "Three-storey upperclass hall next to O'Hare, built in 1986 as Sesquicentennial Hall.",
     "inside": [
       "Student rooms"
     ]
@@ -290,7 +290,7 @@
     "name": "Queen's Court",
     "short_name": "QUEEN'S CT",
     "kind": "residence",
-    "blurb": "A cluster of residence halls on the west side of campus: Bishop's, St. John's, St. Robert's and Queen's Court.",
+    "blurb": "Three Collegiate Gothic halls (Bishops', St. John's and St. Robert's), joined as Queen's Court in 1940 round a garden courtyard with a statue. Home to a first-year wellness community.",
     "inside": [
       "Student rooms",
       "Dining"
@@ -301,7 +301,7 @@
     "name": "Alumni Court South",
     "short_name": "ALUMNI CT",
     "kind": "residence",
-    "blurb": "Residence hall on the far west side of campus, by the Alumni Court circle and a Ram Van shuttle stop.",
+    "blurb": "One of the biggest first-year halls, on the far west side near the library and a Ram Van stop. Loschert Hall is its twin.",
     "inside": [
       "Student rooms"
     ]
@@ -310,7 +310,7 @@
     "name": "Martyrs' Court",
     "short_name": "MARTYRS CT",
     "kind": "residence",
-    "blurb": "L-shaped residence hall wrapping around Martyrs' Lawn.",
+    "blurb": "Built in 1950 and named for Jesuit martyrs including St. Isaac Jogues. A first-year hall with study commons on every floor; its front steps are a favourite place to hang out.",
     "inside": [
       "Student rooms"
     ]
@@ -319,7 +319,7 @@
     "name": "Loschert Hall",
     "short_name": "LOSCHERT",
     "kind": "residence",
-    "blurb": "Residence hall in the northwest corner of campus, next to University Church.",
+    "blurb": "First-year hall, formally Alumni Court North (1987), named for alumnus William J. Loschert. Its twin, Alumni Court South, is right next door.",
     "inside": [
       "Student rooms"
     ]
@@ -328,7 +328,7 @@
     "name": "Faber Hall",
     "short_name": "FABER",
     "kind": "residence",
-    "blurb": "Residence hall on Bellarmine Road, next to Loyola Hall.",
+    "blurb": "First-year hall: the seven-storey 1963 addition to Loyola Hall, first built as a Jesuit residence. The modern languages department is here too.",
     "inside": [
       "Student rooms"
     ]
@@ -337,7 +337,7 @@
     "name": "Loyola Hall",
     "short_name": "LOYOLA",
     "kind": "residence",
-    "blurb": "Residence hall next to Faber Hall, near Bellarmine Road and Constitution Row.",
+    "blurb": "Built in 1936 for Jesuit faculty and named for St. Ignatius Loyola. Now a first-year hall, home to the Manresa program.",
     "inside": [
       "Student rooms"
     ],
@@ -347,7 +347,7 @@
     "name": "Conley & Salice Halls",
     "short_name": "CONLEY",
     "kind": "residence",
-    "blurb": "Two residence halls along Mill River Road on the far west side of campus.",
+    "blurb": "Two upperclass halls on Mill River Road, opened in 2009 with Campbell Hall.",
     "inside": [
       "Student rooms"
     ]
@@ -367,7 +367,7 @@
     "name": "Finlay Hall",
     "short_name": "FINLAY",
     "kind": "residence",
-    "blurb": "Residence hall on the south side of campus, on Clavius Way near the Bathgate Avenue entrance.",
+    "blurb": "Built in 1913 for Fordham's medical school, later a science building, now a hall mostly for sophomores. On Clavius Way near the Bathgate Avenue entrance.",
     "inside": [
       "Student rooms"
     ],
@@ -377,7 +377,7 @@
     "name": "Walsh Hall",
     "short_name": "WALSH HALL",
     "kind": "residence",
-    "blurb": "Residence hall on the south side of campus. Not the library! That's the Walsh Family Library in the southwest corner.",
+    "blurb": "Thirteen storeys on East 191st Street, opened in 1972 (first known as the \"555\"), with apartments for upperclass students. Not the library! That's the Walsh Family Library in the southwest corner.",
     "inside": [
       "Student rooms"
     ]

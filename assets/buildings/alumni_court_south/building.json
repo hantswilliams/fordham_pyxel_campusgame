@@ -1,0 +1,34 @@
+{
+  "_about": "Alumni Court South (decisions/0024): Loschert's twin, in the same pinkish-tan brick with the gabled glass entrance bay.",
+  "id": "alumni_court_south",
+  "name": "Alumni Court South",
+  "map": "rose_hill",
+  "location": "alumni_court_south",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    6,
+    27
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    24,
+    100
+  ],
+  "footprint": [
+    "OOO",
+    "OOO",
+    "OOO",
+    "OOO",
+    "OOO",
+    "OOO",
+    "WwW",
+    "WDW"
+  ],
+  "sources": [
+    "research/images/web/residence_search_alumni_court_south.jpg (image search, reference only)"
+  ]
+}

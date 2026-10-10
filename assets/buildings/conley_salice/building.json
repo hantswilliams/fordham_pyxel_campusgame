@@ -1,0 +1,36 @@
+{
+  "_about": "Conley and Salice Halls (decisions/0024), 2009, built with Campbell Hall: charcoal brick, a glass stair tower and a cast-stone base.",
+  "id": "conley_salice",
+  "name": "Conley & Salice Halls",
+  "map": "rose_hill",
+  "location": "conley_salice",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    3,
+    42
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    24,
+    116
+  ],
+  "footprint": [
+    "OOO",
+    "OOO",
+    "OOO",
+    "OOO",
+    "OOO",
+    "OOO",
+    "OOO",
+    "WwW",
+    "WDW"
+  ],
+  "sources": [
+    "research/images/web/residence_commons_west.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Salice_Hall_(Fordham) (Fordham University New Dorm.JPG CC BY-SA 3.0; Campbell and Salice Halls (4523251308).jpg CC BY-SA 2.0)"
+  ]
+}

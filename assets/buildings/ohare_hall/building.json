@@ -1,0 +1,35 @@
+{
+  "_about": "O'Hare Hall (decisions/0024), 2000: three wings of dark fieldstone with limestone piers and big gridded windows, two stone entrance bays.",
+  "id": "ohare_hall",
+  "name": "O'Hare Hall",
+  "map": "rose_hill",
+  "location": "ohare_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    77,
+    46
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    80,
+    84
+  ],
+  "footprint": [
+    "OOOOOOOOO",
+    "OOOOOOOOO",
+    "OOOOOOOOO",
+    "OOOOOOOOO",
+    "OOOOOOOOO",
+    "WwWwWwWwW",
+    "WwWDwWDwW"
+  ],
+  "sources": [
+    "research/images/web/residence_commons_east.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/File:O'Hare_Hall_dormitory.jpg (CC BY-SA 2.0)",
+    "https://commons.wikimedia.org/wiki/File:O'Hare_Hall_at_Fordham_University.jpg (CC BY-SA 2.0)"
+  ]
+}

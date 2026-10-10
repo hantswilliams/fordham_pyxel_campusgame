@@ -1,0 +1,31 @@
+{
+  "_about": "Loyola Hall (decisions/0024), 1936: Collegiate Gothic in gray stone with battlements and a taller central entrance bay with a pointed arch.",
+  "id": "loyola_hall",
+  "name": "Loyola Hall",
+  "map": "rose_hill",
+  "location": "loyola_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    28,
+    28
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    56,
+    36
+  ],
+  "footprint": [
+    "OOOOOOO",
+    "OOOOOOO",
+    "WwWwWwW",
+    "WwWDwWW"
+  ],
+  "sources": [
+    "research/images/web/residence_commons_west.jpg and residence_commons_east.jpg (Wikimedia Commons contact sheets)",
+    "https://commons.wikimedia.org/wiki/Category:Loyola_Hall_(Fordham) (Loyola Hall, Fordham University.png CC BY-SA 4.0; Loyola Hall Fordham postcard 1937.jpg public domain)"
+  ]
+}

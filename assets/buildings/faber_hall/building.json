@@ -1,0 +1,32 @@
+{
+  "_about": "Faber Hall (decisions/0024), the 1963 seven-storey addition to Loyola Hall: pale tan brick in horizontal bands.",
+  "id": "faber_hall",
+  "name": "Faber Hall",
+  "map": "rose_hill",
+  "location": "faber_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    24,
+    23
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    24,
+    52
+  ],
+  "footprint": [
+    "OOO",
+    "OOO",
+    "OOO",
+    "WwW",
+    "WDW"
+  ],
+  "sources": [
+    "research/images/web/residence_commons_west.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Faber_Hall (Faber Hall, Fordham University.jpg CC BY-SA 4.0)"
+  ]
+}
