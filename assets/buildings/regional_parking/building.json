@@ -1,0 +1,36 @@
+{
+  "_about": "Fordham Regional Parking Facility (decisions/0026): a concrete garage. The top deck has parked cars, light poles, a striped down ramp along the east side and a stair / elevator tower; the front shows open parking levels with cars inside, a glass stair tower, the pedestrian doors and the car entrance with its barrier arm.",
+  "id": "regional_parking",
+  "name": "Fordham Regional Parking Facility",
+  "map": "rose_hill",
+  "location": "regional_parking",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    89,
+    45
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    64,
+    118
+  ],
+  "footprint": [
+    "GGGGGGGGG",
+    "GGGGGGGGG",
+    "GGGGGGGGG",
+    "GGGGGGGGG",
+    "GGGGGGGGG",
+    "GGGGGGGGG",
+    "GGGGGGGGG",
+    "GGGGGGGGG",
+    "WwWwWwWwW",
+    "WwWDDWWwW"
+  ],
+  "sources": [
+    "Drawn from the official campus map (research/Rose-Hill-Campus-Map.pdf) and the usual look of a parking garage; no photo of this garage was found (decisions/0025)"
+  ]
+}

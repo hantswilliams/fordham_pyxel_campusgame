@@ -398,6 +398,14 @@
       "Ram Van pick-up / drop-off"
     ]
   },
+  "parking_lot": {
+    "name": "Parking Lot",
+    "kind": "transit",
+    "blurb": "Surface parking just inside the Main Entrance, off Xavier Way. Parking on campus needs a Fordham permit, and visitors check in at the gate.",
+    "inside": [
+      "Parking"
+    ]
+  },
   "main_entrance": {
     "name": "Main Entrance",
     "kind": "transit",

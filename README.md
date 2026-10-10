@@ -50,7 +50,7 @@ uv run python tools/building_gallery.py  # review page for drawn buildings: buil
 
 `content/maps/rose_hill.txt` is the map. Each character is one 16×16 tile:
 
-- **Ground:** `.` grass, `:` walkway or sidewalk, `,` stone-paved plaza, `*` flowers, `P` parking
+- **Ground:** `.` grass, `:` walkway or sidewalk, `,` stone-paved plaza, `*` flowers, `P` parking, `c` a parked car (solid; decision 0026)
 - **Roads** (decision 0016): `=` road, `X` crosswalk on a left-right road, `Y` crosswalk on an up-down road
 - **Buildings:**
   - Roofs show the building type: `R` academic (slate), `O` residence hall (orange), `G` other campus building (gray), `M` Admission (maroon)

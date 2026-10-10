@@ -405,6 +405,16 @@ def _plaza(img, x, y):
     img.pset(x + 11, y + 12, Col.STONE)
 
 
+def _car(img, x, y):
+    """A parked car seen from above, in a parking stall."""
+    _parking(img, x, y)
+    img.rect(x + 4, y + 2, 9, 13, Col.NAVY)
+    img.rect(x + 5, y + 2, 7, 12, Col.RED)
+    img.rect(x + 5, y + 4, 7, 2, Col.LIGHT_BLUE)       # windscreen
+    img.rect(x + 5, y + 11, 7, 1, Col.LIGHT_BLUE)      # rear window
+    img.rect(x + 6, y + 6, 5, 5, Col.MAROON)           # roof
+
+
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
     "door": _door, "window": _window, "tree": _tree, "flowers": _flowers,
@@ -421,7 +431,7 @@ TILE_ART = {
     "lib_stone": _lib_stone, "glass_arch": _glass_arch, "lib_window": _lib_window,
     "lib_tower": _lib_tower, "modern_roof": _modern_roof, "modern_wall": _modern_wall,
     "glass_tower": _glass_tower, "glass_door": _glass_door,
-    "plaza": _plaza,
+    "plaza": _plaza, "car": _car,
 }
 
 

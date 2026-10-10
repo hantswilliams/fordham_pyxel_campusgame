@@ -1,0 +1,35 @@
+{
+  "_about": "The surface parking lot by the Main Entrance (decisions/0026), drawn as a landmark: asphalt, painted stalls, parked cars facing the drive aisles, and a parking sign by the entrance. Car cells use the solid 'c' tile; the aisles and empty stalls stay walkable.",
+  "id": "parking_lot",
+  "name": "Parking Lot",
+  "map": "rose_hill",
+  "location": "parking_lot",
+  "faces": "south",
+  "status": "in review",
+  "landmark": true,
+  "origin": [
+    82,
+    27
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "footprint": [
+    "ccPccccP",
+    "        ",
+    "        ",
+    "cPcccPcc",
+    "ccccPccP",
+    "        ",
+    "        ",
+    "PcccPccc",
+    "ccPcccPc",
+    "        ",
+    "        ",
+    "cccPPccc"
+  ],
+  "sources": [
+    "Drawn from the official campus map's Parking Area A (research/Rose-Hill-Campus-Map.pdf); no photo used"
+  ]
+}

@@ -50,5 +50,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0023](0023-athletics.md) | Athletics, batch 1 of the photo pass: 1 fields and stadium as drawn landmarks, 2 gym, McShane and Lombardi drawn, 3 building cards | All Option A (self-approved at your request; review at the end) | Yes | Approved |
 | [0024](0024-residence-halls.md) | Residence halls, batch 2 of the photo pass: 1 eleven halls drawn on their existing footprints, 2 a place drawn as several buildings (Martyrs' Court), 3 cards | All Option A (self-approved at your request; review at the end) | Yes | Approved |
 | [0025](0025-academic-buildings.md) | Academic and other buildings, batch 3 of the photo pass: 1 eight buildings drawn on their existing footprints, 2 leave Faculty Memorial Hall, the parking garage and the observatory tile until there are photos, 3 cards | All Option A (self-approved at your request; review at the end) | Yes | Approved |
+| [0026](0026-parking-cars.md) | Parking: 1 a solid `c` parked-car tile for the lot, 2 the garage drawn with cars, ramp and stair towers, 3 a Parking Lot card | All Option A (built at your request) | Yes | Built, for your review |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

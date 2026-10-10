@@ -257,3 +257,36 @@ def diamond(d, x0, y0, w, h, infield=ORANGE, base_path=PEACH, track=MAROON, logo
     if logo:
         fordham_f(d, cx, home - r // 2 - s // 2, 4)
     return cx, home
+
+
+# ---------------------------------------------------------------- parking
+CAR_ROOF = {}  # body colour -> roof colour, filled in below
+
+
+def car(d, x, y, body, nose="up"):
+    """A parked car seen from above, 9 x 14 px, nose 'up' or 'down'."""
+    roof = CAR_ROOF.get(body, body)
+    d.rectangle([x, y, x + 8, y + 13], fill=NAVY)
+    d.rectangle([x + 1, y + 1, x + 7, y + 12], fill=body)
+    front, back = (y + 3, y + 10) if nose == "up" else (y + 9, y + 2)
+    d.rectangle([x + 1, front, x + 7, front + 1], fill=LBLUE)         # windscreen
+    d.line([x + 1, back, x + 7, back], fill=LBLUE)                     # rear window
+    top = min(front, back) + 2
+    d.rectangle([x + 2, top, x + 6, top + 4], fill=roof)
+    lights = y + 1 if nose == "up" else y + 12
+    d.point([x + 1, lights], fill=YELLOW)
+    d.point([x + 7, lights], fill=YELLOW)
+
+
+CAR_ROOF.update({RED: MAROON, MAROON: NAVY, WHITE: ST_HI, GRAY: ROOF_SH, DBLUE: NAVY,
+                 YELLOW: ORANGE, ST_DK: BRICK_DK, LBLUE: CYAN, GREEN: NAVY, ST_HI: ST})
+CAR_COLORS = (RED, WHITE, GRAY, DBLUE, MAROON, ST_DK, YELLOW, WHITE, LBLUE, GREEN, GRAY, ST_HI)
+
+
+def p_sign(d, x, y, s=9):
+    """The blue square parking sign with a white P."""
+    d.rectangle([x, y, x + s - 1, y + s - 1], fill=WHITE)
+    d.rectangle([x + 1, y + 1, x + s - 2, y + s - 2], fill=DBLUE)
+    px = x + s // 2 - 2
+    d.line([px, y + 2, px, y + s - 3], fill=WHITE)
+    d.rectangle([px, y + 2, px + 3, y + 4], outline=WHITE)

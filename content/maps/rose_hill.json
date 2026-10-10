@@ -115,22 +115,6 @@
   "objects": [
     {
       "at": [
-        92,
-        54
-      ],
-      "type": "door",
-      "location": "regional_parking"
-    },
-    {
-      "at": [
-        93,
-        54
-      ],
-      "type": "door",
-      "location": "regional_parking"
-    },
-    {
-      "at": [
         87,
         64
       ],
@@ -190,6 +174,15 @@
       "type": "sign",
       "tile": "dome",
       "location": "seismic_observatory"
+    },
+    {
+      "at": [
+        82,
+        34
+      ],
+      "type": "sign",
+      "tile": "parking",
+      "location": "parking_lot"
     },
     {
       "at": [
