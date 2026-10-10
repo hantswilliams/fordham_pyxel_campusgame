@@ -5,7 +5,9 @@ choose -> tapping (short animation) -> granted -> done
 
 from dataclasses import dataclass
 
-CHOICES = ["Fordham ID card", "Phone (Apple or Google Wallet)"]
+# Phone first: most students tap in with the ID in their phone wallet.
+PHONE, CARD = 0, 1
+CHOICES = ["Phone (Apple or Google Wallet)", "Fordham ID card"]
 TAP_FRAMES = 45        # moving the card/phone to the reader
 BEEP_AT = 30           # reader light turns green on this frame of the tap
 

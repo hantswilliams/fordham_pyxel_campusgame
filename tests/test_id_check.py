@@ -4,12 +4,13 @@ from game.systems.id_check import BEEP_AT, CHOICES, TAP_FRAMES, IdCheck
 from game.world.mapdata import parse_map
 
 
-def test_choose_wraps_between_card_and_phone():
+def test_phone_comes_first_then_the_card():
     c = IdCheck()
-    c.move(1)
     assert CHOICES[c.choice].startswith("Phone")
     c.move(1)
     assert CHOICES[c.choice].startswith("Fordham ID")
+    c.move(1)
+    assert CHOICES[c.choice].startswith("Phone")
 
 
 def test_tap_turns_the_light_green_then_grants():

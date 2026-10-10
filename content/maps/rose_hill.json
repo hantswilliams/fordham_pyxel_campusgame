@@ -112,7 +112,7 @@
       "open_tile": "path",
       "lines": [
         "Hi there, welcome! I'm Bert. I look after the Webster Avenue gate.",
-        "Before you head in, I need to see your Fordham ID. Tap your ID card on the reader, or your phone if your ID is in Apple Wallet or Google Wallet."
+        "Before you head in, I need to see your Fordham ID. Tap your phone on the reader if your ID is in Apple Wallet or Google Wallet, or tap your ID card."
       ],
       "after_lines": [
         "Perfect, you're all set! Keep your ID handy. You'll tap in like that whenever you come through this gate.",
@@ -141,7 +141,7 @@
       "sprite": 5,
       "facing": "right",
       "lines": [
-        "I'm Bert. I check IDs here at the Webster Avenue gate, so have your Fordham ID card or your phone wallet ready when you come in.",
+        "I'm Bert. I check IDs here at the Webster Avenue gate, so have your phone wallet or your Fordham ID card ready when you come in.",
         "Have a good one!"
       ]
     },

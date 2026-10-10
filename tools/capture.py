@@ -111,7 +111,7 @@ def main() -> None:
         # Bert's ID check: walking into the closed gate starts it
         ("10_bert_asks_for_id", [{Action.UP}] + wait(150)),
         ("11_id_choose", read(len(paginate(gate.lines)))),
-        ("12_id_phone_beep", tap(Action.DOWN) + wait(4) + tap(Action.CONFIRM) + wait(38)),
+        ("12_id_phone_beep", tap(Action.CONFIRM) + wait(38)),      # phone is the first choice
         ("13_access_granted", wait(20)),
         ("14_bert_all_set", tap(Action.CONFIRM) + wait(150)),
         # through the gate: welcome banner, then the Orientation Leader

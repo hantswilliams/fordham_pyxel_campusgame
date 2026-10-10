@@ -4,7 +4,7 @@
 import pyxel
 
 from game.config import SCREEN_H, SCREEN_W, Col
-from game.systems.id_check import CHOICES, IdCheck
+from game.systems.id_check import CARD, CHOICES, IdCheck
 from game.systems.input import Action
 from game.ui import font
 
@@ -87,19 +87,20 @@ class IdCheckScene(Scene):
 
         if c.state == "choose":
             font.text(x + 8, y + 26, "How will you tap in?", Col.BLACK)
+            ly = y + 46
             for i, label in enumerate(CHOICES):
-                ly = y + 50 + i * 22
                 if i == c.choice:
                     pyxel.tri(x + 8, ly + 2, x + 8, ly + 10, x + 13, ly + 6, Col.MAROON)
                 lines = [label] if len(label) <= 16 else label.replace(" (", "\n(").split("\n")
                 for j, line in enumerate(lines):
                     font.text(x + 18, ly + j * 12, line, Col.BLACK if i == c.choice else Col.GRAY)
+                ly += len(lines) * 12 + 8            # a gap between options, however many lines
             pyxel.text(x + 8, y + h - 9, "UP/DOWN: CHOOSE   Z: TAP", Col.DARK_BLUE)
         else:
             # slide the card/phone from the left to the reader
             start_x, end_x = x + 14, READER_X - 30
             px = start_x + (end_x - start_x) * c.tap_progress
-            if c.choice == 0:
+            if c.choice == CARD:
                 _draw_card(px, READER_Y + 10)
             else:
                 _draw_phone(px + 8, READER_Y + 2)
