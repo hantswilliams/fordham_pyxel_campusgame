@@ -83,7 +83,12 @@ def draw_people(img, m, b) -> None:
         if o.type == "npc":
             u, v = character_uv(o.sprite, o.facing, 0)
             img.blt(o.x * TILE, o.y * TILE - 2, CHAR_IMAGE_BANK, u, v, TILE, TILE, 0)
-    ex, ey = b.entrances()[0]
+    if not b.entrances():                    # a landmark: stand just south of it
+        cells = list(b.cells())
+        ex = min(x for x, _, _ in cells)
+        ey = max(y for _, y, _ in cells)
+    else:
+        ex, ey = b.entrances()[0]
     for d in Direction:
         px, py = ex - d.dx, ey - d.dy
         if not m.is_blocked(px, py):
@@ -179,7 +184,7 @@ def building_section(b, locations) -> str:
         panels.append(panel("Card picture", f'<img class="px" src="{data_uri(b.card_png)}" alt="card.png">',
                             "card.png · shown at the top of the building card", wide=True))
     panels.append(panel("Footprint", footprint_html(b),
-                        f"Origin tile {b.origin[0]}, {b.origin[1]} on {b.map_id} · {len(b.entrances())} entrances"))
+                        f"Origin tile {b.origin[0]}, {b.origin[1]} on {b.map_id} · " + ("landmark" if b.landmark else f"{len(b.entrances())} entrances")))
 
     loc = locations.get(b.location)
     blurb = html.escape(loc.blurb) if loc else ""

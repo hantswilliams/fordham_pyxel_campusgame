@@ -273,7 +273,7 @@ Should we add a small set of extra colors to the game's palette?
 *Update 2026-10-10: D-0021 redrew all three in a shared house style with south-facing doors (v2). Keating Hall followed as the fourth drawn building, in the house style from the start.*
 
 1. Review the library, Campbell and Dealy in the gallery. Once each one looks right, set its status to `approved` in its `building.json` (or tell me what to change).
-2. Pick the next building to convert (McShane or Cunniffe).
+2. Pick the next building to convert (McShane, O'Hare or the University Church). Cunniffe House and Hughes Hall were done in D-0022.
 3. The palette is now at 8 extra colors. Any further colors (for example a pink for Cunniffe) would need a small follow-up decision.
 
 ## Original plan (if all four were approved)

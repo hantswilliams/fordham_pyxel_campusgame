@@ -392,6 +392,19 @@ def _glass_door(img, x, y):
     img.line(x + 8, y + 4, x + 8, y + 15, Col.WHITE)
 
 
+def _plaza(img, x, y):
+    """Stone pavers: larger, paler slabs than the walkways."""
+    img.rect(x, y, 16, 16, Col.STONE_HI)
+    for row in range(2):
+        by = y + row * 8 + 7
+        img.line(x, by, x + 15, by, Col.STONE)
+        off = 0 if row == 0 else 6
+        for bx in range(off, 16, 12):
+            img.line(x + bx, by - 7, x + bx, by - 1, Col.STONE)
+    img.pset(x + 3, y + 3, Col.STONE)
+    img.pset(x + 11, y + 12, Col.STONE)
+
+
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
     "door": _door, "window": _window, "tree": _tree, "flowers": _flowers,
@@ -408,6 +421,7 @@ TILE_ART = {
     "lib_stone": _lib_stone, "glass_arch": _glass_arch, "lib_window": _lib_window,
     "lib_tower": _lib_tower, "modern_roof": _modern_roof, "modern_wall": _modern_wall,
     "glass_tower": _glass_tower, "glass_door": _glass_door,
+    "plaza": _plaza,
 }
 
 

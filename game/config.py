@@ -43,6 +43,8 @@ EXTRA_COLORS = [
     0x6A707A,  # 21 roof shadow
     0x55535C,  # 22 charcoal brick (Campbell Hall)
     0x3B3A42,  # 23 dark charcoal brick
+    0xC98A7C,  # 24 pink brick (Cunniffe House wings, decisions/0022)
+    0xA5675E,  # 25 pink brick shadow
 ]
 
 # Named color indices so the rest of the code never uses magic numbers.
@@ -72,6 +74,8 @@ class Col:
     ROOF_SH = 21
     BRICK = 22
     BRICK_DK = 23
+    PINK_BRICK = 24
+    PINK_BRICK_SH = 25
 
 
 def palette() -> list[int]:

@@ -49,6 +49,9 @@ class BuildingAsset:
     # where the name plaque goes, in pixels from the footprint's top-left:
     # (centre x, top y). None puts it above the entrance (decisions/0021)
     nameplate: tuple[int, int] | None = None
+    # a landmark (fountain, statue) has no entrance; a sign object on one of
+    # its cells opens its card (decisions/0022)
+    landmark: bool = False
     folder: Path | None = None
     notes: dict = field(default_factory=dict)
 
@@ -111,10 +114,11 @@ def parse_building(d: dict, folder: Path | None = None) -> BuildingAsset:
         status=status,
         sprite_offset=tuple(d.get("sprite_offset", (0, 0))),
         nameplate=tuple(d["nameplate"]) if "nameplate" in d else None,
+        landmark=bool(d.get("landmark", False)),
         folder=folder,
         notes={k: v for k, v in d.items() if k.startswith("_")},
     )
-    if not b.entrances():
+    if not b.entrances() and not b.landmark:
         raise BuildingError(f"{where}: footprint has no entrance (e.g. 'A' or 'D')")
     return b
 

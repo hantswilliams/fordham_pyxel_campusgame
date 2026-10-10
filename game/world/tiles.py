@@ -61,6 +61,7 @@ TILES: dict[str, TileDef] = {
         TileDef("modern_wall", 38, True),  # dark brick with tall windows
         TileDef("glass_tower", 39, True),  # glass stair tower
         TileDef("glass_door", 40, True),   # glass entrance (a door)
+        TileDef("plaza", 41, False),       # stone-paved plaza, e.g. round the Cunniffe Fountain (decisions/0022)
     ]
 }
 
@@ -103,6 +104,7 @@ LEGEND: dict[str, str] = {
     "q": "modern_wall",
     "g": "glass_tower",
     "J": "glass_door",
+    ",": "plaza",
 }
 
 # Tiles that are building entrances: each one needs a door object (with a

@@ -27,7 +27,7 @@ BUILDING_PARTS = {"wall", "window", "door", "banner",
 TILE_COLORS = {
     "grass": Col.LIME, "flowers": Col.LIME, "lamp": Col.LIME, "bench": Col.PEACH,
     "sign": Col.LIME, "statue": Col.LIME, "bell": Col.LIME, "shuttle": Col.LIME,
-    "path": Col.PEACH, "booth": Col.PEACH, "pillar": Col.GRAY, "reader_gate": Col.PEACH,
+    "path": Col.PEACH, "plaza": Col.PEACH, "booth": Col.PEACH, "pillar": Col.GRAY, "reader_gate": Col.PEACH,
     "road": Col.GRAY, "crosswalk_h": Col.WHITE, "crosswalk_v": Col.WHITE,
     "parking": Col.GRAY,
     "tree": Col.GREEN, "hedge": Col.GREEN, "field": Col.GREEN, "dirt": Col.ORANGE,

@@ -40,6 +40,7 @@ assets/buildings/
 | `faces` | Which way the main entrance faces. Always `south` since decision 0021 |
 | `nameplate` | Where the name plaque goes, in pixels from the footprint's top-left: `[centre x, top y]`. The game draws the plaque, using the building's `short_name` in `content/locations.json` |
 | `status` | `draft`, `in review` or `approved` |
+| `landmark` | `true` for a statue, fountain or similar with no entrance (decision 0022). It needs a `sign` object on one of its cells in the map's `.json` to open its card |
 
 **`map.png` must be exactly** (footprint width × 16 − offset x) by (footprint height × 16 − offset y) pixels. The tests check this.
 
@@ -55,7 +56,7 @@ assets/buildings/
 
 **The basics:**
 
-- **Use only the colors in `palette.hex`**: the game's 16 plus 8 extra colors: four stone shades, two roof grays and two charcoal bricks. Load it in Aseprite, LibreSprite or Piskel (all can import a `.hex` palette). The tests flag any other color.
+- **Use only the colors in `palette.hex`**: the game's 16 plus 10 extra colors: four stone shades, two roof grays, two charcoal bricks and two pink bricks. Load it in Aseprite, LibreSprite or Piskel (all can import a `.hex` palette). The tests flag any other color.
 - **Pure black is transparent.** Leave everything outside the building transparent (or pure black). For dark lines, use navy (`2b335f`).
 - **1 pixel = 1 game pixel.** Draw at actual size and don't scale up.
 - **Characters can't walk on solid footprint cells**, so they're always drawn in front of the building. Keep anything that rises above the footprint (towers, pier caps) small.

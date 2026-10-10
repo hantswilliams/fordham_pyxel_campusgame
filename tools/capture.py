@@ -92,6 +92,7 @@ def main() -> None:
         if o.type == "door":
             door.setdefault(o.location, (o.x, o.y))
 
+    fountain = next((o.x, o.y) for o in m.objects if o.location == "cunniffe_fountain")
     greeter = next(o for o in m.objects if o.type == "npc" and o.auto)
     gate_steps = abs(m.spawn[1] - (greeter.y + 1))  # walk up through the gate
     gate = next(o for o in m.objects if o.type == "checkpoint")  # Bert's ID check
@@ -130,6 +131,11 @@ def main() -> None:
         # Dealy Hall's columned entrance faces west, toward Cunniffe House
         ("17cc_dealy_portico", tap(Action.CONFIRM) + walk.to_face(*door["dealy_hall"]) + wait(4)),
         ("17cd_dealy_card", tap(Action.CONFIRM) + wait(5)),
+        # the fountain quad (decisions/0022): the fountain, then Hughes Hall
+        ("17ce_fountain_plaza", tap(Action.CONFIRM) + walk.to_face(*fountain) + wait(4)),
+        ("17cf_fountain_card", tap(Action.CONFIRM) + wait(5)),
+        ("17cg_hughes_card", tap(Action.CONFIRM) + walk.to_face(*door["hughes_hall"])
+         + tap(Action.CONFIRM) + wait(5)),
         ("17d_keating_card", tap(Action.CONFIRM) + walk.to_face(*door["keating_hall"])
          + tap(Action.CONFIRM) + wait(5)),
         ("18_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])

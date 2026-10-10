@@ -2,7 +2,7 @@
 
 A Pokémon-style, top-down pixel game where new Fordham students explore campus and find its resources. It's built with [Pyxel](https://github.com/kitao/pyxel).
 
-**Status:** Milestone 2 (Real Rose Hill). The whole Rose Hill campus is one walkable map, laid out from the official campus map. The game opens with a short, skippable intro: you ride Metro-North to Fordham station, walk to the Third / Webster Avenue gate, learn the controls, then walk up to the gate, where Bert the guard checks your Fordham ID (tap your card, or your phone with Apple Wallet or Google Wallet). An Orientation Leader greets you inside. Area names pop up as you walk, and you can talk to students and open a card for any building, landmark, shuttle stop or gate. Most art is placeholder art drawn in code. Every building follows one house style taken from Pokémon Gold/Silver towns (decision 0021). Each has a roof over a front wall, with its door on the south side, a name plaque and a gray signpost. Walsh Library, Campbell Hall, Dealy Hall and Keating Hall are drawn as whole pictures, each with a picture on its building card (decision 0020). Building interiors are deferred (decision 0012).
+**Status:** Milestone 2 (Real Rose Hill). The whole Rose Hill campus is one walkable map, laid out from the official campus map. The game opens with a short, skippable intro: you ride Metro-North to Fordham station, walk to the Third / Webster Avenue gate, learn the controls, then walk up to the gate, where Bert the guard checks your Fordham ID (tap your card, or your phone with Apple Wallet or Google Wallet). An Orientation Leader greets you inside. Area names pop up as you walk, and you can talk to students and open a card for any building, landmark, shuttle stop or gate. Most art is placeholder art drawn in code. Every building follows one house style taken from Pokémon Gold/Silver towns (decision 0021). Each has a roof over a front wall, with its door on the south side, a name plaque and a gray signpost. Walsh Library, Campbell, Dealy, Keating, Hughes Hall and Cunniffe House are drawn as whole pictures, as is the Cunniffe Fountain at the centre of its plaza (decision 0022), and each has a picture on its card (decision 0020). Building interiors are deferred (decision 0012).
 
 ## Run it
 
@@ -50,7 +50,7 @@ uv run python tools/building_gallery.py  # review page for drawn buildings: buil
 
 `content/maps/rose_hill.txt` is the map. Each character is one 16×16 tile:
 
-- **Ground:** `.` grass, `:` walkway or sidewalk, `*` flowers, `P` parking
+- **Ground:** `.` grass, `:` walkway or sidewalk, `,` stone-paved plaza, `*` flowers, `P` parking
 - **Roads** (decision 0016): `=` road, `X` crosswalk on a left-right road, `Y` crosswalk on an up-down road
 - **Buildings:**
   - Roofs show the building type: `R` academic (slate), `O` residence hall (orange), `G` other campus building (gray), `M` Admission (maroon)

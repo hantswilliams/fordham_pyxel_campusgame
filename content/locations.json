@@ -34,8 +34,9 @@
     "name": "Hughes Hall",
     "short_name": "HUGHES HALL",
     "kind": "academic",
-    "blurb": "Academic building next to the Carolyn Dursi Cunniffe Fountain and the Ram Statue.",
+    "blurb": "Home of the Gabelli School of Business: five storeys of dark fieldstone with white-trimmed arched windows, a glass roof, and a glass entrance under a teal canopy. The Ram statue stands out front, by the Cunniffe Fountain.",
     "inside": [
+      "Gabelli School of Business",
       "Classrooms and offices"
     ],
     "guide": true
@@ -101,8 +102,9 @@
   "cunniffe_house": {
     "name": "Cunniffe House",
     "short_name": "CUNNIFFE",
+    "real_entrance": "The front door faces east, looking onto the Cunniffe Fountain.",
     "kind": "campus",
-    "blurb": "Campus building on Edgar Allan Poeway, next to Hughes Hall. A Ram Van shuttle stop is nearby.",
+    "blurb": "The oldest building at Rose Hill, the original manor house: a gray stucco centre with a white cupola, between pink-brick wings. Today it holds university administration offices. Its front looks onto the Cunniffe Fountain, with Hughes Hall next door.",
     "guide": true
   },
   "spellman_hall": {
@@ -194,13 +196,13 @@
   "ram_statue": {
     "name": "Ram Statue",
     "kind": "landmark",
-    "blurb": "The Ram is Fordham's mascot. Its statue stands by the Cunniffe Fountain, between Hughes Hall and Rose Hill Manor Drive.",
+    "blurb": "The Ram is Fordham's mascot. Its bronze statue stands in front of Hughes Hall, by the Cunniffe Fountain.",
     "guide": true
   },
   "cunniffe_fountain": {
     "name": "Carolyn Dursi Cunniffe Fountain",
     "kind": "landmark",
-    "blurb": "Fountain in the academic quad, between Hughes Hall, Cunniffe House and Dealy Hall."
+    "blurb": "A tiered bronze fountain in a round stone basin, on the paved plaza between Cunniffe House, Hughes Hall and Dealy Hall. A good place to meet friends between classes."
   },
   "st_ignatius_statue": {
     "name": "St. Ignatius Statue",

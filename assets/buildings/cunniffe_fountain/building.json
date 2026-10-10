@@ -1,0 +1,19 @@
+{
+  "_about": "The Carolyn Dursi Cunniffe Fountain as a drawn landmark (decisions/0022): no entrance; the sign object on its top-left cell in content/maps/rose_hill.json opens its card. The drawing rises 14 px above the 2 x 2 basin for the tiered fountain and its spray.",
+  "id": "cunniffe_fountain",
+  "name": "Carolyn Dursi Cunniffe Fountain",
+  "map": "rose_hill",
+  "location": "cunniffe_fountain",
+  "landmark": true,
+  "faces": "south",
+  "status": "in review",
+  "origin": [33, 43],
+  "sprite_offset": [0, -14],
+  "footprint": [
+    "~~",
+    "~~"
+  ],
+  "sources": [
+    "research/images/Carolyn_Dursi_Cunniffe_fountain,_Fordham.png (tiered dark-bronze fountain in a round stone basin, hedges, mums, benches; tracing reference only)"
+  ]
+}

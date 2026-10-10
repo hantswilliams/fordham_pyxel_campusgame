@@ -40,6 +40,11 @@ def test_walsh_library_is_the_pilot():
     assert "walsh_library" in ids
 
 
+def test_landmarks_need_no_entrance():
+    b = parse_building(minimal(footprint=["~~", "~~"], landmark=True))
+    assert b.landmark and b.entrances() == []
+
+
 def test_parse_errors():
     with pytest.raises(BuildingError, match="unknown character"):
         parse_building(minimal(footprint=["R?", "DW"]))
@@ -76,7 +81,13 @@ def test_hand_placed_object_on_an_entrance_is_an_error():
 @pytest.mark.parametrize("b", BUILDINGS, ids=lambda b: b.id)
 def test_building_is_on_the_map_with_its_doors(b):
     m = load_map(b.map_id, config.MAPS_DIR)
-    assert b.location in {o.location for o in m.objects if o.type == "door"}
+    if b.landmark:
+        # a landmark has no door; a sign on one of its cells opens its card
+        cells = {(x, y) for x, y, _ in b.cells()}
+        assert any(o.type == "sign" and o.location == b.location and (o.x, o.y) in cells
+                   for o in m.objects), f"{b.id}: needs a sign object on one of its cells"
+    else:
+        assert b.location in {o.location for o in m.objects if o.type == "door"}
     for x, y, name in b.cells():
         assert m.tiles[y][x] == name
     for x, y in b.entrances():
@@ -118,6 +129,7 @@ def test_pictures_use_only_game_colors(b):
 
 
 def test_extra_colors_are_few():
-    """D-0020 Part 4: a short 'Fordham stone' list, about 6 to 8 colors."""
-    assert len(config.EXTRA_COLORS) <= 8
+    """D-0020 Part 4: a short list of extra colors; D-0022 raised the cap
+    from 8 to 10 for Cunniffe's pink brick. More needs a decision."""
+    assert len(config.EXTRA_COLORS) <= 10
     assert len(config.palette()) == 16 + len(config.EXTRA_COLORS)

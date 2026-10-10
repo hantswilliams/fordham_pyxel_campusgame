@@ -1,0 +1,24 @@
+{
+  "_about": "Hughes Hall (Gabelli School of Business) as one drawn building (decisions/0022), house style, entrance facing south onto the fountain plaza. Tall, so its front shows almost all the way up. 'D' is the glass entrance. 'nameplate' is the plaque position in pixels (centre x, top y).",
+  "id": "hughes_hall",
+  "name": "Hughes Hall",
+  "map": "rose_hill",
+  "location": "hughes_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [35, 37],
+  "sprite_offset": [0, 0],
+  "nameplate": [40, 50],
+  "footprint": [
+    "RRRRR",
+    "WwWwW",
+    "wWwWw",
+    "WwWwW",
+    "wWDWw"
+  ],
+  "sources": [
+    "research/images/hughes_gabelli_hall.jpg (five storeys of dark fieldstone, white-trimmed arched windows, glass roof, glass canopy entrance, Ram statue; tracing reference only)",
+    "research/images/gabelli_hughes.jpeg (the entrance and canopy)",
+    "research/images/gabelli_hughes_2.jpg (the entrance close up: HUGHES HALL lettering, Gabelli School of Business on the doors)"
+  ]
+}
