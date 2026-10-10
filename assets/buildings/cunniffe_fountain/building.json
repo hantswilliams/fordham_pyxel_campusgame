@@ -7,7 +7,7 @@
   "landmark": true,
   "faces": "south",
   "status": "in review",
-  "origin": [33, 43],
+  "origin": [36, 42],
   "sprite_offset": [0, -14],
   "footprint": [
     "~~",

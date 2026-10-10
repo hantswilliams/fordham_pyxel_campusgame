@@ -102,54 +102,51 @@ def cupola(d, cx, top, w, h):
 
 # ---------------------------------------------------------------- Cunniffe
 def cunniffe_map():
+    """5 x 4 tiles: pink-brick wings either side of the taller gray centre
+    block, the cupola above, the arched door in the middle of the front."""
     m = meta("cunniffe_house")
     OY = -m["sprite_offset"][1]
-    W, H = 96, 64 + OY
+    W, H = 80, 64 + OY
     im = Image.new("RGBA", (W, H), CLEAR)
     d = ImageDraw.Draw(im)
     y = lambda v: v + OY                                                    # noqa: E731
-    # pink-brick wings: low roofs, then walls with white trim
-    for x0, x1 in ((0, 31), (64, 95)):
+    for x0, x1 in ((0, 23), (56, 79)):
         d.rectangle([x0, y(0), x1, y(33)], fill=ROOF_SH)
         for ry in range(y(4), y(33), 6):
             d.line([x0 + 2, ry, x1 - 2, ry], fill=ROOF)
         d.line([x0, y(34), x1, y(34)], fill=NAVY)                         # eave
         d.rectangle([x0, y(35), x1, y(37)], fill=WHITE)                    # white cornice
         pink_brick(d, x0, y(38), x1, y(63))
-        for wx in range(x0 + 4, x1 - 4, 9):
+        for wx in range(x0 + 3, x1 - 4, 7):
             framed_window(d, wx, y(41), 5, 6, frame=WHITE)
             framed_window(d, wx, y(53), 5, 8, frame=WHITE, arched=True)
-    # centre block: taller, gray stucco, white top storey and dentil cornice
-    d.rectangle([32, y(-2), 63, y(5)], fill=ROOF)
-    d.rectangle([32, y(6), 63, y(17)], fill=WHITE)                         # top storey
-    d.line([32, y(6), 63, y(6)], fill=ST_HI)
-    for wx in (36, 46, 56):
+    d.rectangle([24, y(-2), 55, y(5)], fill=ROOF)
+    d.rectangle([24, y(6), 55, y(17)], fill=WHITE)                         # top storey
+    d.line([24, y(6), 55, y(6)], fill=ST_HI)
+    for wx in (28, 38, 48):
         d.rectangle([wx, y(10), wx + 3, y(13)], fill=NAVY)
         d.point([wx, y(10)], fill=LBLUE)
-    d.rectangle([32, y(18), 63, y(20)], fill=ST_HI)                        # dentil cornice
-    for dx in range(33, 63, 2):
+    d.rectangle([24, y(18), 55, y(20)], fill=ST_HI)                        # dentil cornice
+    for dx in range(25, 55, 2):
         d.point([dx, y(19)], fill=ST)
-    stucco(d, 32, y(21), 63, y(63))
-    for wx in (34, 57):
+    stucco(d, 24, y(21), 55, y(63))
+    for wx in (27, 48):
         framed_window(d, wx, y(24), 5, 7)
         framed_window(d, wx, y(46), 5, 9)
-    # the arched front door with its iron grille, and two lanterns
-    d.rectangle([41, y(45), 54, y(63)], fill=ST_HI)
-    d.pieslice([41, y(41), 54, y(50)], 180, 360, fill=ST_HI)
-    d.rectangle([43, y(47), 52, y(63)], fill=NAVY)
-    d.pieslice([43, y(43), 52, y(51)], 180, 360, fill=NAVY)
-    for gx in range(44, 52, 2):
+    d.rectangle([33, y(45), 46, y(63)], fill=ST_HI)                        # arched door
+    d.pieslice([33, y(41), 46, y(50)], 180, 360, fill=ST_HI)
+    d.rectangle([35, y(47), 44, y(63)], fill=NAVY)
+    d.pieslice([35, y(43), 44, y(51)], 180, 360, fill=NAVY)
+    for gx in range(36, 44, 2):
         d.line([gx, y(46), gx, y(63)], fill=DBLUE)
-    for lx in (39, 56):
+    for lx in (31, 48):
         d.rectangle([lx - 1, y(49), lx + 1, y(52)], fill=YELLOW)
         d.point([lx, y(48)], fill=NAVY)
-    # cupola on the roof
-    cupola(d, 48, 3, 16, 16)
-    # outline: wings and centre block
+    cupola(d, 40, 3, 16, 16)
     d.rectangle([0, y(0), W - 1, H - 1], outline=NAVY)
-    d.line([32, y(-2), 32, y(0)], fill=NAVY)
-    d.line([63, y(-2), 63, y(0)], fill=NAVY)
-    d.line([32, y(-2), 63, y(-2)], fill=NAVY)
+    d.line([24, y(-2), 24, y(0)], fill=NAVY)
+    d.line([55, y(-2), 55, y(0)], fill=NAVY)
+    d.line([24, y(-2), 55, y(-2)], fill=NAVY)
     return im
 
 

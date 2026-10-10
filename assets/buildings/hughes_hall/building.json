@@ -6,7 +6,7 @@
   "location": "hughes_hall",
   "faces": "south",
   "status": "in review",
-  "origin": [35, 37],
+  "origin": [35, 35],
   "sprite_offset": [0, 0],
   "nameplate": [40, 50],
   "footprint": [

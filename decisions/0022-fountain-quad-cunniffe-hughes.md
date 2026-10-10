@@ -29,18 +29,20 @@ Cunniffe is a tall, narrow tile building west of a small 2 × 2 pond (the founta
 
 ```
         Edgar Allan Poeway (road)
-   |  [ CUNNIFFE HOUSE ]  :  [ HUGHES ]  =
-   |  [  cupola, wings ]  :  [  HALL   ]  =  Rose Hill
-   |  [=====door=====  ]  :  [==door== ]  =  Manor
-   |  , , , , , , , , , , , , , , , , ,   =  Drive
-   |  , , ,bench  ( FOUNTAIN )  RAM , ,   =
-   |  , , , , ,   (  basin   ) , , , , ,   =
-   |  * * bench , , , , , , , bench * *    =
-   |        [       DEALY HALL (back)   ]  =
+   :                         :  [ HUGHES HALL ]  =
+   :                         :  [====door=====]  =  Rose
+   : : : : : : : : : : : : : , , RAM , , , , ,   =  Hill
+   :  [ CUNNIFFE  ]   , bench , ( FOUNTAIN ) bench  Manor
+   :  [  HOUSE    ]   , , , , , (  basin   ) , = Drive
+   :  [===door====]   , , , , , , , , , , , ,    =
+   :  , , , , , , , , mums , , , , mums , ,      =
+   :            [        DEALY HALL         ]    =
 ```
 
-- **Cunniffe House** becomes a wide building (6 × 4 tiles), and **Hughes Hall** moves down to line up beside it (5 × 5). Both front doors open south **straight onto the plaza**, the way their real entrances face the fountain.
-- **The plaza** is 12 × 4 tiles of stone paving, with the fountain in its exact centre. There are benches and flower beds of mums at the corners.
+*Revised 2026-10-10 at your request:* Cunniffe House sits on the **left (west)**, centred between **Hughes Hall on top** and **Dealy Hall below**, with the fountain in the middle. Doors still face south (D-0021). Cunniffe's door opens onto a strip of paving along its front that joins the fountain plaza.
+
+- **Cunniffe House** (5 × 4 tiles) is on the left, centred on the fountain. **Hughes Hall** (5 × 5) is on top. Both front doors open south onto the paving.
+- **The plaza** is 7 × 6 tiles of stone paving between the three buildings, plus a strip along Cunniffe's front. The fountain is in the middle, level with Cunniffe's centre and lined up with Hughes and Dealy. Benches stand either side of the fountain, with mums by Dealy.
 - **The Ram statue** stands in front of Hughes, as in the photo.
 - **Dealy** is unchanged. It sits on the south side of the plaza, and its own door still faces south (D-0021).
 - **Walkways:** a walkway between Cunniffe and Hughes joins the plaza to Edgar Allan Poeway. The existing path past Cunniffe's west side leads down to Dealy's door.
@@ -149,9 +151,11 @@ They go in `palette.hex`, and the test limit rises to 10.
 
 ## What was built (2026-10-10)
 
-- **Part 1: the plaza.**
-  - Cunniffe House (6 × 4) and Hughes Hall (5 × 5) stand side by side on the north side, with a walkway between them up to Edgar Allan Poeway.
-  - The stone-paved plaza is 12 × 4 tiles, with the fountain at its exact centre, benches either side and mums at the corners. A new **plaza** tile (`,` in the map legend) does the paving.
+- **Part 1: the plaza** (revised the same day so Cunniffe sits on the left, between Hughes and Dealy).
+  - Hughes Hall (5 × 5) is on top and Dealy below. Cunniffe House (5 × 4) is on the left, centred on the fountain.
+  - The fountain is in the middle of a 7 × 6 stone-paved plaza, with a strip along Cunniffe's front. A new **plaza** tile (`,` in the map legend) does the paving.
+  - Benches flank the fountain, with mums by Dealy.
+  - A walkway runs north of Cunniffe from the west walkway, and another runs beside Hughes up to Edgar Allan Poeway.
   - The Ram statue moved to the plaza in front of Hughes. Each building's signpost stands beside its door.
   - A new crosswalk leads east across Rose Hill Manor Drive to Edwards Parade. The path past Cunniffe's west side leads down to the walkway and Dealy's door.
 - **Parts 2–4:** `assets/buildings/cunniffe_house/`, `hughes_hall/` and `cunniffe_fountain/`, each with a map drawing, a card picture and notes. They're drawn by `assets/buildings/_style/draw_fountain_quad.py`.

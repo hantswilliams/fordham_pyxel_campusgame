@@ -1,19 +1,19 @@
 {
-  "_about": "Cunniffe House as one drawn building (decisions/0022), house style, front door facing south onto the fountain plaza. The drawing rises 12 px above the footprint for the cupola. The two 'D' cells are the arched front door. 'nameplate' is the plaque position in pixels (centre x, top y).",
+  "_about": "Cunniffe House as one drawn building (decisions/0022), house style. It stands on the west side of the fountain plaza, centred between Hughes Hall (north) and Dealy Hall (south), its front door facing south onto the paved strip that joins the plaza. The drawing rises 12 px above the footprint for the cupola. 'D' is the arched front door. 'nameplate' is the plaque position in pixels (centre x, top y).",
   "id": "cunniffe_house",
   "name": "Cunniffe House",
   "map": "rose_hill",
   "location": "cunniffe_house",
   "faces": "south",
   "status": "in review",
-  "origin": [28, 38],
+  "origin": [28, 41],
   "sprite_offset": [0, -12],
-  "nameplate": [48, 35],
+  "nameplate": [40, 35],
   "footprint": [
-    "GGGGGG",
-    "GGGGGG",
-    "WwWwwW",
-    "WwDDwW"
+    "GGGGG",
+    "GGGGG",
+    "WwWwW",
+    "WwDwW"
   ],
   "sources": [
     "research/images/Cunniffe_House,_2017.jpg (front: gray stucco centre, white cupola with cross, pink-brick wings; tracing reference only)",
