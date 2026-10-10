@@ -1,0 +1,27 @@
+{
+  "_about": "Keating Hall as one drawn building (decisions/0020) in the shared house style, entrance facing south (decisions/0021). Footprint rows use the map legend; the two 'D' cells are the arched entrance under the tower. The drawing rises 10 px above the footprint so the tower's turrets stand above the roofline. 'nameplate' is the plaque position in pixels from the footprint's top-left (centre x, top y).",
+  "id": "keating_hall",
+  "name": "Keating Hall",
+  "map": "rose_hill",
+  "location": "keating_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [58, 42],
+  "sprite_offset": [0, -10],
+  "nameplate": [80, 65],
+  "footprint": [
+    "RRRRRRRRRR",
+    "RRRRRRRRRR",
+    "RRRRRRRRRR",
+    "RRRRRRRRRR",
+    "WwWBWWBWwW",
+    "WwWwWWwWwW",
+    "WwWwDDwWwW"
+  ],
+  "sources": [
+    "research/images/Keating_Hall,_2014_crop.png (the front from Edwards Parade: banded tan stone, central tower with corner turrets and a tall tracery window, pointed-arch entrance up wide steps, crenellated wings; tracing reference only)",
+    "research/images/keating_terrace-1024x490.jpg (the entrance at commencement, with maroon banners)",
+    "research/images/keating_insta.jpg (the front in autumn)",
+    "research/images/keating_hall_facing_east.png (Keating seen across Edwards Parade)"
+  ]
+}

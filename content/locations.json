@@ -9,8 +9,9 @@
   "keating_hall": {
     "name": "Keating Hall",
     "short_name": "KEATING HALL",
+    "real_entrance": "The main entrance faces west, up the wide stone steps from Edwards Parade, under the tower.",
     "kind": "academic",
-    "blurb": "The gothic building with the tall central tower on the east side of Edwards Parade. One of the most recognizable buildings at Rose Hill.",
+    "blurb": "The gothic building with the tall central tower on the east side of Edwards Parade, one of the biggest and most historic buildings at Rose Hill. Maroon banners hang beside the entrance at commencement.",
     "inside": [
       "Classrooms and offices",
       "Dining"
