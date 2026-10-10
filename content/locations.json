@@ -127,7 +127,7 @@
     "name": "McShane Campus Center",
     "short_name": "MCSHANE",
     "kind": "campus",
-    "blurb": "The student center, north of Edwards Parade next to Rose Hill Gymnasium. The main place to grab a meal.",
+    "blurb": "The student center, rebuilt in 2021 where the McGinley Center stood: tall limestone walls and a glass atrium. The Marketplace inside is the main dining hall at Rose Hill.",
     "inside": [
       "Dining",
       "Student center"
@@ -160,7 +160,7 @@
     "name": "Rose Hill Gymnasium",
     "short_name": "ROSE HILL GYM",
     "kind": "athletics",
-    "blurb": "The gym next to McShane Campus Center. The Victory Bell stands just outside.",
+    "blurb": "Home of Fordham basketball since 1925, with about 3,200 seats: the oldest on-campus arena still used by a Division I basketball team. Its stone Gothic front has a tall pointed-arch window, and the Victory Bell stands just outside.",
     "inside": [
       "Gymnasium"
     ],
@@ -170,7 +170,7 @@
     "name": "Lombardi Memorial Center",
     "short_name": "LOMBARDI",
     "kind": "athletics",
-    "blurb": "Athletics building on the north side of campus, behind McShane Campus Center.",
+    "blurb": "The Vincent T. Lombardi Memorial Center, named for the Fordham alumnus and football coach: Fordham's athletics and recreation building behind McShane Campus Center. Inside are an eight-lane pool and a fieldhouse with an indoor 220-meter track.",
     "inside": [
       "Field House"
     ]
@@ -179,13 +179,39 @@
     "name": "Moglia Stadium",
     "short_name": "MOGLIA",
     "kind": "athletics",
-    "blurb": "The stadium beside Jack Coffey Field."
+    "blurb": "The 7,000-seat grandstand and press box along Jack Coffey Field, home of Fordham Rams football. It's named for Joe Moglia (FCRH '71)."
   },
   "jack_coffey_field": {
     "name": "Jack Coffey Field & Houlihan Park",
     "kind": "athletics",
-    "blurb": "Jack Coffey Field and Houlihan Park, the baseball field, sit on the northeast side of campus between Moglia Stadium and the Main Entrance.",
+    "blurb": "Fordham's football and soccer field, with FieldTurf and lights. The Moglia Stadium grandstand runs along its north side, and Houlihan Park, the baseball field, is just south of it.",
     "guide": true
+  },
+  "houlihan_park": {
+    "name": "Houlihan Park",
+    "short_name": "HOULIHAN PARK",
+    "kind": "athletics",
+    "blurb": "Jim Houlihan Park, home of Fordham Rams baseball: a FieldTurf diamond with about 1,000 seats, lights and a scoreboard, just south of Jack Coffey Field.",
+    "guide": true
+  },
+  "murphy_field": {
+    "name": "Murphy Field",
+    "short_name": "MURPHY FIELD",
+    "kind": "athletics",
+    "blurb": "A lit FieldTurf field for soccer and football practice, entered through a stone archway with a bust of Cornelius Murphy, the student it's named for. Bahoshy Softball Field is right next to it.",
+    "guide": true
+  },
+  "bahoshy_field": {
+    "name": "Bahoshy Softball Field",
+    "short_name": "BAHOSHY FIELD",
+    "kind": "athletics",
+    "blurb": "Home of Fordham softball, part of the Murphy Field complex: a clay infield and a FieldTurf outfield with the Fordham F."
+  },
+  "tennis_courts": {
+    "name": "Hawthorn/Rooney Tennis Courts",
+    "short_name": "TENNIS",
+    "kind": "athletics",
+    "blurb": "Six tennis courts beside Murphy Field, shared by the Fordham and Fordham Prep teams."
   },
   "victory_bell": {
     "name": "Victory Bell",

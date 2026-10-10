@@ -1,0 +1,24 @@
+{
+  "_about": "Bahoshy Softball Field (decisions/0023), part of the Murphy Field complex: clay infield, FieldTurf outfield with the Fordham F. A landmark.",
+  "id": "bahoshy_field",
+  "name": "Bahoshy Softball Field",
+  "map": "rose_hill",
+  "location": "bahoshy_field",
+  "landmark": true,
+  "faces": "south",
+  "status": "in review",
+  "origin": [31, 16],
+  "sprite_offset": [0, 0],
+  "footprint": [
+    "FFFFFFF",
+    "FFFFFFF",
+    "FFFFFFF",
+    "FFFFFFF",
+    "FFFFFFF",
+    "FFFFFFF"
+  ],
+  "sources": [
+    "research/images/web/athletics_search_murphy_bahoshy.jpg (screenshot of image-search results: aerial views; tracing reference only)",
+    "Bing image search: Fordham Bahoshy Softball Complex (aerial views); tracing reference only"
+  ]
+}

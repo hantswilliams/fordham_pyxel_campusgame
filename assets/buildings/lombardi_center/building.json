@@ -1,0 +1,25 @@
+{
+  "_about": "Lombardi Memorial Center (decisions/0023): the athletics and recreation building, drawn in the house style. Big ribbed-metal fieldhouse roof over a cream and gray front with a glass entrance.",
+  "id": "lombardi_center",
+  "name": "Lombardi Memorial Center",
+  "map": "rose_hill",
+  "location": "lombardi_center",
+  "faces": "south",
+  "status": "in review",
+  "origin": [42, 14],
+  "sprite_offset": [0, 0],
+  "nameplate": [112, 54],
+  "footprint": [
+    "GGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGG",
+    "WwWwWwWwWwWwWw",
+    "wWwWwWwWwWwWwW",
+    "WwWwWwDDWwWwWw"
+  ],
+  "sources": [
+    "research/images/web/athletics_search_lombardi.jpg (screenshot of image-search results: the gray ribbed-metal expansion; tracing reference only)",
+    "https://commons.wikimedia.org/wiki/Category:McGinley_Center (Fordham University Lombardi Memorial Center.jpg, CC BY-SA 3.0, Anthony22)",
+    "Bing image search: Lombardi Center expansion (gray ribbed metal panels); tracing reference only"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "_about": "The Hawthorn/Rooney Tennis Courts (decisions/0023): six courts shared by the Fordham and Fordham Prep teams. A landmark.",
+  "id": "tennis_courts",
+  "name": "Hawthorn/Rooney Tennis Courts",
+  "map": "rose_hill",
+  "location": "tennis_courts",
+  "landmark": true,
+  "faces": "south",
+  "status": "in review",
+  "origin": [26, 12],
+  "sprite_offset": [0, 0],
+  "footprint": [
+    "FFFF",
+    "FFFF",
+    "FFFF",
+    "FFFF",
+    "FFFF",
+    "FFFF"
+  ],
+  "sources": [
+    "research/images/web/athletics_search_murphy_bahoshy.jpg (aerial views of the complex)",
+    "https://www.fordhamprep.org/athletics/athletic-facilities"
+  ]
+}

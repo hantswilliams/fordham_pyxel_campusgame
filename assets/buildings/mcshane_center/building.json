@@ -1,0 +1,25 @@
+{
+  "_about": "McShane Campus Center (decisions/0023): the student center, rebuilt in 2021 on the site of the McGinley Center. Tall limestone front with vertical fins and windows, and a glass atrium tower that rises above the roof.",
+  "id": "mcshane_center",
+  "name": "McShane Campus Center",
+  "map": "rose_hill",
+  "location": "mcshane_center",
+  "faces": "south",
+  "status": "in review",
+  "origin": [40, 21],
+  "sprite_offset": [0, -10],
+  "nameplate": [72, 62],
+  "footprint": [
+    "GGGGGGGGG",
+    "GGGGGGGGG",
+    "WwWwWwWwW",
+    "wWwWwWwWw",
+    "WwWwWwWwW",
+    "WwWwDwWwW"
+  ],
+  "sources": [
+    "research/images/web/athletics_search_mcshane_2021.jpg (screenshot of image-search results: the 2021 building; tracing reference only)",
+    "Bing image search: McShane Campus Center exterior (2021 building: limestone fins, tall windows, glass tower); tracing reference only",
+    "research/images/facing_north_mcshane_rosehillgym.png (the old McGinley Center front, before the rebuild)"
+  ]
+}
