@@ -30,7 +30,8 @@ MAROON = 0x860038
 PALETTE_OVERRIDES = {2: MAROON, 3: 0x3E7D3A, 4: 0x8F563B, 11: 0x7DBE52}
 
 # Extra "Fordham stone" colors added after the 16 (decisions/0020 Part 4):
-# warm stone shades for Fordham's stone buildings and two roof grays.
+# warm stone shades for Fordham's stone buildings, two roof grays, and two
+# charcoal bricks for the newer residence halls.
 # Keep this list short; every drawing uses only these colors plus the 16.
 # assets/buildings/palette.hex holds the same colors for drawing apps.
 EXTRA_COLORS = [
@@ -40,6 +41,8 @@ EXTRA_COLORS = [
     0x6F685E,  # 19 dark stone trim
     0x8C929C,  # 20 roof
     0x6A707A,  # 21 roof shadow
+    0x55535C,  # 22 charcoal brick (Campbell Hall)
+    0x3B3A42,  # 23 dark charcoal brick
 ]
 
 # Named color indices so the rest of the code never uses magic numbers.
@@ -67,6 +70,8 @@ class Col:
     STONE_DK = 19
     ROOF = 20
     ROOF_SH = 21
+    BRICK = 22
+    BRICK_DK = 23
 
 
 def palette() -> list[int]:

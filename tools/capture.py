@@ -126,7 +126,8 @@ def main() -> None:
          + walk.to_face(*door["walsh_library"]) + wait(4)),
         ("17b_walsh_library_card", tap(Action.CONFIRM) + wait(5)),
         ("17c_campbell_entrance", tap(Action.CONFIRM) + walk.to_face(*door["campbell_hall"]) + wait(4)),
-        ("17d_keating_card", walk.to_face(*door["keating_hall"])
+        ("17cb_campbell_card", tap(Action.CONFIRM) + wait(5)),
+        ("17d_keating_card", tap(Action.CONFIRM) + walk.to_face(*door["keating_hall"])
          + tap(Action.CONFIRM) + wait(5)),
         ("18_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])
          + tap(Action.CONFIRM) + wait(5)),

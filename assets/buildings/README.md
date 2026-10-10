@@ -44,7 +44,7 @@ assets/buildings/
 
 ## Drawing rules
 
-- **Use only the colors in `palette.hex`**: the game's 16 plus the 6 "Fordham stone" colors. Load it in Aseprite, LibreSprite or Piskel (all can import a `.hex` palette). The tests flag any other color.
+- **Use only the colors in `palette.hex`**: the game's 16 plus 8 extra colors: four stone shades, two roof grays and two charcoal bricks. Load it in Aseprite, LibreSprite or Piskel (all can import a `.hex` palette). The tests flag any other color.
 - **Pure black is transparent.** Leave everything outside the building transparent (or pure black). For dark lines, use navy (`2b335f`).
 - **1 pixel = 1 game pixel.** Draw at actual size and don't scale up.
 - **Characters can't walk on solid footprint cells**, so they're always drawn in front of the building. Keep anything that rises above the footprint (towers, pier caps) small.

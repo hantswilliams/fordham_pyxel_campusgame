@@ -48,6 +48,23 @@ def data_uri(path: Path) -> str:
     return f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode()
 
 
+def photo_uri(path: Path, max_w: int = 900) -> str:
+    """A reference photo, shrunk to a JPEG so the page stays small
+    (needs Pillow, a dev dependency; without it the photo goes in as is)."""
+    try:
+        from io import BytesIO
+
+        from PIL import Image
+    except ImportError:
+        return data_uri(path)
+    im = Image.open(path).convert("RGB")
+    if im.width > max_w:
+        im = im.resize((max_w, round(im.height * max_w / im.width)), Image.LANCZOS)
+    buf = BytesIO()
+    im.save(buf, "JPEG", quality=82)
+    return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
+
+
 def render_map(m, with_buildings: bool) -> "pyxel.Image":
     bake_tilemap(m, 0)
     img = pyxel.Image(m.width * TILE, m.height * TILE)
@@ -146,7 +163,7 @@ def building_section(b, locations) -> str:
         rel = src.split(" (")[0]
         p = ROOT / rel
         if p.suffix.lower() in PHOTO_TYPES and p.exists():
-            panels.append(panel("Reference photo", f'<img class="photo" src="{data_uri(p)}" alt="Reference photo of {html.escape(b.name)}">',
+            panels.append(panel("Reference photo", f'<img class="photo" src="{photo_uri(p)}" alt="Reference photo of {html.escape(b.name)}">',
                                 html.escape(src.split(" (", 1)[1].rstrip(")") if " (" in src else rel)))
             break
     panels.append(panel("In the game", f'<img class="px" src="{crop_png(drawn, b, m)}" alt="{html.escape(b.name)} as drawn, in the game">',
@@ -232,7 +249,7 @@ figcaption { font-size: 0.85rem; color: var(--muted); }
 .fp-walk { background: transparent; border: 1px dashed var(--line); color: var(--muted); }
 .fp-none { background: transparent; }
 .key { font-size: 0.8rem; color: var(--muted); margin: 0; }
-code { font-family: var(--mono); font-size: 0.9em; }
+code { font-family: var(--mono); font-size: 0.9em; overflow-wrap: anywhere; }
 .notes { border-top: 1px solid var(--line); padding-top: 12px; }
 .notes summary { cursor: pointer; font-weight: 600; }
 .notes summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

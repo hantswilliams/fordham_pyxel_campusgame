@@ -69,7 +69,6 @@
     {"at": [17, 42], "type": "door", "location": "martyrs_court"},
     {"at": [8, 49], "type": "door", "location": "martyrs_court"},
     {"at": [4, 50], "type": "door", "location": "conley_salice"},
-    {"at": [5, 57], "type": "door", "location": "campbell_hall"},
     {"at": [37, 38], "type": "door", "location": "hughes_hall"},
     {"at": [30, 45], "type": "door", "location": "cunniffe_house"},
     {"at": [36, 51], "type": "door", "location": "dealy_hall"},

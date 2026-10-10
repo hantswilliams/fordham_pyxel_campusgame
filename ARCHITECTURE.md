@@ -147,7 +147,7 @@
 - `map.png` is drawn over the map.
 - `card.png` appears on its building card.
 
-`load_map` stamps the footprint onto the grid and adds the entrance doors. The overworld draws `map.png` after the tiles and before the characters. The palette is the 16 Pyxel colors (four swapped) plus six "Fordham stone" colors (`config.EXTRA_COLORS`, mirrored in `assets/buildings/palette.hex`). `tools/building_gallery.py` builds a review page per building. Walsh Library is the pilot; other buildings move over one at a time.
+`load_map` stamps the footprint onto the grid and adds the entrance doors. The overworld draws `map.png` after the tiles and before the characters. The palette is the 16 Pyxel colors (four swapped) plus eight extra colors for stone, roofs and brick (`config.EXTRA_COLORS`, mirrored in `assets/buildings/palette.hex`). `tools/building_gallery.py` builds a review page per building. Walsh Library was the pilot and Campbell Hall the second; other buildings move over one at a time.
 
 A `tests/test_content.py` check validates the data: every NPC's dialogue exists, every quest references real locations, and every URL is well-formed. Content edits then can't break the game.
 

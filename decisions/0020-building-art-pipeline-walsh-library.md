@@ -257,10 +257,16 @@ Should we add a small set of extra colors to the game's palette?
 - **Review page.** `uv run python tools/building_gallery.py` writes `build/building_gallery.html`. It shows the reference photo, the building in the game, the tile version, the map drawing, the card picture, the footprint, and the notes. A copy is published as a private link for review.
 - **Simplifications to review** are listed in `assets/buildings/walsh_library/notes.md`. The main one: the real lawn-side façade is curved, and here it's two straight steps.
 
+**Campbell Hall (second building, 2026-10-09, at your request).**
+- It's converted the same way: `assets/buildings/campbell_hall/`. The footprint is a wider north part, a narrower south part, and the dining entrance at the step on the east side.
+- Two charcoal brick colors were added for it, bringing the extra colors to 8. That's the top of the "about 6–8" approved in Part 4.
+- Its drawings are v1, **in review**. Open questions are in its `notes.md`.
+
 ## Next steps
 
-1. Review the library in the gallery. Once it looks right, set its status to `approved` in `building.json` (or tell me what to change).
-2. Pick the next building to convert (Keating, Campbell, Dealy or McShane).
+1. Review the library and Campbell in the gallery. Once each one looks right, set its status to `approved` in its `building.json` (or tell me what to change).
+2. Pick the next building to convert (Keating, Dealy or McShane).
+3. The palette is now at 8 extra colors. Any further colors (for example a pink for Cunniffe) would need a small follow-up decision.
 
 ## Original plan (if all four were approved)
 
