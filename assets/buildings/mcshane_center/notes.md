@@ -17,3 +17,4 @@ Found online for this batch (decisions/0023). Photos are tracing references only
 ## History
 
 - v1, 2026-10-10: first draft drawn in code (`../_style/draw_athletics.py`).
+- v2, 2026-10-10: joined to the gym by a low glass link, from `research/images/mcshane_lombardi_oldgym.jpg`. It's now 10 × 6 tiles, and the main entrance is in the link. The card shows the link and the gym's Gothic end.

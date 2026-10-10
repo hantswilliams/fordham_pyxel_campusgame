@@ -95,3 +95,13 @@ Same places and doors as now, south-facing.
 
 - The press box sideline and Houlihan Park's position relative to the football field.
 - That the tennis courts are the six Hawthorn/Rooney courts next to Murphy Field.
+
+## Update (2026-10-10): one complex
+
+You added `research/images/mcshane_lombardi_oldgym.jpg` and `research/images/arial.png`. They show that McShane, the gym and Lombardi are now **one connected building**, still in two distinct styles.
+
+- **McShane** is in front and modern. A low glass link with the main entrance joins it to the gym.
+- **Rose Hill Gym** stays the old Gothic end. It now has a big slate roof with a raised clerestory, and a fieldstone gable front.
+- **Lombardi** is its own block behind both, in two big cream boxes, with white barrel vaults behind McShane. Its entrance is where it pokes out east of the gym, with a path down to the walkway.
+
+The walkways that used to run between the three buildings are gone. Each building keeps its own door, signpost and card.

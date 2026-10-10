@@ -1,23 +1,34 @@
 {
-  "_about": "Lombardi Memorial Center (decisions/0023): the athletics and recreation building, drawn in the house style. Big ribbed-metal fieldhouse roof over a cream and gray front with a glass entrance.",
+  "_about": "Lombardi Memorial Center (decisions/0023, updated): the back of the athletics complex, joined to McShane and the gym. Two big cream boxes (fieldhouse with the indoor track, and the pool), white barrel vaults behind McShane, and its glass entrance where it pokes out east of the gym.",
   "id": "lombardi_center",
   "name": "Lombardi Memorial Center",
   "map": "rose_hill",
   "location": "lombardi_center",
   "faces": "south",
   "status": "in review",
-  "origin": [42, 14],
-  "sprite_offset": [0, 0],
-  "nameplate": [112, 54],
+  "origin": [
+    42,
+    14
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    264,
+    84
+  ],
   "footprint": [
-    "GGGGGGGGGGGGGG",
-    "GGGGGGGGGGGGGG",
-    "GGGGGGGGGGGGGG",
-    "WwWwWwWwWwWwWw",
-    "wWwWwWwWwWwWwW",
-    "WwWwWwDDWwWwWw"
+    "GGGGGGGGGGGGGGGGG ",
+    "GGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGG",
+    "WwWwWwWwWwWwWwWwWw",
+    "WwWwWwWwWwWwWwWwDW"
   ],
   "sources": [
+    "research/images/arial.png (aerial rendering of the new campus center: McShane, the gym and Lombardi as one complex; owner unknown, tracing reference only)",
     "research/images/web/athletics_search_lombardi.jpg (screenshot of image-search results: the gray ribbed-metal expansion; tracing reference only)",
     "https://commons.wikimedia.org/wiki/Category:McGinley_Center (Fordham University Lombardi Memorial Center.jpg, CC BY-SA 3.0, Anthony22)",
     "Bing image search: Lombardi Center expansion (gray ribbed metal panels); tracing reference only"

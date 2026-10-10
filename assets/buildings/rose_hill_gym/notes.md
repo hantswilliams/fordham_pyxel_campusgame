@@ -17,3 +17,4 @@ Found online for this batch (decisions/0023). Photos are tracing references only
 ## History
 
 - v1, 2026-10-10: first draft drawn in code (`../_style/draw_athletics.py`).
+- v2, 2026-10-10: redrawn as the Gothic end of the complex. It has a big slate roof with a raised clerestory along the ridge, and a fieldstone gable front with the great pointed window over three wooden doors (no more battlements across the front).

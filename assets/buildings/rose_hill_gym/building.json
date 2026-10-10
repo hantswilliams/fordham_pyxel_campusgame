@@ -1,14 +1,23 @@
 {
-  "_about": "Rose Hill Gymnasium (decisions/0023), home of Fordham basketball since 1925. Gothic Revival front of light fieldstone with a crenellated parapet and a tall pointed-arch window over three wooden doors; the big arched roof with its clerestory glass behind.",
+  "_about": "Rose Hill Gymnasium (decisions/0023, updated), home of Fordham basketball since 1925 and the Gothic end of the complex: a big slate roof with a raised clerestory along the ridge, and a fieldstone gable front with a great pointed window over three wooden doors.",
   "id": "rose_hill_gym",
   "name": "Rose Hill Gymnasium",
   "map": "rose_hill",
   "location": "rose_hill_gym",
   "faces": "south",
   "status": "in review",
-  "origin": [50, 21],
-  "sprite_offset": [0, -6],
-  "nameplate": [56, 75],
+  "origin": [
+    50,
+    21
+  ],
+  "sprite_offset": [
+    0,
+    -6
+  ],
+  "nameplate": [
+    56,
+    75
+  ],
   "footprint": [
     "GGGGGGG",
     "GGGGGGG",
@@ -18,6 +27,8 @@
     "WwWDWwW"
   ],
   "sources": [
+    "research/images/arial.png (aerial rendering of the complex; owner unknown, tracing reference only)",
+    "research/images/mcshane_lombardi_oldgym.jpg (rendering of McShane, the glass link and the gym from the plaza; owner unknown, tracing reference only)",
     "research/images/web/athletics_commons_rose_hill_gym.jpg (contact sheet of Wikimedia Commons photos, CC licenses as listed below)",
     "https://commons.wikimedia.org/wiki/Category:Rose_Hill_Gymnasium (Rose Hill Gym.jpg CC BY 3.0 Samv315; Archfull.jpg CC BY-SA 4.0 Hconnolly4; Rose Hill gymnasium roof.jpg CC BY-SA 2.0 David Joyner)",
     "research/images/facing_north_mcshane_rosehillgym.png"

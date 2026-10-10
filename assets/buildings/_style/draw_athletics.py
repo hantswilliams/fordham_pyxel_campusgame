@@ -11,34 +11,47 @@ from kit import (BROWN, CYAN, DBLUE, GRAY, GREEN, LBLUE, LIME, MAROON, NAVY, ORA
                  PINK, RED, ROOF, ROOF_SH, ST, ST_DK, ST_HI, ST_SH, WHITE, YELLOW,
                  arched_window, ashlar, battlements, canvas, card, clouds, diamond, door, eave,
                  fieldstone, flat_roof, fordham_f, gothic_window, lawn, light_tower, outline,
-                 panels, person, save_building, tree, turf, window)
+                 panels, person, save_building, tree, turf, window, BRICK_DK, slope_roof)
 
 
 # ---------------------------------------------------------------- buildings
 def lombardi():
+    """The back of the complex (D-0023 update): two big cream boxes for the
+    fieldhouse and pool, white barrel vaults behind McShane, and the
+    Lombardi entrance where the building pokes out east of the gym."""
     im, d, ox, oy = canvas("lombardi_center")
-    W, H = im.size
-    panels(d, 0, 0, W - 1, 45, base=ROOF, rib=ROOF_SH, step=4)            # fieldhouse roof
-    d.line([0, 1, W - 1, 1], fill=WHITE)
-    for sx in (24, 88, 152):                                              # skylights
-        d.rectangle([sx, 14, sx + 40, 20], fill=NAVY)
-        d.rectangle([sx + 1, 15, sx + 39, 19], fill=LBLUE)
-    eave(d, 0, W - 1, 46)
-    panels(d, 0, 48, W - 1, 66, base=GRAY, rib=ROOF, step=3)              # gray ribbed band
-    ashlar(d, 0, 67, W - 1, H - 1, base=ST_HI, joint=ST)                  # cream base
-    for x0 in list(range(6, 90, 14)) + list(range(136, 218, 14)):
-        window(d, x0, 72, 9, 7)
-        window(d, x0, 82, 9, 8)
-    d.rectangle([92, 48, 131, H - 1], fill=NAVY)                          # glass entrance block
-    d.rectangle([94, 50, 129, H - 1], fill=LBLUE)
-    for gx in range(98, 128, 6):
-        d.line([gx, 50, gx, H - 1], fill=DBLUE)
-    for gy in range(56, H - 18, 8):
-        d.line([94, gy, 129, gy], fill=CYAN)
-    d.rectangle([76, 70, 81, 92], fill=MAROON)                            # banners
-    d.rectangle([142, 70, 147, 92], fill=MAROON)
-    door(d, 100, 80, 24, 16, frame=NAVY, glass=True)
-    outline(d, 0, 0, W - 1, H - 1)
+    W, H = im.size                                                        # 288 x 112
+    # white barrel vaults (behind McShane), running front to back
+    for vx in range(0, 128, 16):
+        d.rectangle([vx, 4, vx + 15, 92], fill=ST)
+        d.rectangle([vx + 2, 4, vx + 13, 92], fill=ST_HI)
+        d.rectangle([vx + 5, 4, vx + 10, 92], fill=WHITE)
+        d.line([vx, 4, vx, 92], fill=ST_SH)
+        d.pieslice([vx, 0, vx + 15, 9], 180, 360, fill=ST_HI)
+    d.rectangle([0, 93, 127, H - 1], fill=NAVY)                           # glass link along McShane
+    d.rectangle([1, 94, 126, H - 1], fill=LBLUE)
+    for gx in range(6, 127, 8):
+        d.line([gx, 94, gx, H - 1], fill=WHITE)
+    outline(d, 0, 0, 127, H - 1)
+    # the two big cream boxes: fieldhouse (with its indoor track) and pool
+    flat_roof(d, 128, 0, 207, 79, rim=ST_HI, fill=ST_HI, seam=ST, units=((150, 20),))
+    flat_roof(d, 208, 6, W - 1, 79, rim=ST_HI, fill=ST_HI, seam=ST, units=((250, 30),))
+    eave(d, 128, W - 1, 80)
+    ashlar(d, 128, 82, W - 1, H - 1, base=ST_HI, joint=ST, step=6)
+    for px in range(132, W - 2, 12):                                      # tall cream panels
+        d.line([px, 82, px, H - 1], fill=ST)
+    for wx in range(138, 236, 24):
+        d.rectangle([wx, 86, wx + 12, 96], fill=NAVY)
+        d.rectangle([wx + 1, 87, wx + 11, 95], fill=LBLUE)
+    # the entrance, on the part you can see from the walkway
+    d.rectangle([244, 84, 283, H - 1], fill=NAVY)                         # glass entrance bay
+    d.rectangle([246, 86, 281, H - 1], fill=LBLUE)
+    for gx in range(250, 281, 6):
+        d.line([gx, 86, gx, H - 1], fill=DBLUE)
+    d.rectangle([240, 82, 243, H - 1], fill=MAROON)                       # banner
+    door(d, 258, H - 14, 12, 14, frame=NAVY, glass=True)
+    outline(d, 128, 0, W - 1, H - 1)
+    d.line([207, 0, 207, 79], fill=NAVY)
     return im
 
 
@@ -65,31 +78,44 @@ def lombardi_card():
 
 
 def mcshane():
+    """McShane (2021) at the front of the complex: limestone with vertical
+    fins, the glass tower, and the glass link to the gym with the main
+    entrance (D-0023 update)."""
     im, d, ox, oy = canvas("mcshane_center")
-    W, H = im.size
+    W, H = im.size                                                        # 160 x 106
     top = oy
-    d.rectangle([0, top, W - 1, top + 9], fill=ROOF_SH)                   # roof strip
-    d.rectangle([2, top + 2, W - 3, top + 7], fill=ROOF)
-    eave(d, 0, W - 1, top + 10)
-    ashlar(d, 0, top + 12, W - 1, H - 1, base=ST_HI, joint=ST, step=6)    # limestone
+    d.rectangle([0, top, 109, top + 9], fill=ST)                          # roof strip
+    d.rectangle([2, top + 2, 107, top + 7], fill=ST_HI)
+    eave(d, 0, 109, top + 10)
+    ashlar(d, 0, top + 12, 109, H - 1, base=ST_HI, joint=ST, step=6)      # limestone
     for fx in range(4, 108, 8):                                           # vertical fins + windows
         d.rectangle([fx, top + 14, fx + 4, H - 14], fill=NAVY)
         d.rectangle([fx + 1, top + 15, fx + 3, H - 15], fill=LBLUE)
         for wy in range(top + 18, H - 16, 9):
             d.point([fx + 2, wy], fill=YELLOW)                            # warm lit rooms
         d.line([fx + 6, top + 12, fx + 6, H - 14], fill=ST_SH)
-    # glass atrium tower at the east end, rising above the roof
-    d.rectangle([110, 0, W - 1, H - 1], fill=NAVY)
-    d.rectangle([112, 2, W - 3, H - 1], fill=LBLUE)
-    for gx in range(116, W - 3, 5):
+    d.rectangle([0, H - 13, 109, H - 1], fill=ST)                         # ground floor
+    for gx in range(4, 106, 12):
+        d.rectangle([gx, H - 11, gx + 8, H - 2], fill=LBLUE)
+    outline(d, 0, top, 109, H - 1)
+    # the glass tower, rising above the roof
+    d.rectangle([110, 0, 143, H - 1], fill=NAVY)
+    d.rectangle([112, 2, 141, H - 1], fill=LBLUE)
+    for gx in range(116, 141, 5):
         d.line([gx, 2, gx, H - 1], fill=WHITE)
     for gy in range(8, H - 2, 8):
-        d.line([112, gy, W - 3, gy], fill=CYAN)
-    d.rectangle([0, H - 13, 109, H - 1], fill=ST)                         # ground floor
-    d.rectangle([60, H - 22, 87, H - 18], fill=ST_DK)                     # entrance canopy
-    door(d, 66, H - 16, 14, 16, frame=NAVY, glass=True)
-    outline(d, 0, top, W - 1, H - 1)
-    d.line([110, 0, W - 1, 0], fill=NAVY)
+        d.line([112, gy, 141, gy], fill=CYAN)
+    # the low glass link to the gym, with the main entrance
+    d.rectangle([144, top, W - 1, top + 27], fill=ST)                     # its flat roof
+    d.rectangle([146, top + 2, W - 1, top + 25], fill=ST_HI)
+    d.line([144, top, W - 1, top], fill=NAVY)
+    d.rectangle([144, top + 30, W - 1, H - 1], fill=NAVY)
+    d.rectangle([144, top + 32, W - 1, H - 1], fill=LBLUE)
+    d.rectangle([144, top + 28, W - 1, top + 31], fill=ST_HI)
+    for gx in range(148, W, 5):
+        d.line([gx, top + 32, gx, H - 16], fill=WHITE)
+    door(d, 146, H - 14, 12, 14, frame=NAVY, glass=True)
+    d.line([110, 0, 143, 0], fill=NAVY)
     return im
 
 
@@ -105,7 +131,11 @@ def mcshane_card():
     d.rectangle([152, 4, 194, 76], fill=LBLUE)
     for gx in range(156, 194, 5):
         d.line([gx, 4, gx, 76], fill=WHITE)
-    tree(d, 212, 40, 14, leaf=PINK, hi=WHITE, ground=76)                 # cherry blossom, as in the photo
+    d.rectangle([196, 34, 208, 76], fill=NAVY)                            # glass link to the gym
+    d.rectangle([197, 36, 207, 76], fill=YELLOW)
+    fieldstone(d, 208, 30, 227, 76, base=ST_SH, light=ST, dark=ST_DK)       # the gym's Gothic end
+    d.polygon([(208, 30), (227, 12), (227, 30)], fill=ROOF_SH)
+    gothic_window(d, 216, 40, 10, 18)
     lawn(d, 77)
     for i, s in enumerate((MAROON, LBLUE, WHITE)):
         person(d, 120 + i * 9, 68, s)
@@ -113,32 +143,45 @@ def mcshane_card():
 
 
 def gym():
+    """Rose Hill Gym (1925), the old Gothic end of the complex: a big slate
+    roof with its ridge running back from the front, a raised clerestory
+    along the ridge, and the fieldstone gable front (D-0023 update)."""
     im, d, ox, oy = canvas("rose_hill_gym")
-    W, H = im.size
-    # the big arched roof: dark metal with a clerestory glass band
-    d.rectangle([2, 0, W - 3, oy + 44], fill=ST_DK)
-    for y in range(3, oy + 40, 4):
-        d.line([4, y, W - 5, y], fill=BROWN)
-    d.rectangle([2, oy + 34, W - 3, oy + 43], fill=LBLUE)                 # clerestory windows
-    for gx in range(4, W - 3, 4):
-        d.line([gx, oy + 34, gx, oy + 43], fill=WHITE)
-    d.ellipse([2, -6, W - 3, 12], fill=ST_DK)                             # curve of the roof
-    outline(d, 2, 0, W - 3, oy + 44)
-    # light fieldstone front with crenellated parapet
-    fieldstone(d, 0, oy + 48, W - 1, H - 1, base=ST, light=ST_HI, dark=ST_SH)
-    battlements(d, 0, W - 1, oy + 48, h=3, step=4, fill=ST_SH, top=ST_HI)
-    for x0 in (6, 22, 82, 98):
-        window(d, x0, oy + 60, 8, 10, frame=ST_HI)
-        window(d, x0, oy + 80, 8, 10, frame=ST_HI)
-    # the tall pointed-arch entrance: limestone frame, tracery, three doors
-    d.rectangle([36, oy + 50, 75, H - 1], fill=ST_HI)
-    d.polygon([(36, oy + 58), (56, oy + 44), (75, oy + 58)], fill=ST_HI)
-    d.line([56, oy + 40, 56, oy + 46], fill=ST_HI)                         # stone cross
-    d.line([54, oy + 42, 58, oy + 42], fill=ST_HI)
-    gothic_window(d, 42, oy + 52, 28, 20)
-    for dx in (40, 52, 64):
-        door(d, dx, H - 14, 8, 14, frame=ST_SH, leaf=BROWN)
-    outline(d, 0, oy + 45, W - 1, H - 1)
+    W, H = im.size                                                        # 112 x 102
+    cx = W // 2
+    roof_bottom = oy + 46
+    # the two slopes of the big pitched roof, ridge down the middle
+    slope_left, slope_right = ROOF_SH, ROOF
+    d.rectangle([2, 0, cx - 1, roof_bottom], fill=slope_left)
+    d.rectangle([cx, 0, W - 3, roof_bottom], fill=slope_right)
+    for x in range(6, W - 4, 6):                                          # slate courses
+        d.line([x, 0, x, roof_bottom], fill=NAVY if x < cx else ROOF_SH)
+    # the raised clerestory monitor along the ridge
+    d.rectangle([cx - 12, 0, cx + 11, roof_bottom - 6], fill=ST_DK)
+    d.rectangle([cx - 10, 2, cx + 9, roof_bottom - 8], fill=ROOF)
+    d.line([cx, 2, cx, roof_bottom - 8], fill=GRAY)
+    d.rectangle([cx - 12, 4, cx - 11, roof_bottom - 8], fill=LBLUE)       # its glass sides
+    d.rectangle([cx + 10, 4, cx + 11, roof_bottom - 8], fill=LBLUE)
+    outline(d, 2, 0, W - 3, roof_bottom)
+    # dark fieldstone front with the pointed gable over the entrance
+    front_top = roof_bottom + 2
+    fieldstone(d, 0, front_top, W - 1, H - 1, base=ST_SH, light=ST, dark=ST_DK)
+    d.polygon([(cx - 30, front_top + 2), (cx, front_top - 18), (cx + 29, front_top + 2)], fill=ST_SH)
+    d.polygon([(cx - 26, front_top + 2), (cx, front_top - 14), (cx + 25, front_top + 2)], fill=ST_DK)
+    d.line([cx - 30, front_top + 2, cx, front_top - 18], fill=ST_HI)       # stone coping
+    d.line([cx, front_top - 18, cx + 29, front_top + 2], fill=ST_HI)
+    d.line([cx, front_top - 24, cx, front_top - 18], fill=ST_HI)           # stone cross
+    d.line([cx - 2, front_top - 22, cx + 2, front_top - 22], fill=ST_HI)
+    gothic_window(d, cx - 13, front_top - 6, 26, 24)                      # the great window, lit
+    for gy in range(front_top + 8, front_top + 17, 3):
+        d.line([cx - 12, gy, cx + 11, gy], fill=YELLOW)
+    for x0 in (8, 22, 82, 96):                                            # side windows
+        arched_window(d, x0, front_top + 8, 7, 11, frame=ST_HI, glass=NAVY)
+    d.rectangle([0, front_top, 3, H - 1], fill=ST_SH)                     # corner buttresses
+    d.rectangle([W - 4, front_top, W - 1, H - 1], fill=ST_SH)
+    for dx in (cx - 18, cx - 6, cx + 6):                                  # three wooden doors
+        door(d, dx, H - 14, 10, 14, frame=ST_SH, leaf=BROWN)
+    outline(d, 0, front_top, W - 1, H - 1)
     return im
 
 
