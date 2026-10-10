@@ -262,10 +262,16 @@ Should we add a small set of extra colors to the game's palette?
 - Two charcoal brick colors were added for it, bringing the extra colors to 8. That's the top of the "about 6–8" approved in Part 4.
 - Its drawings are v1, **in review**. Open questions are in its `notes.md`.
 
+**Dealy Hall (third building, 2026-10-10, at your request).**
+- It's converted the same way: `assets/buildings/dealy_hall/`. The footprint is a T from the campus map: a north-south wing and a main block running east toward Rose Hill Manor Drive.
+- The columned entrance now faces **west**, toward Cunniffe House, reached by a short new walkway. The dining entrance is on the wing's east side.
+- This corrects an earlier note that put the drive on Dealy's west side.
+- No new colors. Its drawings are v1, **in review**.
+
 ## Next steps
 
-1. Review the library and Campbell in the gallery. Once each one looks right, set its status to `approved` in its `building.json` (or tell me what to change).
-2. Pick the next building to convert (Keating, Dealy or McShane).
+1. Review the library, Campbell and Dealy in the gallery. Once each one looks right, set its status to `approved` in its `building.json` (or tell me what to change).
+2. Pick the next building to convert (Keating, McShane or Cunniffe).
 3. The palette is now at 8 extra colors. Any further colors (for example a pink for Cunniffe) would need a small follow-up decision.
 
 ## Original plan (if all four were approved)

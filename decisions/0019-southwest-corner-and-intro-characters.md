@@ -114,7 +114,7 @@ The southwest corner is the first part of campus every player sees, so it should
 - **Cons:** Larkin would be left facing a walkway that no longer exists, and Campbell and Archer Drive stay inaccurate.
 
 ### C. Option A, and also apply "entrances face where they really are" to every building now
-- For example, your photos show **Dealy's** columned entrance faces **west** onto Rose Hill Manor Drive, and **Cunniffe House** faces **east**.
+- For example, your photos show **Dealy's** columned entrance faces **west** (toward Cunniffe House; corrected 2026-10-10), and **Cunniffe House** faces **east**.
 - **Pros:** The most accurate campus.
 - **Cons:** Needs a photo or map check for every building, and much more work. Better done gradually as photos come in.
 
@@ -191,6 +191,6 @@ Today the library is a generic gray-roofed building. How closely should it match
 
 ### Noted for later (no decision needed now)
 
-- **Dealy Hall** (`dealey_hall_facingEast.png`): dark stone with white trim around arched windows, and a columned portico entrance that faces **west**, onto Rose Hill Manor Drive.
+- **Dealy Hall** (`dealey_hall_facingEast.png`): dark stone with white trim around arched windows, and a columned portico entrance that faces **west**, toward Cunniffe House. *(Corrected 2026-10-10: Rose Hill Manor Drive is on Dealy's east side, not the west. Dealy is now a drawn building, see D-0020.)*
 - **Rose Hill Manor Drive** (`rosehill_manor_drive_facingNorth.png`): tree-lined, with sidewalks on both sides and a **low post-and-rail fence** along Edwards Parade. A good detail for the art pass.
 - **Campbell's plaza**: steps, birch trees and outdoor tables in front of the entrance. It can be suggested with a few tiles if Part 2 is approved.

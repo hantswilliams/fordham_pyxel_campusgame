@@ -71,7 +71,6 @@
     {"at": [4, 50], "type": "door", "location": "conley_salice"},
     {"at": [37, 38], "type": "door", "location": "hughes_hall"},
     {"at": [30, 45], "type": "door", "location": "cunniffe_house"},
-    {"at": [36, 51], "type": "door", "location": "dealy_hall"},
     {"at": [62, 48], "type": "door", "location": "keating_hall"},
     {"at": [63, 48], "type": "door", "location": "keating_hall"},
     {"at": [69, 56], "type": "door", "location": "spellman_hall"},

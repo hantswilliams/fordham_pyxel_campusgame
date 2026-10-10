@@ -121,7 +121,7 @@ Source: `research/Rose-Hill-Campus-Map.pdf` (Fordham's Rose Hill Campus Map). I 
 | `zoomin_southwest.png` | Close-up of the official map's southwest corner | Campbell between Archer Drive and Mill River Road, Walsh Library's entrances on its north side, no walkway south of it, extra Ram Van stops, "Duane" on the Admission building. See D-0019 |
 | `Walsh-1078_lookingSouth.jpg` | Walsh Library from Walsh Lawn | Light gray stone façade, tall dark glass entrance arches, a slatted tower. The entrance faces north onto the lawn (D-0019) |
 | `campbell_dorms_facingWest.png` | Campbell Hall, the new residence hall | Modern dark brick, a glass stair tower, a stepped plaza with birch trees. Its entrance faces east toward Mill River Road |
-| `dealey_hall_facingEast.png` | Dealy Hall | Dark stone with white trim, and a columned entrance that faces west onto Rose Hill Manor Drive |
+| `dealey_hall_facingEast.png` | Dealy Hall | Dark stone with white trim, and a columned entrance that faces west, toward Cunniffe House. (Corrected 2026-10-10: Rose Hill Manor Drive is on Dealy's *east* side, so the entrance faces away from it) |
 | `rosehill_manor_drive_facingNorth.png` | Rose Hill Manor Drive | Tree-lined road with sidewalks on both sides, and a post-and-rail fence along Edwards Parade |
 | `person_shouldbe_bigger*.png` | Screenshots of the intro | Characters look too small in the train and station scenes (D-0019) |
 

@@ -1,0 +1,26 @@
+{
+  "_about": "Dealy Hall as one drawn building (decisions/0020). Footprint rows use the map legend (game/world/tiles.py); ' ' leaves the map cell alone, '.' is lawn and ':' walkway. The 'D' on the west side is the columned main entrance, facing Cunniffe House; the 'D' on the east side of the wing is the dining entrance. The tiles only show if map.png is missing; the minimap reads them for colors.",
+  "id": "dealy_hall",
+  "name": "Dealy Hall",
+  "map": "rose_hill",
+  "location": "dealy_hall",
+  "faces": "west",
+  "status": "in review",
+  "origin": [34, 44],
+  "sprite_offset": [-6, 0],
+  "footprint": [
+    "RR    ",
+    "RR    ",
+    "RR....",
+    "DRRRRR",
+    "RRRRRR",
+    "RR....",
+    "RD::::",
+    "RR...."
+  ],
+  "sources": [
+    "research/images/dealey_hall_facingEast.png (west façade: dark fieldstone with white quoins around the windows, arched windows, light top storey, columned portico with an arched door and steps; owner unknown, tracing reference only)",
+    "research/images/fasting_east_cunniffee(1stbuilding)_dealey(2ndbuilding-back).png (Dealy behind Cunniffe House, its portico facing the lawn between them)",
+    "research/Rose-Hill-Campus-Map.pdf (outline: a north-south wing on the west and a main block running east to Rose Hill Manor Drive; dining icon by the wing)"
+  ]
+}
