@@ -70,3 +70,10 @@ def test_controls_card_text_fits():
         assert len(keys) * BIG_CHAR_W <= 88, keys
         assert 100 + len(action) * BIG_CHAR_W <= 244, action
     assert len(data.prompt) * BIG_CHAR_W <= 244
+
+
+def test_intro_art_stays_above_the_caption_box():
+    from game.gfx import intro_art
+    from game.ui.textbox import box_top
+    assert intro_art.SCENE_BOTTOM == box_top()
+    assert intro_art.ROAD_Y < intro_art.SCENE_BOTTOM - 20  # the road, and the Ram Van on it, show

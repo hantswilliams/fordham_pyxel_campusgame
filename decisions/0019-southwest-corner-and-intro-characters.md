@@ -59,6 +59,11 @@ In the train and station scenes, people are drawn with the same 16×16-pixel spr
 
 >
 
+**Follow-up fix (2026-10-09, after your screenshots):** the train passengers still looked tiny and the player looked bigger than the Ram Van. The cause: the caption box covers the bottom of the screen (everything below y = 130), so the street's road and the van were mostly hidden behind it, and the train's seats and windows were sized for smaller people.
+- **Train:** a close-up, with passengers at 3×. They fill their seats, with their heads at the windows.
+- **Street:** the sidewalk and road moved up above the caption box. The Ram Van is now a full-size shuttle bus, about 1.4× as tall and 3.5× as long as a person, and it drives past in front of the people on the sidewalk.
+- **A test** keeps intro art above the caption box.
+
 ---
 
 # Part 2: A more detailed, accurate southwest corner
