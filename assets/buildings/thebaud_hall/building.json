@@ -1,0 +1,31 @@
+{
+  "_about": "Thebaud Hall (decisions/0025), 1886, the first science building: cream stone under a green copper mansard roof with white dormers, beside the old power-plant smokestack.",
+  "id": "thebaud_hall",
+  "name": "Thebaud Hall",
+  "map": "rose_hill",
+  "location": "thebaud_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    34,
+    55
+  ],
+  "sprite_offset": [
+    0,
+    -14
+  ],
+  "nameplate": [
+    40,
+    36
+  ],
+  "footprint": [
+    "RRRRRR",
+    "RRRRRR",
+    "WwWwWW",
+    "WwDWwW"
+  ],
+  "sources": [
+    "research/images/web/academic_commons_thebaud_freeman_spellman_larkin_mulcahy.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Thebaud_Hall (Thebaud Hall gables, Fordham University.png CC BY-SA 2.0; Thebaud Hall viewed from south.jpg CC BY-SA 4.0; Thebaud Haull, Fordham with smokestack.jpg CC BY-SA 4.0)"
+  ]
+}

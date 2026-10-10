@@ -45,7 +45,7 @@
     "name": "Freeman Hall",
     "short_name": "FREEMAN",
     "kind": "academic",
-    "blurb": "Academic building on the south side of Edwards Parade, next to the Seismic Observatory.",
+    "blurb": "Built in 1930 for physics, in gray Collegiate Gothic stone, on the south side of Edwards Parade next to the Seismic Observatory.",
     "inside": [
       "Classrooms and offices"
     ],
@@ -55,7 +55,7 @@
     "name": "Collins Hall",
     "short_name": "COLLINS",
     "kind": "academic",
-    "blurb": "Academic building on Edgar Allan Poeway, between the residence halls and the academic quad.",
+    "blurb": "Built in 1904: red brick with a white classical front. Home of Collins Auditorium, the theatre program and the philosophy department, on Edgar Allan Poeway.",
     "inside": [
       "Classrooms and offices"
     ]
@@ -64,7 +64,7 @@
     "name": "Thebaud Hall",
     "short_name": "THEBAUD",
     "kind": "academic",
-    "blurb": "Academic building near the Bathgate Avenue pedestrian entrance. Home of the Public Safety Office.",
+    "blurb": "Built in 1886 as Fordham's science building, under a green copper roof, next to the old power-plant smokestack near the Bathgate Avenue entrance. Home of the Public Safety Office.",
     "inside": [
       "Public Safety Office",
       "Classrooms and offices"
@@ -76,7 +76,7 @@
     "short_name": "LARKIN",
     "real_entrance": "The entrance is on the north side, facing the walkway along Walsh Library.",
     "kind": "academic",
-    "blurb": "Academic building at the south edge of Walsh Lawn, east of Walsh Library.",
+    "blurb": "Built in 1927 for biology: gray Collegiate Gothic with a tower over the door, at the south edge of Walsh Lawn, east of Walsh Library.",
     "inside": [
       "Classrooms and offices"
     ]
@@ -85,7 +85,7 @@
     "name": "Mulcahy Hall",
     "short_name": "MULCAHY",
     "kind": "academic",
-    "blurb": "Academic building on the south side of campus, at the east end of the south residence halls.",
+    "blurb": "The chemistry building, opened in 1969, at the east end of the south side of campus.",
     "inside": [
       "Classrooms and offices"
     ]
@@ -111,13 +111,13 @@
     "name": "Spellman Hall",
     "short_name": "SPELLMAN",
     "kind": "campus",
-    "blurb": "Campus building between Keating Hall and O'Hare Hall."
+    "blurb": "Built in 1946 as a home for the Jesuits who serve Fordham and Fordham Prep. It has its own chapel, St. Robert Bellarmine. Between Keating Hall and O'Hare Hall."
   },
   "admissions": {
     "name": "Duane Library / Admission",
     "short_name": "ADMISSION",
     "kind": "campus",
-    "blurb": "Duane Library, the maroon building between Walsh Lawn and Thebaud Hall, is home to the Office of Undergraduate Admission.",
+    "blurb": "Duane Library (1926) was Fordham's library until 1998. Now it's home to the Office of Undergraduate Admission, the place to start a campus tour. It's marked in maroon on the campus map.",
     "inside": [
       "Office of Undergraduate Admission"
     ],
@@ -150,7 +150,7 @@
     "name": "University Church",
     "short_name": "CHURCH",
     "kind": "campus",
-    "blurb": "The church in the northwest part of campus, beside the cemetery on Bellarmine Road. Fordham is a Jesuit university, and everyone is welcome.",
+    "blurb": "Fordham's church since 1845, in gray Gothic stone, beside the Jesuit cemetery on Bellarmine Road. Its altar came from Old St. Patrick's Cathedral and some of its stained glass was a gift from King Louis Philippe of France. Fordham is a Jesuit university, and everyone is welcome.",
     "inside": [
       "Church"
     ],

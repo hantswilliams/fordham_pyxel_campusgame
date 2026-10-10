@@ -115,38 +115,6 @@
   "objects": [
     {
       "at": [
-        18,
-        26
-      ],
-      "type": "door",
-      "location": "university_church"
-    },
-    {
-      "at": [
-        24,
-        35
-      ],
-      "type": "door",
-      "location": "collins_hall"
-    },
-    {
-      "at": [
-        69,
-        56
-      ],
-      "type": "door",
-      "location": "spellman_hall"
-    },
-    {
-      "at": [
-        49,
-        57
-      ],
-      "type": "door",
-      "location": "freeman_hall"
-    },
-    {
-      "at": [
         92,
         54
       ],
@@ -168,38 +136,6 @@
       ],
       "type": "door",
       "location": "faculty_memorial_hall"
-    },
-    {
-      "at": [
-        36,
-        58
-      ],
-      "type": "door",
-      "location": "thebaud_hall"
-    },
-    {
-      "at": [
-        28,
-        58
-      ],
-      "type": "door",
-      "location": "admissions"
-    },
-    {
-      "at": [
-        23,
-        67
-      ],
-      "type": "door",
-      "location": "larkin_hall"
-    },
-    {
-      "at": [
-        60,
-        64
-      ],
-      "type": "door",
-      "location": "mulcahy_hall"
     },
     {
       "at": [

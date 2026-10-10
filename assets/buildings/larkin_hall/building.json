@@ -1,0 +1,31 @@
+{
+  "_about": "Larkin Hall (decisions/0025), 1927, built for biology: gray Collegiate Gothic fieldstone with a central tower over the entrance.",
+  "id": "larkin_hall",
+  "name": "Larkin Hall",
+  "map": "rose_hill",
+  "location": "larkin_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    21,
+    64
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    40,
+    36
+  ],
+  "footprint": [
+    "RRRRR",
+    "RRRRR",
+    "WwWwW",
+    "wWDWw"
+  ],
+  "sources": [
+    "research/images/web/academic_commons_thebaud_freeman_spellman_larkin_mulcahy.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Larkin_Hall (Larkin Hall, Fordham University.jpg CC BY-SA 4.0; 2020 Fordham University Larkin Hall.jpg CC BY-SA 4.0)"
+  ]
+}

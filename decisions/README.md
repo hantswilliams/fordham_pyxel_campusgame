@@ -49,5 +49,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0022](0022-fountain-quad-cunniffe-hughes.md) | The fountain quad: 1 plaza with the Cunniffe Fountain at the centre, 2 Cunniffe House drawn, 3 Hughes Hall drawn, 4 fountain as a drawn landmark, 5 two pink-brick colors | All Option A | Yes (art v1 in review) | Approved |
 | [0023](0023-athletics.md) | Athletics, batch 1 of the photo pass: 1 fields and stadium as drawn landmarks, 2 gym, McShane and Lombardi drawn, 3 building cards | All Option A (self-approved at your request; review at the end) | Yes | Approved |
 | [0024](0024-residence-halls.md) | Residence halls, batch 2 of the photo pass: 1 eleven halls drawn on their existing footprints, 2 a place drawn as several buildings (Martyrs' Court), 3 cards | All Option A (self-approved at your request; review at the end) | Yes | Approved |
+| [0025](0025-academic-buildings.md) | Academic and other buildings, batch 3 of the photo pass: 1 eight buildings drawn on their existing footprints, 2 leave Faculty Memorial Hall, the parking garage and the observatory tile until there are photos, 3 cards | All Option A (self-approved at your request; review at the end) | Yes | Approved |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

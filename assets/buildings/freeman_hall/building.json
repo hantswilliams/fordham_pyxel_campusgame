@@ -1,0 +1,31 @@
+{
+  "_about": "Freeman Hall (decisions/0025), 1930, built for physics: gray Collegiate Gothic fieldstone with battlements and a central entrance bay.",
+  "id": "freeman_hall",
+  "name": "Freeman Hall",
+  "map": "rose_hill",
+  "location": "freeman_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    46,
+    54
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    56,
+    36
+  ],
+  "footprint": [
+    "RRRRRRR",
+    "RRRRRRR",
+    "WwWwWwW",
+    "WwWDwWW"
+  ],
+  "sources": [
+    "research/images/web/academic_commons_thebaud_freeman_spellman_larkin_mulcahy.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Freeman_Hall (Freeman Hall, Fordham.jpg CC BY-SA 4.0; Freeman-hall Fordham Univ.jpg public domain)"
+  ]
+}

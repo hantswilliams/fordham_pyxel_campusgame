@@ -1,0 +1,32 @@
+{
+  "_about": "Spellman Hall (decisions/0025), 1946, a Jesuit residence: red brick with stone quoins, a stone parapet and a stone entrance bay.",
+  "id": "spellman_hall",
+  "name": "Spellman Hall",
+  "map": "rose_hill",
+  "location": "spellman_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    68,
+    52
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    24,
+    52
+  ],
+  "footprint": [
+    "GGG",
+    "GGG",
+    "GGG",
+    "WwW",
+    "WDW"
+  ],
+  "sources": [
+    "research/images/web/academic_commons_thebaud_freeman_spellman_larkin_mulcahy.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Spellman_Hall (Spellman Hall, Fordham University.jpg CC BY-SA 2.0)"
+  ]
+}

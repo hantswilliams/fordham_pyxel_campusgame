@@ -65,8 +65,22 @@ assets/buildings/
 ## Adding or updating a building
 
 1. Make the folder and `building.json`, copying the library's. Start with `"status": "draft"`.
-2. Draw `map.png` and `card.png` (or ask Claude for a first draft in code; see `walsh_library/options/draft_v1.py`).
+2. Draw `map.png` and `card.png`, or ask Claude for a first draft in code. The batch scripts in `_style/` draw most buildings with the shared kit `_style/kit.py`: `draw_athletics.py`, `draw_residence.py` and `draw_academic.py`.
 3. If the footprint changed, run `uv run python tools/stamp_buildings.py` to copy it into the map file. The tests tell you if they differ.
 4. Run the tests: `uv run pytest`.
 5. Build the review page: `uv run python tools/building_gallery.py`, then open `build/building_gallery.html`.
 6. When it looks right, set `"status": "approved"`.
+
+## Photos found online (decisions 0023–0025)
+
+The buildings drawn in the photo pass were traced from photos found online.
+- **Wikimedia Commons** photos have free licenses, which are listed in each building's `building.json` and `notes.md`.
+- **Image-search** screenshots are for reference only.
+
+The screenshots are kept in `research/images/web/`, listed in its `SOURCES.md`. Faculty Memorial Hall and the Regional Parking Facility are still tiles, because no reliable photos turned up.
+
+## A place drawn as several buildings
+
+One place can be split across more than one folder, as long as each folder has the same `location`. Martyrs' Court is the example: `martyrs_court` is the main block and `martyrs_court_west` is the west wing.
+- Each block needs its own `nameplate`.
+- Exactly one block should have a `card.png`. The tests check both.

@@ -1,0 +1,32 @@
+{
+  "_about": "Duane Library (decisions/0025), 1926, the old library, now Admission and the theology department: gray Collegiate Gothic with a central tower, a tall tracery window and an arched entrance.",
+  "id": "admissions",
+  "name": "Duane Library (Admission)",
+  "map": "rose_hill",
+  "location": "admissions",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    26,
+    54
+  ],
+  "sprite_offset": [
+    0,
+    -10
+  ],
+  "nameplate": [
+    40,
+    52
+  ],
+  "footprint": [
+    "MMMMM",
+    "MMMMM",
+    "MMMMM",
+    "WwWwW",
+    "WwDWw"
+  ],
+  "sources": [
+    "research/images/web/academic_commons_church_collins_duane.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Duane_Library_(Fordham) (Duane Library, Rose Hill.jpg CC BY-SA 4.0; Duane Library entrance.jpg CC BY-SA 4.0; Duane Library Fordham by R. Bucko.png CC BY 2.0)"
+  ]
+}

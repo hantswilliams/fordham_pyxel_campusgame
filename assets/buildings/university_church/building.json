@@ -1,0 +1,33 @@
+{
+  "_about": "University Church (decisions/0025), 1845: gray fieldstone Gothic Revival with a square bell tower and pinnacles over the pointed-arch door, and an octagonal lantern over the crossing.",
+  "id": "university_church",
+  "name": "University Church",
+  "map": "rose_hill",
+  "location": "university_church",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    16,
+    21
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    40,
+    68
+  ],
+  "footprint": [
+    "GGGGG",
+    "GGGGG",
+    "GGGGG",
+    "GGGGG",
+    "WwWwW",
+    "WwDWw"
+  ],
+  "sources": [
+    "research/images/web/academic_commons_church_collins_duane.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:University_Church_(Fordham) (Fordham University 08.JPG CC BY-SA 3.0; University Church, Fordham entrance.jpg CC BY-SA 2.0; Church, Fordham University from northeast end (4803445032).jpg CC BY-SA 2.0)"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "_about": "Collins Hall (decisions/0025), 1904, home of Collins Auditorium: red brick with a white limestone classical front, columns, a pediment and arched doors.",
+  "id": "collins_hall",
+  "name": "Collins Hall",
+  "map": "rose_hill",
+  "location": "collins_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    23,
+    30
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    24,
+    68
+  ],
+  "footprint": [
+    "RRR",
+    "RRR",
+    "RRR",
+    "RRR",
+    "WwW",
+    "WDW"
+  ],
+  "sources": [
+    "research/images/web/academic_commons_church_collins_duane.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Collins_Auditorium (Collins Hall Rose Hill, Fordham.jpg CC BY-SA 4.0; Collins Auditorium, Fordham University.jpg CC BY-SA 4.0; Collins Auditorium detail.jpg CC BY-SA 2.0)"
+  ]
+}

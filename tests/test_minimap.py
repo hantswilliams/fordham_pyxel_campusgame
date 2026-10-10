@@ -27,7 +27,7 @@ def test_building_walls_take_their_roof_colour():
 
 def test_admission_is_maroon_on_the_map():
     colors = tile_colors(M)
-    door = next(o for o in M.objects if o.location == "admissions")
+    door = next(o for o in M.objects if o.location == "admissions" and o.type == "door")
     assert colors[door.y][door.x] == Col.MAROON
 
 

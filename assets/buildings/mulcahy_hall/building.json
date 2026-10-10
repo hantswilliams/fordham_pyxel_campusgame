@@ -1,0 +1,32 @@
+{
+  "_about": "Mulcahy Hall (decisions/0025), 1969, the chemistry building: brown brick between white concrete piers, with tall window strips.",
+  "id": "mulcahy_hall",
+  "name": "Mulcahy Hall",
+  "map": "rose_hill",
+  "location": "mulcahy_hall",
+  "faces": "south",
+  "status": "in review",
+  "origin": [
+    59,
+    60
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
+  "nameplate": [
+    24,
+    52
+  ],
+  "footprint": [
+    "RRRR",
+    "RRRR",
+    "RRRR",
+    "WwWW",
+    "WDWW"
+  ],
+  "sources": [
+    "research/images/web/academic_commons_thebaud_freeman_spellman_larkin_mulcahy.jpg (Wikimedia Commons contact sheet)",
+    "https://commons.wikimedia.org/wiki/Category:Mulcahy_Hall (Mulcahy Hall Fordham University.jpg CC BY-SA 4.0)"
+  ]
+}
