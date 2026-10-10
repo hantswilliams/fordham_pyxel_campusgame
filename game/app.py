@@ -5,6 +5,7 @@ from game.gfx.placeholder_art import build_all
 from game.scenes.base import SceneManager
 from game.scenes.title import TitleScene
 from game.systems.input import PyxelInput
+from game.world.buildings import load_buildings
 from game.world.locations import load_locations
 
 
@@ -13,12 +14,13 @@ class App:
                  start_scene=None):
         pyxel.init(config.SCREEN_W, config.SCREEN_H, title=config.TITLE,
                    fps=config.FPS, headless=headless)
-        for index, rgb in config.PALETTE_OVERRIDES.items():
-            pyxel.colors[index] = rgb
+        config.apply_palette(pyxel.colors)
         build_all()
 
         self.input = input_source or PyxelInput()
         self.locations = load_locations(config.LOCATIONS_FILE)
+        # drawn buildings by location id, for card pictures (decisions/0020)
+        self.buildings = {b.location: b for b in load_buildings(config.BUILDINGS_DIR)}
         self.scenes = SceneManager()
         self.scenes.push(start_scene(self) if start_scene else TitleScene(self))
 

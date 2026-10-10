@@ -1,11 +1,14 @@
 """Building card: what a building or landmark is and what's inside.
 Shown when the player faces a door, landmark or shuttle sign and presses Z.
 Interiors are deferred (decisions/0012), so this is how buildings are explored.
-Text uses the big reading font (decisions/0018)."""
+Text uses the big reading font (decisions/0018). Buildings with a drawn
+picture (assets/buildings/<id>/card.png, decisions/0020) show it at the top
+of the card; it scrolls away with the text."""
 
 import pyxel
 
 from game.config import SCREEN_H, SCREEN_W, Col
+from game.gfx.building_art import card_image
 from game.systems.input import Action
 from game.ui import font
 from game.ui.text import BIG_CHAR_W, BIG_LINE_H, wrap
@@ -21,6 +24,11 @@ HEADER_H = 18
 BODY_TOP = HEADER_H + 22
 FOOTER_H = 16
 VISIBLE_LINES = (CARD_H - BODY_TOP - FOOTER_H) // BIG_LINE_H
+# with a picture, the kind tag sits on the picture and the body starts higher
+PIC_W, PIC_H = CARD_W - 2 * PAD, 88  # card.png size: 228 x 88
+PIC_BODY_TOP = HEADER_H + 4
+PIC_VISIBLE_LINES = (CARD_H - PIC_BODY_TOP - FOOTER_H) // BIG_LINE_H
+PIC_LINES = -(-(PIC_H + 4) // BIG_LINE_H)  # text lines the picture takes up
 
 KIND_COLORS = {
     "academic": Col.DARK_BLUE,
@@ -57,10 +65,24 @@ class BuildingCardScene(Scene):
         self.loc = location
         self.lines = card_lines(location)
         self.scroll = 0
+        building = getattr(app, "buildings", {}).get(location.id)
+        self.picture = card_image(building) if building else None
+
+    @property
+    def body_top(self) -> int:
+        return PIC_BODY_TOP if self.picture else BODY_TOP
+
+    @property
+    def visible_lines(self) -> int:
+        return PIC_VISIBLE_LINES if self.picture else VISIBLE_LINES
+
+    @property
+    def total_lines(self) -> int:
+        return len(self.lines) + (PIC_LINES if self.picture else 0)
 
     @property
     def max_scroll(self) -> int:
-        return max(0, len(self.lines) - VISIBLE_LINES)
+        return max(0, self.total_lines - self.visible_lines)
 
     def update(self) -> None:
         if self.input.pressed(Action.DOWN):
@@ -83,14 +105,21 @@ class BuildingCardScene(Scene):
         pyxel.rect(x + 2, y + 2, w - 4, HEADER_H - 2, Col.MAROON)
         font.text(x + PAD, y + 4, self.loc.name.upper()[:MAX_CHARS], Col.WHITE)
 
-        label = self.loc.kind_label
-        tag_col = KIND_COLORS.get(self.loc.kind, Col.GRAY)
-        pyxel.rect(x + PAD, y + HEADER_H + 4, font.width(label) + 8, 15, tag_col)
-        font.text(x + PAD + 4, y + HEADER_H + 5, label, Col.WHITE)
-
-        top = y + BODY_TOP
-        for i, (s, col) in enumerate(self.lines[self.scroll:self.scroll + VISIBLE_LINES]):
-            font.text(x + PAD, top + i * BIG_LINE_H, s, col)
+        top = y + self.body_top
+        if not self.picture:
+            self._draw_tag(x + PAD, y + HEADER_H + 4)
+        pyxel.clip(x + 2, top, w - 4, self.visible_lines * BIG_LINE_H)
+        first = 0
+        if self.picture:
+            py = top + 1 - self.scroll * BIG_LINE_H
+            self._draw_picture(x + PAD, py)
+            self._draw_tag(x + PAD + 3, py + PIC_H - 18)  # on the lawn, not the building
+            first = PIC_LINES
+        for i, (s, col) in enumerate(self.lines):
+            row = first + i - self.scroll
+            if 0 <= row < self.visible_lines:
+                font.text(x + PAD, top + row * BIG_LINE_H, s, col)
+        pyxel.clip()
 
         # footer: scroll arrows + close hint
         fy = y + h - FOOTER_H + 1
@@ -101,3 +130,14 @@ class BuildingCardScene(Scene):
             pyxel.tri(x + PAD + 12, fy + 4, x + PAD + 20, fy + 4, x + PAD + 16, fy + 9, Col.MAROON)
         footer = "Z: CLOSE"
         font.text(x + w - PAD - font.width(footer), fy, footer, Col.DARK_BLUE)
+
+    def _draw_tag(self, tx: int, ty: int) -> None:
+        label = self.loc.kind_label
+        tag_col = KIND_COLORS.get(self.loc.kind, Col.GRAY)
+        pyxel.rect(tx, ty, font.width(label) + 8, 15, tag_col)
+        font.text(tx + 4, ty + 1, label, Col.WHITE)
+
+    def _draw_picture(self, px: int, py: int) -> None:
+        img = self.picture
+        pyxel.blt(px, py, img, 0, 0, min(img.width, PIC_W), min(img.height, PIC_H))
+        pyxel.rectb(px - 1, py - 1, PIC_W + 2, PIC_H + 2, Col.NAVY)

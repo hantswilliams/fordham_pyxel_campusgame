@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT))
 import pyxel  # noqa: E402
 
 from game import config  # noqa: E402
+from game.gfx.building_art import draw_on_map  # noqa: E402
 from game.gfx.placeholder_art import CHAR_IMAGE_BANK, build_all, character_uv  # noqa: E402
 from game.scenes.overworld import bake_tilemap  # noqa: E402
 from game.world.mapdata import load_map  # noqa: E402
@@ -25,14 +26,15 @@ def main() -> None:
     map_id = sys.argv[1] if len(sys.argv) > 1 else config.START_MAP
     scale = int(sys.argv[2]) if len(sys.argv) > 2 else 1
     pyxel.init(config.SCREEN_W, config.SCREEN_H, headless=True)
-    for index, rgb in config.PALETTE_OVERRIDES.items():
-        pyxel.colors[index] = rgb
+    config.apply_palette(pyxel.colors)
     build_all()
 
     m = load_map(map_id, config.MAPS_DIR)
     bake_tilemap(m, 0)
     img = pyxel.Image(m.width * TILE, m.height * TILE)
     img.bltm(0, 0, 0, 0, 0, m.width * TILE, m.height * TILE)
+    for b in m.buildings:
+        draw_on_map(b, img)
     for obj in m.objects:
         if obj.type == "npc":
             u, v = character_uv(obj.sprite, obj.facing, 0)

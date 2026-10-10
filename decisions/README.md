@@ -44,6 +44,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0017](0017-in-game-campus-map.md) | In-game campus map | Whole campus visible from the start, pins you can browse, no fast travel; visited/unvisited pins in M3 | Yes | Approved |
 | [0018](0018-readable-text.md) | Readable, Pokémon-style text | PixelMplus 12 pixel font, black on white, 3 lines per box | Yes | Awaiting review |
 | [0019](0019-southwest-corner-and-intro-characters.md) | 1: bigger intro characters. 2: detailed southwest corner (library entrance north, Campbell, Archer Dr). 3: Walsh Library look | 1: 2x characters in all intro scenes. 2: rebuild the corner from the close-up map. 3: custom north-facing library tiles | Yes | Approved |
-| [0020](0020-building-art-pipeline-walsh-library.md) | A better way to draw buildings, piloted on Walsh Library: 1 map drawing, 2 card picture, 3 asset folder and review gallery, 4 extra stone colors | 1: whole-building drawing. 2: hand-drawn card picture. 3: one folder per building plus a gallery. 4: about 6–8 extra colors | No (mockups only) | Awaiting review |
+| [0020](0020-building-art-pipeline-walsh-library.md) | A better way to draw buildings, piloted on Walsh Library: 1 map drawing, 2 card picture, 3 asset folder and review gallery, 4 extra stone colors | 1: whole-building drawing. 2: hand-drawn card picture. 3: one folder per building plus a gallery. 4: about 6–8 extra colors | Yes (library art v1 in review) | Approved |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review (four parts, each with its own decision box) |
+| **Status** | Approved, all four parts Option A (2026-10-09). Built the same day; the library's drawings are v1, **in review** |
 | **Raised** | 2026-10-09. You felt the tile-built library doesn't look like the real one, and asked for more options and an asset folder to store and review buildings |
 | **Affects** | How buildings are drawn and stored, the building cards, the color palette. Walsh Library first, then other buildings one at a time |
-| **Built provisionally?** | No. Only review mockups were made, in `assets/buildings/walsh_library/options/` (see `review_sheet.png`) |
+| **Built?** | Yes. `assets/buildings/` (README, `palette.hex`, `walsh_library/`), `game/world/buildings.py` (footprints), `game/gfx/building_art.py` (pictures), card pictures in `game/scenes/card.py`, extra colors in `game/config.py`, review page `tools/building_gallery.py` |
 
 ## Why the library doesn't look right yet (I agree it doesn't)
 
@@ -72,7 +72,7 @@ These are quick mockups to compare *directions*, not finished art. On the review
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -117,7 +117,7 @@ Because the map can't show the library's front (see "why" above), the place to s
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: go with Option A (photo conversions used only as tracing guides)
+- [x] **Approve**: go with Option A (photo conversions used only as tracing guides)
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -190,7 +190,7 @@ assets/buildings/
 
 ## Your decision (Part 3)
 
-- [ ] **Approve**: go with Option A (library first)
+- [x] **Approve**: go with Option A (library first)
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -234,7 +234,7 @@ Should we add a small set of extra colors to the game's palette?
 
 ## Your decision (Part 4)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -244,7 +244,25 @@ Should we add a small set of extra colors to the game's palette?
 
 ---
 
-## If all four are approved, the next steps would be
+## What was built (2026-10-09)
+
+- **Part 3: the folder and loader.**
+  - `assets/buildings/walsh_library/building.json` holds the library's footprint, written in map-legend characters. `load_map` stamps it onto the map and adds a door for every glass arch (10 entrances), so the library's door objects were removed from `rose_hill.json`.
+  - `tools/stamp_buildings.py` copies a changed footprint into the map file. The tests check that the two match.
+- **Part 4: palette.** There are 6 extra colors: four stone shades and two roof grays. They live in `config.EXTRA_COLORS` and `assets/buildings/palette.hex`. Tests check that every drawing uses only palette colors and that the extra list stays at 8 or fewer.
+- **Part 1: map drawing.**
+  - `map.png` (160 × 148 px) is refined from mockup A. It has the tower block and wing with stone façades on the lawn side, one glass arch per tile, pier caps above the roofline, a flat roof with parapet, skylights and rooftop units, the slatted tower with its shadow, and the angled SE end.
+  - A small paved forecourt in front of the wing lets you reach its entrances.
+- **Part 2: card picture.** `card.png` (228 × 88 px) is refined from mockup C. On the building card, the picture sits at the top and scrolls away with the text; the building type tag sits on the lawn in the picture. Cards without a picture are unchanged.
+- **Review page.** `uv run python tools/building_gallery.py` writes `build/building_gallery.html`. It shows the reference photo, the building in the game, the tile version, the map drawing, the card picture, the footprint, and the notes. A copy is published as a private link for review.
+- **Simplifications to review** are listed in `assets/buildings/walsh_library/notes.md`. The main one: the real lawn-side façade is curved, and here it's two straight steps.
+
+## Next steps
+
+1. Review the library in the gallery. Once it looks right, set its status to `approved` in `building.json` (or tell me what to change).
+2. Pick the next building to convert (Keating, Campbell, Dealy or McShane).
+
+## Original plan (if all four were approved)
 
 1. Set up `assets/buildings/` with the palette, the loader, and `building.json` for Walsh Library.
 2. Refine option A into the library's real `map.png`, and option C into `card.png`. You review both in the gallery before they go in the game.

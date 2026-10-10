@@ -2,7 +2,7 @@
 
 A Pokémon-style, top-down pixel game where new Fordham students explore campus and find its resources. It's built with [Pyxel](https://github.com/kitao/pyxel).
 
-**Status:** Milestone 2 (Real Rose Hill). The whole Rose Hill campus is one walkable map, laid out from the official campus map. The game opens with a short, skippable intro: you ride Metro-North to Fordham station, walk to the Third / Webster Avenue gate, learn the controls, then walk up to the gate, where Bert the guard checks your Fordham ID (tap your card, or your phone with Apple Wallet or Google Wallet). An Orientation Leader greets you inside. Area names pop up as you walk, and you can talk to students and open a card for any building, landmark, shuttle stop or gate. Art is placeholder art drawn in code. Building interiors are deferred (decision 0012).
+**Status:** Milestone 2 (Real Rose Hill). The whole Rose Hill campus is one walkable map, laid out from the official campus map. The game opens with a short, skippable intro: you ride Metro-North to Fordham station, walk to the Third / Webster Avenue gate, learn the controls, then walk up to the gate, where Bert the guard checks your Fordham ID (tap your card, or your phone with Apple Wallet or Google Wallet). An Orientation Leader greets you inside. Area names pop up as you walk, and you can talk to students and open a card for any building, landmark, shuttle stop or gate. Most art is placeholder art drawn in code. Walsh Library is the first building drawn as one picture, with a picture on its building card (decision 0020). Building interiors are deferred (decision 0012).
 
 ## Run it
 
@@ -15,6 +15,7 @@ uv run pyxel watch . main.py     # play with auto-reload when files change
 uv run pytest                    # run tests (also validates map content)
 uv run python tools/capture.py   # headless run, saves screenshots to build/screenshots/
 uv run python tools/render_map.py  # whole map as one picture: build/map_rose_hill.png
+uv run python tools/building_gallery.py  # review page for drawn buildings: build/building_gallery.html
 ```
 
 **Controls:**
@@ -35,12 +36,15 @@ uv run python tools/render_map.py  # whole map as one picture: build/map_rose_hi
 | `content/maps/*.json` | Area names, plus everything placed on the map: NPCs and what they say, signs, landmarks, doors |
 | `content/intro.json` | The opening sequence: captions, how long each stays up, and the controls card. Edit the text here |
 | `content/locations.json` | Building cards: name, type, description, what's inside. Will feed the Campus Guide in M3 |
+| `assets/buildings/` | **Drawn buildings** (decision 0020): one folder per building with its map drawing, card picture, footprint and notes. See its README for how to add one |
 | `assets/fonts/` | The reading font (PixelMplus 12, free M+ license, decision 0018) |
 | `research/` | The official Rose Hill campus map and notes taken from it |
 | `game/` | Engine code: `scenes/` (title, overworld, dialogue), `world/` (map, movement, camera), `systems/` (input), `gfx/` (placeholder art) |
 | `tests/` | Unit tests plus content checks (`test_content.py`: every map loads, everything is reachable, every door has a building card) |
 | `tools/capture.py` | Scripted headless playthrough that saves screenshots |
 | `tools/render_map.py` | Draws a whole map as one picture, to compare with the real campus map |
+| `tools/building_gallery.py` | Builds one review page comparing each drawn building with its photo and its tile version |
+| `tools/stamp_buildings.py` | Copies drawn buildings' footprints into the map file after a footprint changes |
 
 ## Editing the map
 
@@ -51,7 +55,7 @@ uv run python tools/render_map.py  # whole map as one picture: build/map_rose_hi
 - **Buildings:**
   - Roofs show the building type: `R` academic (slate), `O` residence hall (orange), `G` other campus building (gray), `M` Admission (maroon)
   - Walls: `W` wall, `w` window, `B` banner, `D` door
-  - Walsh Library (faces north): `S` stone, `A` glass-arch entrance, `s` upper windows, `t` tower
+  - Walsh Library (faces north): `S` stone, `A` glass-arch entrance, `s` upper windows, `t` tower. The library is now a drawn building: its cells come from `assets/buildings/walsh_library/building.json`, and the game adds its entrance doors itself
   - Campbell Hall (modern): `Q` flat roof, `q` dark brick wall, `g` glass stair tower, `J` glass entrance
   - Entrances (`D`, `A`, `J`) each need a door object in the `.json`
 - **Outdoors:** `T` tree, `h` hedge, `b` bench, `L` lamp, `~` water, `F` athletic field, `d` infield dirt, `+` graves

@@ -14,8 +14,13 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from .buildings import BuildingAsset, load_buildings
 from .directions import Direction
 from .tiles import LEGEND, SPAWN_CHAR, SPAWN_GROUND, TILES
+
+# Drawn buildings (decisions/0020). Defined here as well as in game/config.py
+# so this module stays importable without Pyxel or the config.
+BUILDINGS_DIR = Path(__file__).resolve().parents[2] / "assets" / "buildings"
 
 OBJECT_TYPES = {"sign", "npc", "door", "checkpoint"}
 
@@ -64,6 +69,7 @@ class MapData:
     spawn: tuple[int, int]
     spawn_facing: Direction = Direction.DOWN
     areas: list[Area] = field(default_factory=list)
+    buildings: list[BuildingAsset] = field(default_factory=list)
     _by_pos: dict = field(default_factory=dict, repr=False)
 
     def __post_init__(self):
@@ -113,7 +119,8 @@ class MapData:
         return None
 
 
-def parse_map(map_id: str, text: str, meta: dict) -> MapData:
+def parse_map(map_id: str, text: str, meta: dict,
+              buildings: list[BuildingAsset] = ()) -> MapData:
     rows = [line.rstrip("\n") for line in text.strip("\n").splitlines()]
     if not rows:
         raise MapError(f"{map_id}: map is empty")
@@ -146,6 +153,17 @@ def parse_map(map_id: str, text: str, meta: dict) -> MapData:
         raise MapError(f"{map_id}: no player spawn '@'")
 
     height = len(rows)
+
+    # Drawn buildings stamp their footprint onto the grid (decisions/0020)
+    buildings = [b for b in buildings if b.map_id == map_id]
+    for b in buildings:
+        for x, y, name in b.cells():
+            if not (0 <= x < width and 0 <= y < height):
+                raise MapError(f"{map_id}: building {b.id!r} cell {(x, y)} is outside the map")
+            if spawn == (x, y):
+                raise MapError(f"{map_id}: building {b.id!r} covers the spawn")
+            tiles[y][x] = name
+
     objects = []
     seen: set[tuple[int, int]] = set()
     for i, d in enumerate(meta.get("objects", [])):
@@ -156,6 +174,15 @@ def parse_map(map_id: str, text: str, meta: dict) -> MapData:
         if obj.tile:
             tiles[obj.y][obj.x] = obj.tile
         objects.append(obj)
+
+    # ...and every entrance cell opens the building's card
+    for b in buildings:
+        for x, y in b.entrances():
+            if (x, y) in seen:
+                raise MapError(f"{map_id}: object at {(x, y)} sits on an entrance of "
+                               f"building {b.id!r}; the building adds its own door objects")
+            seen.add((x, y))
+            objects.append(MapObject(type="door", x=x, y=y, location=b.location))
 
     areas = [Area(a["name"], *a["rect"]) for a in meta.get("areas", [])]
 
@@ -169,6 +196,7 @@ def parse_map(map_id: str, text: str, meta: dict) -> MapData:
         spawn=spawn,
         spawn_facing=Direction.from_name(meta.get("spawn_facing", "down")),
         areas=areas,
+        buildings=buildings,
     )
 
 
@@ -206,7 +234,11 @@ def _make_object(map_id: str, i: int, d: dict, width: int, height: int) -> MapOb
     )
 
 
-def load_map(map_id: str, maps_dir: Path) -> MapData:
+def load_map(map_id: str, maps_dir: Path,
+             buildings_dir: Path | None = BUILDINGS_DIR) -> MapData:
+    """Load a map and apply its drawn buildings (pass buildings_dir=None
+    to load the bare grid)."""
     text = (maps_dir / f"{map_id}.txt").read_text(encoding="utf-8")
     meta = json.loads((maps_dir / f"{map_id}.json").read_text(encoding="utf-8"))
-    return parse_map(map_id, text, meta)
+    buildings = load_buildings(buildings_dir, map_id) if buildings_dir else []
+    return parse_map(map_id, text, meta, buildings)

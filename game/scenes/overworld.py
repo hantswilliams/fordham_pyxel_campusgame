@@ -4,6 +4,7 @@ import pyxel
 
 from game import config
 from game.config import SCREEN_H, SCREEN_W, TILE, Col
+from game.gfx.building_art import draw_on_map
 from game.gfx.placeholder_art import CHAR_IMAGE_BANK, TILE_IMAGE_BANK, character_uv
 from game.systems.input import Action
 from game.ui import font
@@ -165,6 +166,10 @@ class OverworldScene(Scene):
         cx, cy = self.cam
         pyxel.camera(cx, cy)
         pyxel.bltm(cx, cy, TILEMAP_INDEX, cx, cy, SCREEN_W, SCREEN_H)
+        # drawn buildings go over their footprint tiles (decisions/0020).
+        # Characters can't stand on a footprint, so they're always drawn after.
+        for b in self.map.buildings:
+            draw_on_map(b)
 
         # Characters, back to front so lower ones overlap upper ones.
         drawables: list[tuple[int, int, int, Direction, int]] = []

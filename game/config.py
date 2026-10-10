@@ -16,6 +16,7 @@ CONTENT_DIR = ROOT / "content"
 MAPS_DIR = CONTENT_DIR / "maps"
 LOCATIONS_FILE = CONTENT_DIR / "locations.json"
 INTRO_FILE = CONTENT_DIR / "intro.json"
+BUILDINGS_DIR = ROOT / "assets" / "buildings"  # drawn buildings, decisions/0020
 
 START_MAP = "rose_hill"
 
@@ -27,6 +28,19 @@ START_MAP = "rose_hill"
 #   11 mint  -> grass green
 MAROON = 0x860038
 PALETTE_OVERRIDES = {2: MAROON, 3: 0x3E7D3A, 4: 0x8F563B, 11: 0x7DBE52}
+
+# Extra "Fordham stone" colors added after the 16 (decisions/0020 Part 4):
+# warm stone shades for Fordham's stone buildings and two roof grays.
+# Keep this list short; every drawing uses only these colors plus the 16.
+# assets/buildings/palette.hex holds the same colors for drawing apps.
+EXTRA_COLORS = [
+    0xE4DDD0,  # 16 stone highlight
+    0xC6BDAE,  # 17 stone
+    0x9C9386,  # 18 stone shadow
+    0x6F685E,  # 19 dark stone trim
+    0x8C929C,  # 20 roof
+    0x6A707A,  # 21 roof shadow
+]
 
 # Named color indices so the rest of the code never uses magic numbers.
 class Col:
@@ -46,3 +60,25 @@ class Col:
     GRAY = 13
     PINK = 14
     PEACH = 15
+    # extra colors (EXTRA_COLORS above)
+    STONE_HI = 16
+    STONE = 17
+    STONE_SH = 18
+    STONE_DK = 19
+    ROOF = 20
+    ROOF_SH = 21
+
+
+def palette() -> list[int]:
+    """The game's full palette as 0xRRGGBB values, index = color number."""
+    base = [0x000000, 0x2B335F, 0x7E2072, 0x19959C, 0x8B4852, 0x395C98, 0xA9C1FF,
+            0xEEEEEE, 0xD4186C, 0xD38441, 0xE9C35B, 0x70C6A9, 0x7696DE, 0xA3A3A3,
+            0xFF9798, 0xEDC7B0]  # Pyxel's default 16
+    for index, rgb in PALETTE_OVERRIDES.items():
+        base[index] = rgb
+    return base + EXTRA_COLORS
+
+
+def apply_palette(colors) -> None:
+    """Set Pyxel's palette (pass pyxel.colors) to the game's palette."""
+    colors[:] = palette()

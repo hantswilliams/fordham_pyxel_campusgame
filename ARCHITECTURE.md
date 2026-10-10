@@ -142,6 +142,13 @@
 ]
 ```
 
+**5. Drawn buildings (decision 0020).** Most buildings are built from 16×16 tiles. An important building can instead get a folder in `assets/buildings/<id>/`:
+- `building.json` gives its footprint in map-legend characters. It decides what you bump into, and every entrance cell opens the building card.
+- `map.png` is drawn over the map.
+- `card.png` appears on its building card.
+
+`load_map` stamps the footprint onto the grid and adds the entrance doors. The overworld draws `map.png` after the tiles and before the characters. The palette is the 16 Pyxel colors (four swapped) plus six "Fordham stone" colors (`config.EXTRA_COLORS`, mirrored in `assets/buildings/palette.hex`). `tools/building_gallery.py` builds a review page per building. Walsh Library is the pilot; other buildings move over one at a time.
+
 A `tests/test_content.py` check validates the data: every NPC's dialogue exists, every quest references real locations, and every URL is well-formed. Content edits then can't break the game.
 
 ---
@@ -181,7 +188,8 @@ fordham_pyxel_campusgame/
 │   ├── systems/             # input.py, dialogue.py, progress.py, save.py, audio.py
 │   └── ui/                  # textbox.py, menu.py, hud.py
 ├── content/                 # locations.json, npcs.json, quests.json, dialogue/
-├── assets/                  # game.pyxres, maps/*.tmx, tilesets/*.png, fonts/
+├── assets/                  # game.pyxres, maps/*.tmx, tilesets/*.png, fonts/,
+│                            # buildings/<id>/ (drawn buildings, D-0020)
 ├── tests/                   # content validation + pure-logic unit tests
 └── tools/build.sh           # pyxel package → app2html (+ app2exe)
 ```
