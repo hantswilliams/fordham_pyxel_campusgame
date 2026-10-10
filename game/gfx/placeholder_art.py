@@ -49,43 +49,48 @@ def _path(img, x, y):
 
 
 def _wall(img, x, y):
-    img.rect(x, y, 16, 16, Col.GRAY)
+    """Fordham stone front wall (decisions/0021 house style): warm stone in
+    courses with staggered joints."""
+    img.rect(x, y, 16, 16, Col.STONE)
     for row in range(4):
-        by = y + row * 4
-        img.line(x, by, x + 15, by, Col.DARK_BLUE)
+        by = y + row * 4 + 3
+        img.line(x, by, x + 15, by, Col.STONE_SH)
         off = 0 if row % 2 == 0 else 4
         for bx in range(off, 16, 8):
-            img.line(x + bx, by, x + bx, by + 3, Col.DARK_BLUE)
-        img.line(x + off + 1, by + 1, x + off + 5, by + 1, Col.WHITE)
+            img.pset(x + bx, by - 2, Col.STONE_SH)
+        img.pset(x + off + 2, by - 3, Col.STONE_HI)
 
 
 def _roof(img, x, y):
+    """Slate roof for academic buildings."""
     img.rect(x, y, 16, 16, Col.DARK_BLUE)
     for row in range(0, 16, 4):
         img.line(x, y + row + 3, x + 15, y + row + 3, Col.NAVY)
-        off = 0 if (row // 4) % 2 == 0 else 3
-        for bx in range(off, 16, 6):
-            img.pset(x + bx, y + row + 1, Col.LIGHT_BLUE)
+        off = 0 if (row // 4) % 2 == 0 else 4
+        for bx in range(off, 16, 8):
+            img.line(x + bx, y + row, x + bx + 4, y + row, Col.CYAN)
 
 
 def _door(img, x, y):
+    """Wooden door in the bottom of a stone wall; the mat outside is drawn
+    on the path by game/gfx/building_overlay.py."""
     _wall(img, x, y)
-    img.rect(x + 3, y + 5, 10, 11, Col.BROWN)
-    img.circ(x + 8, y + 6, 5, Col.BROWN)
-    img.rect(x + 3, y + 6, 10, 10, Col.BROWN)
-    img.line(x + 8, y + 2, x + 8, y + 15, Col.NAVY)
+    img.rect(x + 2, y + 2, 12, 14, Col.STONE_DK)
+    img.rect(x + 3, y + 3, 10, 13, Col.BROWN)
+    img.line(x + 8, y + 3, x + 8, y + 15, Col.STONE_DK)
+    img.line(x + 4, y + 4, x + 6, y + 4, Col.ORANGE)
     img.pset(x + 6, y + 10, Col.YELLOW)
     img.pset(x + 10, y + 10, Col.YELLOW)
 
 
 def _window(img, x, y):
+    """Two-pane window: white frame, light blue glass (the house style)."""
     _wall(img, x, y)
-    img.rect(x + 4, y + 4, 8, 10, Col.NAVY)
-    img.tri(x + 4, y + 4, x + 11, y + 4, x + 8, y + 1, Col.NAVY)
-    img.rect(x + 5, y + 5, 6, 8, Col.LIGHT_BLUE)
-    img.line(x + 8, y + 3, x + 8, y + 13, Col.NAVY)
-    img.line(x + 5, y + 9, x + 10, y + 9, Col.NAVY)
-    img.pset(x + 6, y + 6, Col.WHITE)
+    img.rect(x + 2, y + 4, 12, 9, Col.WHITE)
+    img.rect(x + 3, y + 5, 4, 7, Col.LIGHT_BLUE)
+    img.rect(x + 9, y + 5, 4, 7, Col.LIGHT_BLUE)
+    img.line(x + 3, y + 5, x + 4, y + 5, Col.WHITE)
+    img.line(x + 2, y + 13, x + 13, y + 13, Col.STONE_SH)
 
 
 def _tree(img, x, y):
@@ -132,18 +137,22 @@ def _bench(img, x, y):
 
 
 def _sign(img, x, y):
+    """Gray metal signpost on two legs, as in the inspiration images
+    (decisions/0021). Used beside every door and at landmarks."""
     _grass(img, x, y)
-    img.rect(x + 7, y + 9, 2, 7, Col.BROWN)
-    img.rect(x + 1, y + 2, 14, 8, Col.NAVY)
-    img.rect(x + 2, y + 3, 12, 6, Col.BROWN)
-    img.line(x + 4, y + 5, x + 11, y + 5, Col.PEACH)
-    img.line(x + 4, y + 7, x + 9, y + 7, Col.PEACH)
+    img.rect(x + 3, y + 11, 2, 5, Col.NAVY)
+    img.rect(x + 11, y + 11, 2, 5, Col.NAVY)
+    img.rect(x + 1, y + 1, 14, 11, Col.NAVY)
+    img.rect(x + 2, y + 2, 12, 9, Col.WHITE)
+    img.rect(x + 3, y + 3, 10, 7, Col.GRAY)
+    img.line(x + 4, y + 5, x + 11, y + 5, Col.WHITE)
+    img.line(x + 4, y + 7, x + 9, y + 7, Col.WHITE)
 
 
 def _banner(img, x, y):
     _wall(img, x, y)
     img.rect(x + 4, y + 1, 8, 12, Col.MAROON)
-    img.tri(x + 4, y + 13, x + 11, y + 13, x + 8, y + 10, Col.GRAY)
+    img.tri(x + 4, y + 13, x + 11, y + 13, x + 8, y + 10, Col.STONE)
     img.line(x + 4, y + 1, x + 11, y + 1, Col.YELLOW)
     img.line(x + 6, y + 5, x + 9, y + 5, Col.WHITE)
     img.line(x + 7, y + 4, x + 7, y + 8, Col.WHITE)

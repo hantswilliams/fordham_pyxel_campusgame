@@ -1,6 +1,6 @@
 # Walsh Library: notes
 
-**Status:** in review (first drafts, v1). Pilot building for decisions/0020.
+**Status:** in review (v2, house style). Pilot building for decisions/0020.
 
 ## Sources
 
@@ -24,6 +24,15 @@
 - Are the tower's position and height right?
 - Should the card picture show the curve of the façade more strongly?
 
+## v2: house style (decision 0021)
+
+- **Entrance now faces south.** The building is one row shorter (10 × 8 tiles), with the glass main doors in the middle of the south wall and a walkway along the fence in front of them.
+  - The real entrances face north onto Walsh Lawn; the card says so under **IN REAL LIFE**.
+- **Shape:** a rectangle. The roof carries the raised tower-block roof at the west, skylights, rooftop units, and the slatted tower with its shadow. The front wall has stone piers and glass arches.
+- **The game adds** the plaque (WALSH LIBRARY, at `nameplate` in building.json) and the mats.
+- v1's map drawing is kept in `options/map_v1.png`. The card picture is unchanged.
+
 ## History
 
 - v1, 2026-10-09: first drafts drawn in code (`options/draft_v1.py`), refined from mockups A and C.
+- v2, 2026-10-10: house style and south-facing entrance (decision 0021), drawn by `../_style/draw_v2.py`.

@@ -11,6 +11,7 @@ from game.scenes.card import MAX_CHARS, card_lines
 from game.world.directions import Direction
 from game.world.locations import load_locations
 from game.world.mapdata import load_map
+from game.gfx.building_overlay import door_groups, plaque_spot, plaque_width
 from game.world.tiles import DOOR_TILES
 
 MAP_IDS = sorted(p.stem for p in config.MAPS_DIR.glob("*.txt"))
@@ -137,22 +138,41 @@ def test_building_card_fits(loc_id):
     assert len(lines) <= 16, "card text is very long; trim the blurb"
 
 
-def test_southwest_corner_matches_the_close_up_map():
-    """D-0019: Walsh Library and Larkin open to the north, there's no walkway
-    between the library and the south fence, Campbell opens to the east."""
+def test_every_door_opens_south():
+    """D-0021: every entrance is in the bottom row of its building's front
+    wall and opens south, toward the camera."""
     m = load_map(config.START_MAP, config.MAPS_DIR)
-    doors = {}
     for o in m.objects:
         if o.type == "door":
-            doors.setdefault(o.location, []).append((o.x, o.y))
-    for loc in ("walsh_library", "larkin_hall"):
-        for x, y in doors[loc]:
-            assert not m.is_blocked(x, y - 1), f"{loc}: entrance at {(x, y)} should open to the north"
-    for x, y in doors["campbell_hall"]:
-        assert not m.is_blocked(x + 1, y), "Campbell's entrance should open east onto Mill River Road"
-    lib = [(o.x, o.y) for o in m.objects if o.location == "walsh_library"]
-    lib_x = range(min(x for x, _ in lib), max(x for x, _ in lib) + 1)
-    fence_y = next(y for y in range(max(y for _, y in lib), m.height) if m.tiles[y][lib_x[0]] == "fence")
-    for y in range(max(y for _, y in lib) + 1, fence_y):
-        for x in lib_x:
-            assert m.tiles[y][x] not in ("path",), f"walkway south of the library at {(x, y)}"
+            assert not m.is_blocked(o.x, o.y + 1), \
+                f"{o.location}: door at {(o.x, o.y)} should open onto a walkable cell to the south"
+
+
+def test_every_building_has_a_signpost_by_its_door():
+    """D-0021 Part 3: a signpost within a few steps of an entrance."""
+    m = load_map(config.START_MAP, config.MAPS_DIR)
+    groups = door_groups(m)
+    signs = [(o.x, o.y, o.location) for o in m.objects if o.type == "sign"]
+    for loc, gs in groups.items():
+        doors = [c for g in gs for c in g]
+        near = [s for s in signs if s[2] == loc
+                and min(abs(s[0] - x) + abs(s[1] - y) for x, y in doors) <= 8]
+        assert near, f"{loc} has no signpost near its door"
+
+
+def test_every_building_has_a_name_plaque_that_fits():
+    m = load_map(config.START_MAP, config.MAPS_DIR)
+    for loc, gs in door_groups(m).items():
+        name = LOCATIONS[loc].short_name
+        assert name, f"{loc} needs a short_name for its plaque"
+        assert name == name.upper(), f"{loc}: plaque names are in capitals"
+        for g in gs:
+            _, _, room = plaque_spot(m, loc, g)
+            assert plaque_width(name) <= room - 2, f"{loc}: {name!r} is too wide for its wall"
+
+
+def test_moved_entrances_say_where_the_real_one_is():
+    """D-0021 Part 1: buildings whose real entrance isn't on the south side
+    say so on their card."""
+    for loc in ("walsh_library", "larkin_hall", "campbell_hall", "dealy_hall"):
+        assert LOCATIONS[loc].real_entrance, loc

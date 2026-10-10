@@ -27,6 +27,8 @@ class Location:
     inside: list[str] = field(default_factory=list)
     url: str = ""
     guide: bool = False  # appears in the Campus Guide (D-0014)
+    short_name: str = ""  # on the building's name plaque (D-0021)
+    real_entrance: str = ""  # where the entrance really is, if the map differs (D-0021)
 
     @property
     def kind_label(self) -> str:
@@ -51,6 +53,8 @@ def parse_locations(data: dict) -> dict[str, Location]:
             inside=list(d.get("inside", [])),
             url=d.get("url", ""),
             guide=bool(d.get("guide", False)),
+            short_name=d.get("short_name", ""),
+            real_entrance=d.get("real_entrance", ""),
         )
     return out
 

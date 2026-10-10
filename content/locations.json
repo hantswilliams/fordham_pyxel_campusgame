@@ -8,6 +8,7 @@
   },
   "keating_hall": {
     "name": "Keating Hall",
+    "short_name": "KEATING HALL",
     "kind": "academic",
     "blurb": "The gothic building with the tall central tower on the east side of Edwards Parade. One of the most recognizable buildings at Rose Hill.",
     "inside": [
@@ -18,8 +19,10 @@
   },
   "dealy_hall": {
     "name": "Dealy Hall",
+    "short_name": "DEALY HALL",
+    "real_entrance": "The columned main entrance is on the west side, facing Cunniffe House.",
     "kind": "academic",
-    "blurb": "Academic building of dark stone with white trim, beside Rose Hill Manor Drive across from Edwards Parade. Its columned main entrance faces west, toward Cunniffe House. A Ram Van shuttle stop is on the drive by its east end.",
+    "blurb": "Academic building of dark stone with white trim, beside Rose Hill Manor Drive across from Edwards Parade. A Ram Van shuttle stop is on the drive by its east end.",
     "inside": [
       "Classrooms and offices",
       "Dining"
@@ -28,6 +31,7 @@
   },
   "hughes_hall": {
     "name": "Hughes Hall",
+    "short_name": "HUGHES HALL",
     "kind": "academic",
     "blurb": "Academic building next to the Carolyn Dursi Cunniffe Fountain and the Ram Statue.",
     "inside": [
@@ -37,6 +41,7 @@
   },
   "freeman_hall": {
     "name": "Freeman Hall",
+    "short_name": "FREEMAN",
     "kind": "academic",
     "blurb": "Academic building on the south side of Edwards Parade, next to the Seismic Observatory.",
     "inside": [
@@ -46,6 +51,7 @@
   },
   "collins_hall": {
     "name": "Collins Hall",
+    "short_name": "COLLINS",
     "kind": "academic",
     "blurb": "Academic building on Edgar Allan Poeway, between the residence halls and the academic quad.",
     "inside": [
@@ -54,6 +60,7 @@
   },
   "thebaud_hall": {
     "name": "Thebaud Hall",
+    "short_name": "THEBAUD",
     "kind": "academic",
     "blurb": "Academic building near the Bathgate Avenue pedestrian entrance. Home of the Public Safety Office.",
     "inside": [
@@ -64,14 +71,17 @@
   },
   "larkin_hall": {
     "name": "Larkin Hall",
+    "short_name": "LARKIN",
+    "real_entrance": "The entrance is on the north side, facing the walkway along Walsh Library.",
     "kind": "academic",
-    "blurb": "Academic building at the south edge of Walsh Lawn, east of Walsh Library. Its entrance faces north, onto the walkway along the library.",
+    "blurb": "Academic building at the south edge of Walsh Lawn, east of Walsh Library.",
     "inside": [
       "Classrooms and offices"
     ]
   },
   "mulcahy_hall": {
     "name": "Mulcahy Hall",
+    "short_name": "MULCAHY",
     "kind": "academic",
     "blurb": "Academic building on the south side of campus, at the east end of the south residence halls.",
     "inside": [
@@ -80,6 +90,7 @@
   },
   "faculty_memorial_hall": {
     "name": "Faculty Memorial Hall",
+    "short_name": "FACULTY MEM",
     "kind": "academic",
     "blurb": "Academic building in the southeast corner of campus, near Belmont Avenue.",
     "inside": [
@@ -88,17 +99,20 @@
   },
   "cunniffe_house": {
     "name": "Cunniffe House",
+    "short_name": "CUNNIFFE",
     "kind": "campus",
     "blurb": "Campus building on Edgar Allan Poeway, next to Hughes Hall. A Ram Van shuttle stop is nearby.",
     "guide": true
   },
   "spellman_hall": {
     "name": "Spellman Hall",
+    "short_name": "SPELLMAN",
     "kind": "campus",
     "blurb": "Campus building between Keating Hall and O'Hare Hall."
   },
   "admissions": {
     "name": "Duane Library / Admission",
+    "short_name": "ADMISSION",
     "kind": "campus",
     "blurb": "Duane Library, the maroon building between Walsh Lawn and Thebaud Hall, is home to the Office of Undergraduate Admission.",
     "inside": [
@@ -108,6 +122,7 @@
   },
   "mcshane_center": {
     "name": "McShane Campus Center",
+    "short_name": "MCSHANE",
     "kind": "campus",
     "blurb": "The student center, north of Edwards Parade next to Rose Hill Gymnasium. The main place to grab a meal.",
     "inside": [
@@ -118,8 +133,10 @@
   },
   "walsh_library": {
     "name": "William D. Walsh Family Library",
+    "short_name": "WALSH LIBRARY",
+    "real_entrance": "The entrances are on the north side, facing Walsh Lawn, under the tower.",
     "kind": "campus",
-    "blurb": "The main library, in the southwest corner of campus. Its glass-arched entrances face north onto Walsh Lawn, below its tall slatted tower. Not to be confused with Walsh Hall, a residence hall on the south side.",
+    "blurb": "The main library, in the southwest corner of campus, below its tall slatted tower. Not to be confused with Walsh Hall, a residence hall on the south side.",
     "inside": [
       "Library",
       "Study spaces"
@@ -128,6 +145,7 @@
   },
   "university_church": {
     "name": "University Church",
+    "short_name": "CHURCH",
     "kind": "campus",
     "blurb": "The church in the northwest part of campus, beside the cemetery on Bellarmine Road. Fordham is a Jesuit university, and everyone is welcome.",
     "inside": [
@@ -137,6 +155,7 @@
   },
   "rose_hill_gym": {
     "name": "Rose Hill Gymnasium",
+    "short_name": "ROSE HILL GYM",
     "kind": "athletics",
     "blurb": "The gym next to McShane Campus Center. The Victory Bell stands just outside.",
     "inside": [
@@ -146,6 +165,7 @@
   },
   "lombardi_center": {
     "name": "Lombardi Memorial Center",
+    "short_name": "LOMBARDI",
     "kind": "athletics",
     "blurb": "Athletics building on the north side of campus, behind McShane Campus Center.",
     "inside": [
@@ -154,6 +174,7 @@
   },
   "moglia_stadium": {
     "name": "Moglia Stadium",
+    "short_name": "MOGLIA",
     "kind": "athletics",
     "blurb": "The stadium beside Jack Coffey Field."
   },
@@ -215,6 +236,7 @@
   },
   "ohare_hall": {
     "name": "O'Hare Hall",
+    "short_name": "O'HARE",
     "kind": "residence",
     "blurb": "Residence hall on the east side of campus, near the Main Entrance. It also houses important student services.",
     "inside": [
@@ -228,6 +250,7 @@
   },
   "tierney_hall": {
     "name": "Tierney Hall",
+    "short_name": "TIERNEY",
     "kind": "residence",
     "blurb": "Residence hall next to O'Hare Hall on the east side of campus.",
     "inside": [
@@ -236,6 +259,7 @@
   },
   "queens_court": {
     "name": "Queen's Court",
+    "short_name": "QUEEN'S CT",
     "kind": "residence",
     "blurb": "A cluster of residence halls on the west side of campus: Bishop's, St. John's, St. Robert's and Queen's Court.",
     "inside": [
@@ -246,6 +270,7 @@
   },
   "alumni_court_south": {
     "name": "Alumni Court South",
+    "short_name": "ALUMNI CT",
     "kind": "residence",
     "blurb": "Residence hall on the far west side of campus, by the Alumni Court circle and a Ram Van shuttle stop.",
     "inside": [
@@ -254,6 +279,7 @@
   },
   "martyrs_court": {
     "name": "Martyrs' Court",
+    "short_name": "MARTYRS CT",
     "kind": "residence",
     "blurb": "L-shaped residence hall wrapping around Martyrs' Lawn.",
     "inside": [
@@ -262,6 +288,7 @@
   },
   "loschert_hall": {
     "name": "Loschert Hall",
+    "short_name": "LOSCHERT",
     "kind": "residence",
     "blurb": "Residence hall in the northwest corner of campus, next to University Church.",
     "inside": [
@@ -270,6 +297,7 @@
   },
   "faber_hall": {
     "name": "Faber Hall",
+    "short_name": "FABER",
     "kind": "residence",
     "blurb": "Residence hall on Bellarmine Road, next to Loyola Hall.",
     "inside": [
@@ -278,6 +306,7 @@
   },
   "loyola_hall": {
     "name": "Loyola Hall",
+    "short_name": "LOYOLA",
     "kind": "residence",
     "blurb": "Residence hall next to Faber Hall, near Bellarmine Road and Constitution Row.",
     "inside": [
@@ -287,6 +316,7 @@
   },
   "conley_salice": {
     "name": "Conley & Salice Halls",
+    "short_name": "CONLEY",
     "kind": "residence",
     "blurb": "Two residence halls along Mill River Road on the far west side of campus.",
     "inside": [
@@ -295,8 +325,10 @@
   },
   "campbell_hall": {
     "name": "Campbell Hall",
+    "short_name": "CAMPBELL",
+    "real_entrance": "The dining entrance is on the east side, facing Mill River Road, near the Webster Avenue gate.",
     "kind": "residence",
-    "blurb": "A newer residence hall: modern dark brick with glass stair towers, between Archer Drive and Mill River Road. Its entrance faces east, onto Mill River Road, near the Webster Avenue gate.",
+    "blurb": "A newer residence hall: modern dark brick with glass stair towers, between Archer Drive and Mill River Road, near the Webster Avenue gate.",
     "inside": [
       "Student rooms",
       "Dining"
@@ -304,6 +336,7 @@
   },
   "finlay_hall": {
     "name": "Finlay Hall",
+    "short_name": "FINLAY",
     "kind": "residence",
     "blurb": "Residence hall on the south side of campus, on Clavius Way near the Bathgate Avenue entrance.",
     "inside": [
@@ -313,6 +346,7 @@
   },
   "walsh_hall": {
     "name": "Walsh Hall",
+    "short_name": "WALSH HALL",
     "kind": "residence",
     "blurb": "Residence hall on the south side of campus. Not the library! That's the Walsh Family Library in the southwest corner.",
     "inside": [
@@ -327,6 +361,7 @@
   },
   "regional_parking": {
     "name": "Fordham Regional Parking Facility",
+    "short_name": "PARKING",
     "kind": "transit",
     "blurb": "Parking garage on the east side of campus. Ram Van pick-up and drop-off is here.",
     "inside": [

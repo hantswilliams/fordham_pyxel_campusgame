@@ -1,6 +1,6 @@
 # Campbell Hall: notes
 
-**Status:** in review (first drafts, v1). Second drawn building, after Walsh Library (decisions/0020).
+**Status:** in review (v2, house style). Second drawn building, after Walsh Library (decisions/0020).
 
 ## Sources
 
@@ -34,6 +34,15 @@
 - Is the building on the right of the photo part of Campbell, or Salice / Conley Halls next door? The card treats it as Campbell's north part.
 - Does Campbell have other entrances students use (residents' entrances) besides the dining entrance?
 
+## v2: house style (decision 0021)
+
+- **Entrance now faces south.** Campbell is one 3 × 10 block (the step between its north and south parts is gone), with glass doors at the south end under the wood canopy.
+  - The real dining entrance faces east onto Mill River Road; the card says so under **IN REAL LIFE**.
+- **Tall and narrow**, so the front shows almost all the way up, like the dark tower in `inspiration3`: storeys of paired windows in charcoal brick, the glass stair tower, and the glass ground floor.
+- **The game adds** the plaque (CAMPBELL) and the mat.
+- v1's map drawing is kept in `options/map_v1.png`. The card picture is unchanged.
+
 ## History
 
 - v1, 2026-10-09: first drafts drawn in code (`options/draft_v1.py`). Added two charcoal brick colors to the palette for it.
+- v2, 2026-10-10: house style and south-facing entrance (decision 0021), drawn by `../_style/draw_v2.py`.

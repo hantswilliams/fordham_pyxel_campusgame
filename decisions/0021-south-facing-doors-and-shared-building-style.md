@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review (four parts, each with its own decision box) |
+| **Status** | Approved, all four parts Option A (2026-10-10). Built the same day; the three drawn buildings are v2, **in review** |
 | **Raised** | 2026-10-10. You asked that building doors always face the same direction, to make the game easier to walk through, even though it's less true to life. You also added `research/images/inspiration1.png` to `inspiration4.png` as a style reference: "some buildings still look very unique, but they all have the same general trend" |
 | **Affects** | Every building's entrance and look, the signs by buildings, the building cards. Changes parts of D-0019 (north-facing library) and D-0020 (the three drawn buildings) |
-| **Built provisionally?** | No. Only mockups, in `assets/buildings/_style/` (see `style_mockups.png`) |
+| **Built?** | Yes. Doors and signposts: the map generator and `content/maps/rose_hill.*`. House style: the tiles in `game/gfx/placeholder_art.py`, the outline/eave/mat/plaque overlay in `game/gfx/building_overlay.py`, and new drawings from `assets/buildings/_style/draw_v2.py`. Cards: `short_name` and `real_entrance` in `content/locations.json` |
 
 ## What the inspiration images show
 
@@ -82,7 +82,7 @@ You've decided that all doors face the same way. The questions are which way, an
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -142,7 +142,7 @@ These are the rules every building follows, so the campus reads as one game whil
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -184,7 +184,7 @@ The inspiration images have a small gray signpost by almost every door, and the 
 
 ## Your decision (Part 3)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -225,7 +225,7 @@ The inspiration images have a small gray signpost by almost every door, and the 
 
 ## Your decision (Part 4)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -234,6 +234,25 @@ The inspiration images have a small gray signpost by almost every door, and the 
 >
 
 ---
+
+## What was built (2026-10-10)
+
+- **Part 1: doors.** Every door now opens south. A test checks every door on the map.
+  - **Walsh Library** is 8 rows tall, with a glass main entrance in the middle of its south wall. A new walkway runs along the fence from Mill River Road to Larkin.
+  - **Larkin** is flipped, with its door on the south wall and a path down to that walkway.
+  - **Campbell** is one 3-tile-wide block, with glass doors at the south end.
+  - **Dealy** is one 6 × 5 block, with the portico on its south wall facing the walkway to Thebaud.
+  - Cards for these four have an **IN REAL LIFE** section saying where the real entrance is. The blurbs no longer give directions.
+- **Part 2: house style.**
+  - **Tile buildings:** new tiles for Fordham stone walls, two-pane windows and wooden doors.
+  - **The overlay:** a navy outline round every tile building and a dark eave where its roof meets the wall.
+  - **The three drawn buildings** are redrawn from the mockups (`_style/draw_v2.py`); their v1 map drawings are kept in each `options/map_v1.png`.
+  - Card pictures are unchanged, since they show the real view.
+- **Part 3: signs.**
+  - Every building has a gray signpost near its door (40 in all, with the landmarks). The generator puts it on the lawn beside the door, or on a walkway only where it can't cut the path in two.
+  - Every building has a name plaque (`short_name`, in capitals, sized to fit its wall). A test checks the fit.
+  - Landmark signs use the same gray signpost; Ram Van signs stay maroon.
+- **Part 4:** done in one pass.
 
 ## What stays the same
 

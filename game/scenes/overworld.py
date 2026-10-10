@@ -5,6 +5,7 @@ import pyxel
 from game import config
 from game.config import SCREEN_H, SCREEN_W, TILE, Col
 from game.gfx.building_art import draw_on_map
+from game.gfx.building_overlay import draw_overlay
 from game.gfx.placeholder_art import CHAR_IMAGE_BANK, TILE_IMAGE_BANK, character_uv
 from game.systems.input import Action
 from game.ui import font
@@ -68,6 +69,10 @@ class OverworldScene(Scene):
         self.greeted: set[tuple[int, int]] = set()
         self.cam = (0, 0)
         bake_tilemap(self.map, TILEMAP_INDEX)
+        # outlines, eaves, door mats and name plaques (decisions/0021),
+        # drawn once into a map-sized image and copied each frame
+        self.overlay = pyxel.Image(self.map.width * TILE, self.map.height * TILE)
+        draw_overlay(self.overlay, self.map, app.locations)
         self._update_camera()
 
     # --- update ------------------------------------------------------------
@@ -170,6 +175,7 @@ class OverworldScene(Scene):
         # Characters can't stand on a footprint, so they're always drawn after.
         for b in self.map.buildings:
             draw_on_map(b)
+        pyxel.blt(cx, cy, self.overlay, cx, cy, SCREEN_W, SCREEN_H, Col.BLACK)
 
         # Characters, back to front so lower ones overlap upper ones.
         drawables: list[tuple[int, int, int, Direction, int]] = []

@@ -44,6 +44,11 @@ def card_lines(loc: Location) -> list[tuple[str, int]]:
     """Body text as (line, colour) pairs, already wrapped to the card width."""
     lines: list[tuple[str, int]] = []
     lines += [(s, Col.BLACK) for s in wrap(loc.blurb, MAX_CHARS)]
+    if loc.real_entrance:
+        # every door faces south in the game; say where it really is (D-0021)
+        lines.append(("", Col.BLACK))
+        lines.append(("IN REAL LIFE", Col.MAROON))
+        lines += [(s, Col.BLACK) for s in wrap(loc.real_entrance, MAX_CHARS)]
     if loc.inside:
         lines.append(("", Col.BLACK))
         lines.append(("WHAT'S HERE", Col.MAROON))

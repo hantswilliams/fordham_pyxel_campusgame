@@ -1,6 +1,6 @@
 # Dealy Hall: notes
 
-**Status:** in review (first drafts, v1). Third drawn building, after Walsh Library and Campbell Hall (decisions/0020).
+**Status:** in review (v2, house style). Third drawn building, after Walsh Library and Campbell Hall (decisions/0020).
 
 ## Sources
 
@@ -39,6 +39,15 @@ Earlier notes (D-0019) said Dealy's entrance faces west "onto Rose Hill Manor Dr
 - Where exactly is the dining entrance? The campus map's dining icon is by the south part of the wing. It's placed on the wing's east side, reached by a walkway from Rose Hill Manor Drive.
 - Is the accessible entrance (at the north end of the wing on the campus map) worth adding as a second way in?
 
+## v2: house style (decision 0021)
+
+- **Entrance now faces south.** The real T shape is simplified to one 6 × 5 block, with the white-columned portico and arched door in its south wall. A short walkway leads down to the path toward Thebaud.
+  - The real portico faces west toward Cunniffe House; the card says so under **IN REAL LIFE**.
+- **Look:** the light top storey shows as the roof's rim, and the dark fieldstone wall has white-quoined windows.
+- **The game adds** the plaque (DEALY HALL) and the mats.
+- v1's map drawing is kept in `options/map_v1.png`. The card picture is unchanged.
+
 ## History
 
 - v1, 2026-10-10: first drafts drawn in code (`options/draft_v1.py`). No new colors: it uses the charcoal bricks added for Campbell plus white and the stone shades.
+- v2, 2026-10-10: house style and south-facing entrance (decision 0021), drawn by `../_style/draw_v2.py`.

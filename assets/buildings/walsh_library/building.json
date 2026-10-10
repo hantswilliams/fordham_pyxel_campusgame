@@ -1,23 +1,23 @@
 {
-  "_about": "Walsh Library as one drawn building (decisions/0020). Footprint rows use the map legend (game/world/tiles.py); ' ' leaves the map cell alone. Every 'A' (glass arch) is an entrance that opens the building card. The tiles only show if map.png is missing; the minimap reads them for colors.",
+  "_about": "Walsh Library as one drawn building (decisions/0020), in the shared house style with its entrance facing south (decisions/0021). Footprint rows use the map legend (game/world/tiles.py). The two 'A' cells in the bottom row are the main entrance. 'nameplate' is where the name plaque goes, in pixels from the footprint's top-left (centre x, top y). The tiles only show if map.png is missing; the minimap reads them for colors.",
   "id": "walsh_library",
   "name": "William D. Walsh Family Library",
   "map": "rose_hill",
   "location": "walsh_library",
-  "faces": "north",
+  "faces": "south",
   "status": "in review",
   "origin": [8, 64],
-  "sprite_offset": [0, -4],
+  "sprite_offset": [0, 0],
+  "nameplate": [80, 98],
   "footprint": [
-    "AAAA::::::",
-    "GGGGAAAAAA",
     "GGGGGGGGGG",
-    "GGGGGGttGG",
-    "GGGGGGttGG",
-    "GGGGGGttGG",
+    "GGGGGGtGGG",
+    "GGGGGGtGGG",
+    "GGGGGGtGGG",
+    "GGGGGGtGGG",
     "GGGGGGGGGG",
-    "GGGGGGGGG ",
-    "GGGGGGGG  "
+    "SSSSSSSSSS",
+    "SSSSAASSSS"
   ],
   "sources": [
     "research/images/Walsh-1078_lookingSouth.jpg (façade, tower; owner unknown, tracing reference only)",

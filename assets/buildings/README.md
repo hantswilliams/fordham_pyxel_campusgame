@@ -37,12 +37,23 @@ assets/buildings/
 | `origin` | Map tile `[x, y]` of the footprint's top-left cell |
 | `footprint` | One string per row, using the **map legend** (`game/world/tiles.py`). A space leaves the map's own cell alone. Solid tiles (`G` roof, `S` stone…) are what you bump into. Every **entrance** tile (`A` glass arch, `D` door, `J` glass door) opens the building card, and the game adds those doors itself. Walkable tiles (`:` path) can be part of a footprint too, for a forecourt |
 | `sprite_offset` | Where `map.png`'s top-left goes, in pixels from the footprint's top-left. A negative y lets a tower or roofline rise above the footprint |
-| `faces` | Which way the main entrance faces: `north`, `south`, `east` or `west` |
+| `faces` | Which way the main entrance faces. Always `south` since decision 0021 |
+| `nameplate` | Where the name plaque goes, in pixels from the footprint's top-left: `[centre x, top y]`. The game draws the plaque, using the building's `short_name` in `content/locations.json` |
 | `status` | `draft`, `in review` or `approved` |
 
 **`map.png` must be exactly** (footprint width × 16 − offset x) by (footprint height × 16 − offset y) pixels. The tests check this.
 
 ## Drawing rules
+
+**The house style (decision 0021, from `research/images/inspiration1-4.png`):**
+- A roof on top and a front wall at the bottom, facing south. Tall, narrow buildings show their front almost all the way up.
+- The entrance goes in the bottom row of the front wall. Leave room above it for the plaque.
+- A 1 px navy outline round the building, and a dark eave line where the roof meets the wall.
+- Two-pane windows: white frame, light blue glass.
+- Its own materials and one signature feature. Simple outlines.
+- Don't draw the plaque or the door mat: the game adds both, so they match on every building. See `_style/` for the mockups and the drafts.
+
+**The basics:**
 
 - **Use only the colors in `palette.hex`**: the game's 16 plus 8 extra colors: four stone shades, two roof grays and two charcoal bricks. Load it in Aseprite, LibreSprite or Piskel (all can import a `.hex` palette). The tests flag any other color.
 - **Pure black is transparent.** Leave everything outside the building transparent (or pure black). For dark lines, use navy (`2b335f`).

@@ -46,6 +46,9 @@ class BuildingAsset:
     # where map.png's top-left goes, in pixels from the footprint's top-left
     # (negative y lets a tower rise above the footprint)
     sprite_offset: tuple[int, int] = (0, 0)
+    # where the name plaque goes, in pixels from the footprint's top-left:
+    # (centre x, top y). None puts it above the entrance (decisions/0021)
+    nameplate: tuple[int, int] | None = None
     folder: Path | None = None
     notes: dict = field(default_factory=dict)
 
@@ -107,6 +110,7 @@ def parse_building(d: dict, folder: Path | None = None) -> BuildingAsset:
         faces=faces,
         status=status,
         sprite_offset=tuple(d.get("sprite_offset", (0, 0))),
+        nameplate=tuple(d["nameplate"]) if "nameplate" in d else None,
         folder=folder,
         notes={k: v for k, v in d.items() if k.startswith("_")},
     )

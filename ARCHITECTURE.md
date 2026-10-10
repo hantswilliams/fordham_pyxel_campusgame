@@ -147,7 +147,9 @@
 - `map.png` is drawn over the map.
 - `card.png` appears on its building card.
 
-`load_map` stamps the footprint onto the grid and adds the entrance doors. The overworld draws `map.png` after the tiles and before the characters. The palette is the 16 Pyxel colors (four swapped) plus eight extra colors for stone, roofs and brick (`config.EXTRA_COLORS`, mirrored in `assets/buildings/palette.hex`). `tools/building_gallery.py` builds a review page per building. Walsh Library was the pilot, then Campbell and Dealy Halls; other buildings move over one at a time.
+`load_map` stamps the footprint onto the grid and adds the entrance doors. The overworld draws `map.png` after the tiles and before the characters. The palette is the 16 Pyxel colors (four swapped) plus eight extra colors for stone, roofs and brick (`config.EXTRA_COLORS`, mirrored in `assets/buildings/palette.hex`). `tools/building_gallery.py` builds a review page per building.
+
+**6. House style (decision 0021).** Every building follows one look: a roof over a south-facing front wall, the door in the bottom row, two-pane windows, a name plaque and a gray signpost by the door. Tile buildings get it from their tiles plus `game/gfx/building_overlay.py`, which draws outlines, eaves, door mats and plaques once into a map-sized image when the map loads. Drawn buildings carry their own outline and get mats and plaques from the same overlay. Walsh Library was the pilot, then Campbell and Dealy Halls; other buildings move over one at a time.
 
 A `tests/test_content.py` check validates the data: every NPC's dialogue exists, every quest references real locations, and every URL is well-formed. Content edits then can't break the game.
 

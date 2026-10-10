@@ -26,6 +26,7 @@ import pyxel  # noqa: E402
 
 from game import config  # noqa: E402
 from game.gfx.building_art import draw_on_map  # noqa: E402
+from game.gfx.building_overlay import draw_overlay  # noqa: E402
 from game.gfx.placeholder_art import CHAR_IMAGE_BANK, build_all, character_uv  # noqa: E402
 from game.scenes.overworld import bake_tilemap  # noqa: E402
 from game.world.buildings import load_buildings  # noqa: E402
@@ -65,13 +66,14 @@ def photo_uri(path: Path, max_w: int = 900) -> str:
     return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
-def render_map(m, with_buildings: bool) -> "pyxel.Image":
+def render_map(m, with_buildings: bool, locations=None) -> "pyxel.Image":
     bake_tilemap(m, 0)
     img = pyxel.Image(m.width * TILE, m.height * TILE)
     img.bltm(0, 0, 0, 0, 0, m.width * TILE, m.height * TILE)
     if with_buildings:
         for b in m.buildings:
             draw_on_map(b, img)
+        draw_overlay(img, m, locations or {})
     return img
 
 
@@ -153,7 +155,7 @@ def panel(title: str, body: str, note: str = "", wide: bool = False) -> str:
 def building_section(b, locations) -> str:
     meta = json.loads((b.folder / "building.json").read_text(encoding="utf-8"))
     m = load_map(b.map_id, config.MAPS_DIR)
-    drawn = render_map(m, True)
+    drawn = render_map(m, True, locations)
     draw_people(drawn, m, b)
     tiles = render_map(m, False)
     draw_people(tiles, m, b)
