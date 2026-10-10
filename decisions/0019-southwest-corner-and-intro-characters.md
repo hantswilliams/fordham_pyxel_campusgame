@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review (three parts, each with its own decision box) |
+| **Status** | Approved, all three parts Option A (2026-10-09). Built the same day |
 | **Raised** | 2026-10-09, from your new photos in `research/images/` (added 7:52–8:35pm) |
 | **Affects** | Part 1: the intro scenes. Part 2: the map around the Webster Ave gate, Campbell, Walsh Library, Larkin, Ram Van stops. Part 3: Walsh Library's art |
-| **Built provisionally?** | No. Nothing changes until you decide |
+| **Built?** | Yes. Part 1: `game/gfx/intro_art.py`. Part 2: `content/maps/rose_hill.*`, `content/locations.json`. Part 3: new tiles in `game/world/tiles.py` and `game/gfx/placeholder_art.py` |
 
 **Source images used:**
 
@@ -51,7 +51,7 @@ In the train and station scenes, people are drawn with the same 16×16-pixel spr
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**: go with Option A (Option C later, at the art pass)
+- [x] **Approve**: go with Option A (Option C later, at the art pass)
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -121,7 +121,7 @@ The southwest corner is the first part of campus every player sees, so it should
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: go with Option A (and C gradually, as photos come in)
+- [x] **Approve**: go with Option A (and C gradually, as photos come in)
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -174,7 +174,7 @@ Today the library is a generic gray-roofed building. How closely should it match
 
 ## Your decision (Part 3)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
