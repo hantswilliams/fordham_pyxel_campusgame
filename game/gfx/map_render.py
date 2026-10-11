@@ -6,6 +6,7 @@ import pyxel
 
 from game.config import TILE
 from game.gfx.building_art import draw_on_map
+from game.gfx import surroundings
 from game.gfx.building_overlay import draw_overlay
 from game.world.mapdata import MapData
 
@@ -18,7 +19,9 @@ def render_world(m: MapData, locations, tilemap_index: int = SCRATCH_TILEMAP) ->
     w, h = m.width * TILE, m.height * TILE
     img = pyxel.Image(w, h)
     img.bltm(0, 0, tilemap_index, 0, 0, w, h)
+    surroundings.draw(m.id, 0, 0, w, h, img)
     for b in m.buildings:
         draw_on_map(b, img)
     draw_overlay(img, m, locations)
+    surroundings.draw_labels(img, m.id)
     return img

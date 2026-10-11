@@ -6,6 +6,7 @@ from game import config
 from game.config import SCREEN_H, SCREEN_W, TILE, Col
 from game.gfx.building_art import draw_on_map
 from game.gfx.building_overlay import draw_overlay
+from game.gfx import surroundings
 from game.gfx.placeholder_art import (BIKE_SPRITE, CHAR_IMAGE_BANK, MAROON_BIKE_SPRITE, TILE_IMAGE_BANK,
                                       character_uv)
 from game.systems.bike import Bike
@@ -116,6 +117,7 @@ class OverworldScene(Scene):
         # drawn once into a map-sized image and copied each frame
         self.overlay = pyxel.Image(self.map.width * TILE, self.map.height * TILE)
         draw_overlay(self.overlay, self.map, app.locations)
+        surroundings.draw_labels(self.overlay, self.map.id)
         self._update_camera()
 
     # --- update ------------------------------------------------------------
@@ -352,6 +354,7 @@ class OverworldScene(Scene):
         cx, cy = self.cam
         pyxel.camera(cx, cy)
         pyxel.bltm(cx, cy, TILEMAP_INDEX, cx, cy, SCREEN_W, SCREEN_H)
+        surroundings.draw(self.map.id, cx, cy, SCREEN_W, SCREEN_H)   # off campus (decisions/0033)
         # drawn buildings go over their footprint tiles (decisions/0020).
         # Characters can't stand on a footprint, so they're always drawn after.
         for b in self.map.buildings:

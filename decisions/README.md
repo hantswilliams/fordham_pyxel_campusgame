@@ -57,5 +57,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0030](0030-bike.md) | A bike: 1 borrow it at a rack outside Walsh Library, 2 X hops on/off anywhere, riding twice as fast | All Option A (built at your request) | Yes | Built, for your review |
 | [0031](0031-optional-missions.md) | Optional missions: 1 one JSON file per mission from a template, 2 seven step types, 3 "!" NPCs + Mission Log, 4 Ram Passport stamps + badges, 5 twelve mission ideas to pick from, 6 the First Week Checklist as the main mission | A throughout; first batch: Lost and Found, Bike Courier, Game Day | Yes | Approved and built |
 | [0032](0032-detailed-campus-map.md) | A detailed campus map: the real map art shrunk to 4 px per tile with colour averaging, scrolling to the picked place, with a whole-campus overview in the corner | Option A (built at your request) | Yes | Built, for your review |
+| [0033](0033-off-campus-surroundings.md) | What's outside the fence: Webster Ave and Metro-North, Fordham Prep, Southern Blvd and the Botanical Garden with the Haupt Conservatory, E Fordham Rd with shops, painted over the off-campus squares, plus green street-name signs | Option A (built at your request) | Yes | Built, for your review |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).
