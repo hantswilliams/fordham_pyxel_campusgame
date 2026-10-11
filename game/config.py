@@ -10,6 +10,7 @@ FPS = 30
 
 TILE = 16  # one gameplay tile = 16x16 px = 2x2 Pyxel 8x8 tiles
 WALK_SPEED = 2  # pixels per frame -> 8 frames per tile (~3.75 tiles/sec)
+BIKE_SPEED = 4  # on the bike (decisions/0030): twice as fast, still divides TILE
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = ROOT / "content"

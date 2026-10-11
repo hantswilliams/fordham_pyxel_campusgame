@@ -64,6 +64,7 @@ TILES: dict[str, TileDef] = {
         TileDef("plaza", 41, False),       # stone-paved plaza, e.g. round the Cunniffe Fountain (decisions/0022)
         TileDef("car", 42, True),          # a parked car in a parking stall
         TileDef("tree_purple", 43, True),  # copper beech: dark purple leaves (southwest corner)
+        TileDef("bike_rack", 44, True),    # bike rack with bikes in it (decisions/0030)
     ]
 }
 

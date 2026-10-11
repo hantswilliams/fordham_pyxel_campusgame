@@ -13,7 +13,7 @@
     "rows": [
       ["ARROWS/WASD", "Move"],
       ["Z/SPACE/ENTER", "Talk, read, open a card"],
-      ["X", "Back, skip text"],
+      ["X", "Back, skip, bike on/off"],
       ["M", "Campus map"],
       ["TAB", "Campus Guide (soon)"]
     ],

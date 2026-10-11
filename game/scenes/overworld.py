@@ -6,7 +6,8 @@ from game import config
 from game.config import SCREEN_H, SCREEN_W, TILE, Col
 from game.gfx.building_art import draw_on_map
 from game.gfx.building_overlay import draw_overlay
-from game.gfx.placeholder_art import CHAR_IMAGE_BANK, TILE_IMAGE_BANK, character_uv
+from game.gfx.placeholder_art import BIKE_SPRITE, CHAR_IMAGE_BANK, TILE_IMAGE_BANK, character_uv
+from game.systems.bike import Bike
 from game.systems.input import Action
 from game.ui import font
 from game.world.camera import follow
@@ -24,6 +25,7 @@ from .base import Scene
 TILEMAP_INDEX = 0
 PLAYER_SPRITE = 0
 BANNER_FRAMES = 75  # how long the area-name banner shows on entry
+TOAST_FRAMES = 45   # how long 'ON THE BIKE' / 'WALKING' shows
 
 # Held directions, checked in this order.
 DIRECTION_ACTIONS = [
@@ -67,6 +69,13 @@ class OverworldScene(Scene):
         self.area_name = area.name if area else self.map.display_name
         self.banner_timer = BANNER_FRAMES
         self.greeted: set[tuple[int, int]] = set()
+        # the bike lives on the app, so it survives leaving the overworld
+        if not hasattr(app, "bike"):
+            app.bike = Bike()
+        self.bike: Bike = app.bike
+        self.player.speed = self.bike.speed
+        self.toast = ""
+        self.toast_timer = 0
         self.cam = (0, 0)
         bake_tilemap(self.map, TILEMAP_INDEX)
         # outlines, eaves, door mats and name plaques (decisions/0021),
@@ -79,12 +88,19 @@ class OverworldScene(Scene):
     def update(self) -> None:
         if self.banner_timer > 0:
             self.banner_timer -= 1
+        if self.toast_timer > 0:
+            self.toast_timer -= 1
 
         p = self.player
         if not p.moving:
             if self.input.pressed(Action.CONFIRM):
                 self._interact()
                 return
+            if self.input.pressed(Action.CANCEL):
+                msg = self.bike.toggle()          # hop on or off (decisions/0030)
+                if msg:
+                    self.player.speed = self.bike.speed
+                    self._show_toast(msg)
             if self.input.pressed(Action.MAP):
                 self.app.scenes.push(CampusMapScene(
                     self.app, self.map, (p.tile_x, p.tile_y), self.area_name))
@@ -102,6 +118,15 @@ class OverworldScene(Scene):
             self._check_area()
             self._check_auto_npc()
         self._update_camera()
+
+    def _show_toast(self, text: str) -> None:
+        self.toast = text
+        self.toast_timer = TOAST_FRAMES
+
+    def _use_bike_rack(self) -> None:
+        lines = self.bike.use_rack()
+        self.player.speed = self.bike.speed
+        self.app.scenes.push(DialogueScene(self.app, lines))
 
     def _update_camera(self) -> None:
         p = self.player
@@ -156,6 +181,8 @@ class OverworldScene(Scene):
             return
         if obj.type == "checkpoint":
             self._start_checkpoint(obj)
+        elif obj.type == "bike_rack":
+            self._use_bike_rack()
         elif obj.type == "npc":
             obj.facing = self.player.facing.opposite
             self.app.scenes.push(DialogueScene(self.app, obj.lines, obj.name))
@@ -183,7 +210,9 @@ class OverworldScene(Scene):
             if obj.type == "npc":
                 drawables.append((obj.y * TILE, obj.x * TILE, obj.sprite, obj.facing, 0))
         p = self.player
-        drawables.append((p.pixel_y, p.pixel_x, PLAYER_SPRITE, p.facing, p.anim_frame))
+        sprite = BIKE_SPRITE if self.bike.riding else PLAYER_SPRITE
+        frame = p.anim_frame if not self.bike.riding else (p.progress // 4) % 3 if p.moving else 0
+        drawables.append((p.pixel_y, p.pixel_x, sprite, p.facing, frame))
         for y, x, sprite, facing, frame in sorted(drawables, key=lambda d: d[0]):
             u, v = character_uv(sprite, facing, frame)
             pyxel.blt(x, y - 2, CHAR_IMAGE_BANK, u, v, TILE, TILE, Col.BLACK)
@@ -192,6 +221,12 @@ class OverworldScene(Scene):
         self._draw_hud()
 
     def _draw_hud(self) -> None:
+        if self.toast_timer > 0:
+            w = font.width(self.toast) + 12
+            y = SCREEN_H - 22
+            pyxel.rect(4, y, w, 16, Col.NAVY)
+            pyxel.rectb(4, y, w, 16, Col.WHITE)
+            font.text(10, y + 2, self.toast, Col.WHITE)
         if self.banner_timer <= 0:
             return
         name = self.area_name

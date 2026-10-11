@@ -18,12 +18,14 @@ import pyxel  # noqa: E402
 from game import config  # noqa: E402
 from game.app import App  # noqa: E402
 from game.scenes.dialogue import paginate  # noqa: E402
+from game.systems.bike import TAKE_LINES  # noqa: E402
 from game.systems.input import Action, ScriptedInput  # noqa: E402
 from game.world.directions import Direction  # noqa: E402
 from game.world.mapdata import load_map  # noqa: E402
 
 OUT = ROOT / "build" / "screenshots"
 FRAMES_PER_STEP = config.TILE // config.WALK_SPEED
+BIKE_FRAMES_PER_STEP = config.TILE // config.BIKE_SPEED
 DIR_ACTION = {Direction.UP: Action.UP, Direction.DOWN: Action.DOWN,
               Direction.LEFT: Action.LEFT, Direction.RIGHT: Action.RIGHT}
 
@@ -51,8 +53,9 @@ class Walker:
         self.m = game_map
         self.pos = game_map.spawn
 
-    def to_face(self, tx: int, ty: int) -> list[set[Action]]:
-        """Walk next to object (tx, ty) and face it."""
+    def to_face(self, tx: int, ty: int, frames: int = FRAMES_PER_STEP) -> list[set[Action]]:
+        """Walk (or ride: pass the bike's frames per step) next to object
+        (tx, ty) and face it."""
         goals = {(tx - d.dx, ty - d.dy): d for d in Direction}
         prev = {self.pos: None}
         queue = deque([self.pos])
@@ -77,7 +80,7 @@ class Walker:
         steps.reverse()
         out = []
         for d in steps:
-            out += [{DIR_ACTION[d]}] * FRAMES_PER_STEP
+            out += [{DIR_ACTION[d]}] * frames
         out += [{DIR_ACTION[goals[end]]}, set()]  # turn to face the target
         self.pos = end
         return out
@@ -126,7 +129,16 @@ def main() -> None:
         ("17_walsh_library_front", read(len(paginate(greeter.lines)) - 1)
          + walk.to_face(*door["walsh_library"]) + wait(4)),
         ("17b_walsh_library_card", tap(Action.CONFIRM) + wait(5)),
-        ("17c_campbell_entrance", tap(Action.CONFIRM) + walk.to_face(*door["campbell_hall"]) + wait(4)),
+    ]
+    # the bike rack outside the library (decisions/0030): borrow a bike, ride, hop off
+    rack = next(o for o in m.objects if o.type == "bike_rack")
+    segments += [
+        ("17ba_bike_rack", tap(Action.CONFIRM) + walk.to_face(rack.x, rack.y)
+         + tap(Action.CONFIRM) + wait(120)),
+        ("17bb_riding", read(len(paginate(TAKE_LINES)) - 1) + tap(Action.CONFIRM) + wait(4)
+         + walk.to_face(*door["larkin_hall"], frames=BIKE_FRAMES_PER_STEP) + wait(4)),
+        ("17bc_hop_off", wait(BIKE_FRAMES_PER_STEP) + tap(Action.CANCEL) + wait(6)),
+        ("17c_campbell_entrance", walk.to_face(*door["campbell_hall"]) + wait(4)),
         ("17cb_campbell_card", tap(Action.CONFIRM) + wait(5)),
         # Dealy Hall's columned entrance faces west, toward Cunniffe House
         ("17cc_dealy_portico", tap(Action.CONFIRM) + walk.to_face(*door["dealy_hall"]) + wait(4)),

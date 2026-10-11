@@ -195,6 +195,28 @@
     },
     {
       "at": [
+        20,
+        71
+      ],
+      "type": "bike_rack",
+      "tile": "bike_rack",
+      "lines": [
+        "A bike rack outside Walsh Library."
+      ]
+    },
+    {
+      "at": [
+        21,
+        71
+      ],
+      "type": "bike_rack",
+      "tile": "bike_rack",
+      "lines": [
+        "A bike rack outside Walsh Library."
+      ]
+    },
+    {
+      "at": [
         17,
         45
       ],

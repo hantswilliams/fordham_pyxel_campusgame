@@ -21,7 +21,7 @@ uv run python tools/building_gallery.py  # review page for drawn buildings: buil
 **Controls:**
 - Arrows or WASD move.
 - **Z**, Space or Enter talks to people and reads signs.
-- **X** skips text, closes a card, or skips the intro.
+- **X** skips text, closes a card, or skips the intro. Once you've borrowed a bike from the rack outside Walsh Library, X also hops you on or off it (decision 0030). Riding is twice as fast.
 - **M** opens the campus map. Arrow keys jump between places, Z shows a place's card, and M or X closes it.
 - Up and Down scroll a long card.
 - Esc quits.

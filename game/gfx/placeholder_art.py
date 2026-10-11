@@ -23,6 +23,10 @@ CHARACTERS = [
 ]
 
 
+# The player on the bike (decisions/0030) has its own sheet row after the people.
+BIKE_SPRITE = len(CHARACTERS)
+
+
 def character_uv(sprite: int, facing: Direction, frame: int) -> tuple[int, int]:
     return (facing.sprite_index * 3 + frame) * 16, sprite * 16
 
@@ -110,6 +114,19 @@ def _tree_purple(img, x, y):
     img.circ(x + 8, y + 7, 6, Col.MAROON)
     for px, py in ((5, 4), (9, 3), (11, 7), (6, 8), (8, 5)):
         img.pset(x + px, y + py, Col.PINK_BRICK_SH)
+
+
+def _bike_rack(img, x, y):
+    """A bike rack on the lawn with two maroon bikes in it (decisions/0030)."""
+    _grass(img, x, y)
+    img.rect(x + 1, y + 12, 14, 2, Col.STONE)              # its concrete pad
+    for bx in (3, 9):
+        img.circb(x + bx + 1, y + 10, 2, Col.NAVY)          # back wheel
+        img.circb(x + bx + 1, y + 4, 2, Col.NAVY)           # front wheel
+        img.line(x + bx + 1, y + 4, x + bx + 1, y + 10, Col.MAROON)   # frame
+        img.line(x + bx - 1, y + 3, x + bx + 3, y + 3, Col.GRAY)       # handlebars
+    for rx in (2, 8, 14):                                   # the rack's hoops
+        img.line(x + rx, y + 6, x + rx, y + 12, Col.GRAY)
 
 
 def _flowers(img, x, y):
@@ -427,7 +444,7 @@ def _car(img, x, y):
 
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
-    "door": _door, "window": _window, "tree": _tree, "tree_purple": _tree_purple, "flowers": _flowers,
+    "door": _door, "window": _window, "tree": _tree, "tree_purple": _tree_purple, "bike_rack": _bike_rack, "flowers": _flowers,
     "hedge": _hedge, "water": _water, "bench": _bench, "sign": _sign,
     "banner": _banner, "lamp": _lamp,
     "roof_res": _roof_colored(Col.ORANGE, Col.BROWN, Col.PEACH),
@@ -487,6 +504,27 @@ def _character(img, ox, oy, facing: Direction, frame: int, colors) -> None:
     img.rect(ox + 9, oy + 12 + right_len, 2, 1, Col.NAVY)
 
 
+def _bike(img, ox, oy, facing: Direction, frame: int) -> None:
+    """The player riding: the bike under them, pedals turning with `frame`.
+    A light-blue frame so it stands out against the maroon shirt."""
+    if facing in (Direction.LEFT, Direction.RIGHT):
+        img.circb(ox + 3, oy + 13, 2, Col.NAVY)             # wheels
+        img.circb(ox + 12, oy + 13, 2, Col.NAVY)
+        img.line(ox + 3, oy + 13, ox + 8, oy + 11, Col.LIGHT_BLUE)   # frame
+        img.line(ox + 8, oy + 11, ox + 12, oy + 13, Col.LIGHT_BLUE)
+        img.line(ox + 7, oy + 11, ox + 10, oy + 11, Col.LIGHT_BLUE)
+        hx = ox + 12 if facing == Direction.RIGHT else ox + 3
+        img.line(hx, oy + 9, hx, oy + 12, Col.GRAY)          # handlebars
+        img.pset(ox + 7 + (frame % 2), oy + 14 - (frame % 2), Col.WHITE)  # pedal
+    else:
+        img.rect(ox + 7, oy + 11, 2, 5, Col.NAVY)            # the wheel, end-on
+        img.pset(ox + 7 + (frame % 2), oy + 12 + frame, Col.GRAY)    # spokes turning
+        img.rect(ox + 6, oy + 11, 4, 1, Col.LIGHT_BLUE)      # frame / mudguard
+        img.line(ox + 2, oy + 9, ox + 13, oy + 9, Col.GRAY)  # handlebars, wider than the rider
+        img.pset(ox + 2, oy + 10, Col.NAVY)                  # grips
+        img.pset(ox + 13, oy + 10, Col.NAVY)
+
+
 def build_characters() -> None:
     img = pyxel.images[CHAR_IMAGE_BANK]
     for sprite, colors in enumerate(CHARACTERS):
@@ -494,6 +532,14 @@ def build_characters() -> None:
             for frame in range(3):
                 u, v = character_uv(sprite, d, frame)
                 _character(img, u, v, d, frame, colors)
+    # the player on the bike: sitting up, legs tucked, the bike drawn over them
+    for d in Direction:
+        for frame in range(3):
+            u, v = character_uv(BIKE_SPRITE, d, frame)
+            img.rect(u, v, 16, 16, Col.BLACK)
+            _character(img, u, v, d, 0, CHARACTERS[0])
+            img.rect(u + 3, v + 13, 10, 3, Col.BLACK)        # legs on the pedals, not the ground
+            _bike(img, u, v, d, frame)
 
 
 def build_all() -> None:

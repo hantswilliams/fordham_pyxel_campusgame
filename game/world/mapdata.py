@@ -22,7 +22,7 @@ from .tiles import LEGEND, SPAWN_CHAR, SPAWN_GROUND, TILES
 # so this module stays importable without Pyxel or the config.
 BUILDINGS_DIR = Path(__file__).resolve().parents[2] / "assets" / "buildings"
 
-OBJECT_TYPES = {"sign", "npc", "door", "checkpoint"}
+OBJECT_TYPES = {"sign", "npc", "door", "checkpoint", "bike_rack"}
 
 
 class MapError(ValueError):
@@ -31,7 +31,7 @@ class MapError(ValueError):
 
 @dataclass
 class MapObject:
-    type: str  # "sign" | "npc" | "door"
+    type: str  # "sign" | "npc" | "door" | "checkpoint" | "bike_rack"
     x: int
     y: int
     name: str = ""
