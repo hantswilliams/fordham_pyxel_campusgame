@@ -57,3 +57,15 @@ def test_trimmed_map_rows_are_off_campus():
     from game.scenes.campus_map import SKIP_ROWS
     for y in range(SKIP_ROWS):
         assert all(t == "offcampus" for t in M.tiles[y]), f"row {y} has campus on it"
+
+
+def test_downsample_averages_blocks_into_palette_colours():
+    """The detailed map (decisions/0032) shrinks the real art by averaging."""
+    from game.world.minimap import downsample
+    rgb = [(0, 0, 0), (255, 0, 0), (0, 0, 255), (128, 0, 128), (250, 250, 250)]
+    # a 4 x 2 image: a solid red 2x2 block, then a red/blue checker block
+    raw = bytes([1, 1, 1, 2,
+                 1, 1, 2, 1])
+    out = downsample(raw, 4, 2, 2, rgb)
+    assert out == bytes([1, 3])          # red stays red; red+blue averages to purple
+    assert 0 not in downsample(bytes([0, 0, 0, 0]), 2, 2, 2, rgb)  # never transparent black

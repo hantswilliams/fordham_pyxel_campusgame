@@ -56,5 +56,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0029](0029-baseball-fields.md) | Baseball and softball: 1 Houlihan Park drawn on Jack Coffey Field's turf (one field, two cards), 2 Bahoshy turned home-plate south-east with an all-dirt infield, 3 red tennis courts | All Option A (built at your request) | Yes | Built, for your review |
 | [0030](0030-bike.md) | A bike: 1 borrow it at a rack outside Walsh Library, 2 X hops on/off anywhere, riding twice as fast | All Option A (built at your request) | Yes | Built, for your review |
 | [0031](0031-optional-missions.md) | Optional missions: 1 one JSON file per mission from a template, 2 seven step types, 3 "!" NPCs + Mission Log, 4 Ram Passport stamps + badges, 5 twelve mission ideas to pick from, 6 the First Week Checklist as the main mission | A throughout; first batch: Lost and Found, Ram Van Run, Landmark Photo Hunt, History Detective | No | Awaiting review |
+| [0032](0032-detailed-campus-map.md) | A detailed campus map: the real map art shrunk to 4 px per tile with colour averaging, scrolling to the picked place, with a whole-campus overview in the corner | Option A (built at your request) | Yes | Built, for your review |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

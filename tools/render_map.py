@@ -14,10 +14,8 @@ sys.path.insert(0, str(ROOT))
 import pyxel  # noqa: E402
 
 from game import config  # noqa: E402
-from game.gfx.building_art import draw_on_map  # noqa: E402
-from game.gfx.building_overlay import draw_overlay  # noqa: E402
+from game.gfx.map_render import render_world  # noqa: E402
 from game.gfx.placeholder_art import CHAR_IMAGE_BANK, build_all, character_uv  # noqa: E402
-from game.scenes.overworld import bake_tilemap  # noqa: E402
 from game.world.locations import load_locations  # noqa: E402
 from game.world.mapdata import load_map  # noqa: E402
 
@@ -32,12 +30,7 @@ def main() -> None:
     build_all()
 
     m = load_map(map_id, config.MAPS_DIR)
-    bake_tilemap(m, 0)
-    img = pyxel.Image(m.width * TILE, m.height * TILE)
-    img.bltm(0, 0, 0, 0, 0, m.width * TILE, m.height * TILE)
-    for b in m.buildings:
-        draw_on_map(b, img)
-    draw_overlay(img, m, load_locations(config.LOCATIONS_FILE))
+    img = render_world(m, load_locations(config.LOCATIONS_FILE))
     for obj in m.objects:
         if obj.type == "npc":
             u, v = character_uv(obj.sprite, obj.facing, 0)

@@ -128,3 +128,37 @@ def next_pin(pins: list[Pin], x: int, y: int, d: Direction) -> int | None:
         if best_score is None or score < best_score:
             best, best_score = i, score
     return best
+
+
+# --- the detailed campus map (decisions/0032) --------------------------------
+DETAIL = 4      # map pixels per tile in the main view: the real art, shrunk 4x
+OVERVIEW = 6    # the corner overview shrinks the detailed map 6x more (~0.67 px per tile)
+
+
+def downsample(raw: bytes, w: int, h: int, k: int, rgb: list[tuple[int, int, int]]) -> bytes:
+    """Shrink a palette image `k` times by averaging each k x k block's
+    colours and snapping the average to the nearest palette colour. This is
+    what makes the map look painted rather than blocky. `raw` holds one
+    palette index per pixel, row by row. Returns the smaller image the same
+    way. Blocks repeat a lot (lawn, road, roof), so results are cached."""
+    ow, oh = w // k, h // k
+    out = bytearray(ow * oh)
+    cache: dict[bytes, int] = {}
+    n = k * k
+    for oy in range(oh):
+        rows = [raw[(oy * k + j) * w:(oy * k + j) * w + w] for j in range(k)]
+        for ox in range(ow):
+            x0 = ox * k
+            key = b"".join(r[x0:x0 + k] for r in rows)
+            v = cache.get(key)
+            if v is None:
+                r = g = b = 0
+                for ci in key:
+                    cr, cg, cb = rgb[ci]
+                    r += cr; g += cg; b += cb
+                r, g, b = r / n, g / n, b / n
+                v = min(range(1, len(rgb)),  # never black: black is transparent
+                        key=lambda i: (rgb[i][0] - r) ** 2 + (rgb[i][1] - g) ** 2 + (rgb[i][2] - b) ** 2)
+                cache[key] = v
+            out[oy * ow + ox] = v
+    return bytes(out)
