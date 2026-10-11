@@ -102,6 +102,16 @@ def _tree(img, x, y):
         img.pset(x + px, y + py, Col.LIME)
 
 
+def _tree_purple(img, x, y):
+    """A copper beech: a broad crown of dark purple leaves."""
+    _grass(img, x, y)
+    img.rect(x + 6, y + 11, 4, 5, Col.BROWN)
+    img.circ(x + 8, y + 7, 7, Col.NAVY)
+    img.circ(x + 8, y + 7, 6, Col.MAROON)
+    for px, py in ((5, 4), (9, 3), (11, 7), (6, 8), (8, 5)):
+        img.pset(x + px, y + py, Col.PINK_BRICK_SH)
+
+
 def _flowers(img, x, y):
     _grass(img, x, y)
     for (px, py), col in zip(
@@ -417,7 +427,7 @@ def _car(img, x, y):
 
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
-    "door": _door, "window": _window, "tree": _tree, "flowers": _flowers,
+    "door": _door, "window": _window, "tree": _tree, "tree_purple": _tree_purple, "flowers": _flowers,
     "hedge": _hedge, "water": _water, "bench": _bench, "sign": _sign,
     "banner": _banner, "lamp": _lamp,
     "roof_res": _roof_colored(Col.ORANGE, Col.BROWN, Col.PEACH),

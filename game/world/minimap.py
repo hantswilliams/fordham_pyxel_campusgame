@@ -30,7 +30,7 @@ TILE_COLORS = {
     "path": Col.PEACH, "plaza": Col.PEACH, "booth": Col.PEACH, "pillar": Col.GRAY, "reader_gate": Col.PEACH,
     "road": Col.GRAY, "crosswalk_h": Col.WHITE, "crosswalk_v": Col.WHITE,
     "parking": Col.GRAY, "car": Col.GRAY,
-    "tree": Col.GREEN, "hedge": Col.GREEN, "field": Col.GREEN, "dirt": Col.ORANGE,
+    "tree": Col.GREEN, "tree_purple": Col.GREEN, "hedge": Col.GREEN, "field": Col.GREEN, "dirt": Col.ORANGE,
     "water": Col.CYAN, "grave": Col.GRAY, "dome": Col.WHITE,
     "fence": Col.DARK_BLUE, "offcampus": Col.NAVY,
     **ROOF_COLORS,

@@ -59,7 +59,7 @@ uv run python tools/building_gallery.py  # review page for drawn buildings: buil
   - Campbell Hall (modern): `Q` flat roof, `q` dark brick wall, `g` glass stair tower, `J` glass entrance. Campbell is a drawn building too, from `assets/buildings/campbell_hall/building.json`
   - Entrances (`D`, `A`, `J`) each need a door object in the `.json`. Every entrance goes in the bottom row of the building's front wall and opens **south** (decision 0021); the tests check this
   - Each building's name plaque uses its `short_name` in `content/locations.json`. Its gray signpost is a `sign` object placed beside the door
-- **Outdoors:** `T` tree, `h` hedge, `b` bench, `L` lamp, `~` water, `F` athletic field, `d` infield dirt, `+` graves
+- **Outdoors:** `T` tree, `V` copper beech (purple leaves; decision 0027), `h` hedge, `b` bench, `L` lamp, `~` water, `F` athletic field, `d` infield dirt, `+` graves
 - **Edges:** `|` campus fence, `I` gate pillar, `K` guard booth, `#` off campus
 - **Player start:** `@`
 
