@@ -32,7 +32,7 @@ TILE_COLORS = {
     "parking": Col.GRAY, "car": Col.GRAY,
     "tree": Col.GREEN, "tree_purple": Col.GREEN, "hedge": Col.GREEN, "field": Col.GREEN, "dirt": Col.ORANGE,
     "water": Col.CYAN, "grave": Col.GRAY, "dome": Col.WHITE,
-    "fence": Col.DARK_BLUE, "offcampus": Col.NAVY,
+    "fence": Col.DARK_BLUE, "offcampus": Col.STONE,
     **ROOF_COLORS,
 }
 

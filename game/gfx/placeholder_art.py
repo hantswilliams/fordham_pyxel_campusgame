@@ -252,9 +252,7 @@ def _fence(img, x, y):
 
 
 def _offcampus(img, x, y):
-    img.rect(x, y, 16, 16, Col.NAVY)
-    img.line(x, y + 7, x + 15, y + 7, Col.DARK_BLUE)
-    img.line(x + 7, y, x + 7, y + 15, Col.DARK_BLUE)
+    img.rect(x, y, 16, 16, Col.STONE)   # plain tan-grey beyond the fence (decisions/0033)
 
 
 def _parking(img, x, y):
