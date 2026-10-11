@@ -26,7 +26,7 @@ from .base import Scene
 from .card import BuildingCardScene
 
 HEADER_H = 16
-FOOTER_H = 26
+FOOTER_H = 30
 VIEW_Y = HEADER_H
 VIEW_H = SCREEN_H - HEADER_H - FOOTER_H
 SKIP_ROWS = 2  # top rows of the campus map are all off-campus; trimmed from the overview
@@ -147,9 +147,9 @@ class CampusMapScene(Scene):
         self._draw_player(blink)
         for gx, gy in self.goals:
             cx, cy = self._screen_xy(gx, gy)
-            pyxel.rect(cx - 3, cy - 12, 7, 10, Col.WHITE)
-            pyxel.rectb(cx - 3, cy - 12, 7, 10, Col.MAROON)
-            pyxel.text(cx - 1, cy - 10, "!", Col.MAROON)
+            pyxel.rect(cx - 4, cy - 16, 9, 14, Col.WHITE)
+            pyxel.rectb(cx - 4, cy - 16, 9, 14, Col.MAROON)
+            font.text(cx - 3, cy - 15, "!", Col.MAROON)
             pyxel.pset(cx, cy - 1, Col.MAROON)
         if self.selected is not None:
             self._draw_pin(self.pins[self.selected], selected=True, blink=blink)
@@ -176,13 +176,13 @@ class CampusMapScene(Scene):
         pyxel.circ(cx, cy - 8, 4, col)
         pyxel.circb(cx, cy - 8, 4, Col.WHITE if blink else Col.NAVY)
         pyxel.pset(cx, cy - 8, Col.WHITE)
-        name = pin.name.upper()
-        tw = len(name) * 4 + 4
+        name = pin.name
+        tw = font.width(name) + 8
         tx = min(max(cx - tw // 2, 2), SCREEN_W - tw - 2)
-        ty = max(cy - 23, VIEW_Y + 2)
-        pyxel.rect(tx, ty, tw, 9, Col.WHITE)
-        pyxel.rectb(tx, ty, tw, 9, Col.NAVY)
-        pyxel.text(tx + 2, ty + 2, name, Col.NAVY)
+        ty = max(cy - 30, VIEW_Y + 2)
+        pyxel.rect(tx, ty, tw, 15, Col.WHITE)
+        pyxel.rectb(tx, ty, tw, 15, Col.NAVY)
+        font.text(tx + 4, ty + 1, name, Col.NAVY)
 
     def _draw_player(self, blink: bool) -> None:
         cx, cy = self._screen_xy(*self.player_xy)
@@ -209,6 +209,21 @@ class CampusMapScene(Scene):
         pyxel.rect(x0 + px * DETAIL // OVERVIEW - 1, y0 + py * DETAIL // OVERVIEW - skip - 1, 3, 3,
                    Col.MAROON if blink else Col.WHITE)
         pyxel.clip()
+        self._draw_key(x0 - 2, y0 + h + 2, w + 4)
+
+    def _draw_key(self, x: int, y: int, w: int) -> None:
+        """What the pin colours mean, in a panel under the overview."""
+        rows = (("Place", "building"), ("Landmark", "landmark"), ("Gate/Ram", "transit"))
+        w = max(w, 14 + max(font.width(r[0]) for r in rows) + 4)
+        x = min(x, SCREEN_W - w - 2)
+        h = len(rows) * 12 + 4
+        pyxel.rect(x, y, w, h, Col.WHITE)
+        pyxel.rectb(x, y, w, h, Col.NAVY)
+        for i, (label, kind) in enumerate(rows):
+            ry = y + 2 + i * 12
+            pyxel.rectb(x + 3, ry + 3, 7, 7, Col.NAVY)
+            pyxel.rect(x + 4, ry + 4, 5, 5, PIN_COLORS[kind])
+            font.text(x + 13, ry, label, Col.DARK_BLUE)
 
     def _draw_footer(self) -> None:
         y = SCREEN_H - FOOTER_H
@@ -217,15 +232,8 @@ class CampusMapScene(Scene):
         max_chars = (SCREEN_W - 12) // BIG_CHAR_W
         if self.selected is None:
             font.text(6, y + 2, f"You are here: {self.area_name}"[:max_chars], Col.BLACK)
-            pyxel.text(6, y + 17, "ARROWS: PICK A PLACE", Col.DARK_BLUE)
+            font.text(6, y + 15, "ARROWS: PICK A PLACE", Col.DARK_BLUE)
         else:
             pin = self.pins[self.selected]
             font.text(6, y + 2, pin.name[:max_chars], Col.MAROON)
-            pyxel.text(6, y + 17, "Z: DETAILS  ARROWS: NEXT", Col.DARK_BLUE)
-        # what the pin colours mean, bottom right
-        kx = SCREEN_W - 116
-        for dx, label, kind in ((0, "PLACE", "building"), (30, "LANDMARK", "landmark"),
-                                (74, "GATE/RAM", "transit")):
-            pyxel.rect(kx + dx + 1, y + 17, 5, 5, PIN_COLORS[kind])
-            pyxel.rectb(kx + dx, y + 16, 7, 7, Col.NAVY)
-            pyxel.text(kx + dx + 9, y + 17, label, Col.DARK_BLUE)
+            font.text(6, y + 15, "Z: DETAILS  ARROWS: NEXT", Col.DARK_BLUE)

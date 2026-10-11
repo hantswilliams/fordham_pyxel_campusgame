@@ -1,7 +1,7 @@
 {
   "id": "first_week",
   "title": "First Week Checklist",
-  "summary": "Your main mission (decisions/0014): find the places every new student needs in their first week. Do them in any order.",
+  "summary": "Your main mission: find the places every new student needs in their first week. Do them in any order.",
   "optional": false,
   "order": "any",
   "teaches": ["Where to eat, study, get help and get off campus", "Where your classes are"],

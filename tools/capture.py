@@ -212,7 +212,8 @@ def main() -> None:
     m.remove_object(*item["at"])
     segments += [
         ("26_mission_log", wait(15) + tap(Action.CONFIRM) + drain(found[1:]) + wait(4) + tap(Action.MENU) + wait(6)),
-        ("27_ram_passport", tap(Action.RIGHT) + wait(6)),
+        ("26b_mission_page", tap(Action.CONFIRM) + wait(6)),
+        ("27_ram_passport", tap(Action.CANCEL) + wait(2) + tap(Action.RIGHT) + wait(6)),
         ("28_mission_map_pin", tap(Action.MENU) + wait(4) + tap(Action.MAP) + wait(12)),
     ]
     done = book.near("thebaud_hall")

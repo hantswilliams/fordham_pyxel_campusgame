@@ -305,3 +305,6 @@ Following your choices: Option A in Parts 1–4 and 6, and missions **1 Lost and
 **Still to confirm with Fordham**
 - That a found ID goes to Public Safety.
 - Where the mail room is. The mission says "McShane", without naming a room.
+
+## Follow-up: reading font (2026-10-11)
+The Mission Log, the Ram Passport, the campus map labels, the HUD tracker and the "!"/"?" bubbles now use the PixelMplus reading font (decision 0018) instead of Pyxel's small built-in font. The bigger letters don't fit the old side-by-side log, so the log is now a list of missions with a short preview of the selected mission (next step and hint) below it. **Z opens that mission's full page**, which holds the summary, the checklist, the hint and the reward, and scrolls with Up/Down. On that page, Z tracks or drops the mission. On the campus map, the pin key moved to a small panel under the overview. Screenshot: `26b_mission_page`.

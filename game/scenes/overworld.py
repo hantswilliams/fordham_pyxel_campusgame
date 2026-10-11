@@ -12,6 +12,7 @@ from game.systems.bike import Bike
 from game.systems.missions import Reaction
 from game.systems.input import Action
 from game.ui import font
+from game.ui.text import BIG_CHAR_W
 from game.world.camera import follow
 from game.world.directions import Direction
 from game.world.mapdata import MapData, MapObject, load_map
@@ -372,10 +373,10 @@ class OverworldScene(Scene):
             if obj.type == "npc":
                 mark = self.book.npc_marker(obj.name)
                 if mark:
-                    bx, by = obj.x * TILE + 4, obj.y * TILE - 13 - bob
-                    pyxel.rect(bx, by, 8, 9, Col.WHITE)
-                    pyxel.rectb(bx, by, 8, 9, Col.NAVY)
-                    pyxel.text(bx + 2, by + 2, mark, Col.MAROON)
+                    bx, by = obj.x * TILE + 3, obj.y * TILE - 17 - bob
+                    pyxel.rect(bx, by, 10, 14, Col.WHITE)
+                    pyxel.rectb(bx, by, 10, 14, Col.NAVY)
+                    font.text(bx + 2, by + 1, mark, Col.MAROON)
 
         pyxel.camera()
         self._draw_hud()
@@ -386,20 +387,23 @@ class OverworldScene(Scene):
             top = 26
         tracker = self.book.tracker() if self.progress.show_tracker else None
         if tracker:
-            text = tracker if len(tracker) <= 60 else tracker[:59] + "."
-            w = len(text) * 4 + 8
-            pyxel.rect(4, top, w, 11, Col.NAVY)
-            pyxel.rectb(4, top, w, 11, Col.PEACH)
-            pyxel.text(8, top + 3, text, Col.WHITE)
+            most = (SCREEN_W - 20) // BIG_CHAR_W
+            text = tracker if len(tracker) <= most else tracker[:most - 1] + "."
+            w = font.width(text) + 10
+            pyxel.rect(4, top, w, 15, Col.NAVY)
+            pyxel.rectb(4, top, w, 15, Col.PEACH)
+            font.text(9, top + 1, text, Col.WHITE)
         if self.complete_timer > 0:
             msg = "MISSION COMPLETE!"
             w = font.width(msg) + 20
             x, y = (SCREEN_W - w) // 2, 40
-            pyxel.rect(x, y, w, 30, Col.MAROON)
-            pyxel.rectb(x, y, w, 30, Col.YELLOW)
-            pyxel.rectb(x + 2, y + 2, w - 4, 26, Col.WHITE)
+            w = max(w, font.width(self.complete_title) + 20)
+            x = (SCREEN_W - w) // 2
+            pyxel.rect(x, y, w, 32, Col.MAROON)
+            pyxel.rectb(x, y, w, 32, Col.YELLOW)
+            pyxel.rectb(x + 2, y + 2, w - 4, 28, Col.WHITE)
             font.centered(y + 3, msg, Col.YELLOW)
-            pyxel.text(SCREEN_W // 2 - len(self.complete_title) * 2, y + 20, self.complete_title, Col.WHITE)
+            font.centered(y + 16, self.complete_title, Col.WHITE)
         if self.toast_timer > 0:
             w = font.width(self.toast) + 12
             y = SCREEN_H - 22
