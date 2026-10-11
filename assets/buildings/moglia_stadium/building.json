@@ -1,5 +1,5 @@
 {
-  "_about": "Moglia Stadium (decisions/0023): the 7,000-seat grandstand and press box along Jack Coffey Field's north sideline. A landmark: the sign at its west end opens its card.",
+  "_about": "Moglia Stadium (decisions/0023): the 7,000-seat grandstand and press box along Jack Coffey Field's north sideline. A landmark: the signpost at its west end, beside the walk from Lombardi, opens its card, and a MOGLIA STADIUM plaque on the press box names it.",
   "id": "moglia_stadium",
   "name": "Moglia Stadium",
   "map": "rose_hill",
@@ -9,6 +9,7 @@
   "status": "in review",
   "origin": [62, 19],
   "sprite_offset": [0, 0],
+  "nameplate": [80, 3],
   "footprint": [
     "GGGGGGGGGG",
     "GGGGGGGGGG",

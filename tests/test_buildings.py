@@ -82,10 +82,13 @@ def test_hand_placed_object_on_an_entrance_is_an_error():
 def test_building_is_on_the_map_with_its_doors(b):
     m = load_map(b.map_id, config.MAPS_DIR)
     if b.landmark:
-        # a landmark has no door; a sign on one of its cells opens its card
+        # a landmark has no door; a sign on one of its cells, or a signpost
+        # right beside it (Moglia Stadium), opens its card
         cells = {(x, y) for x, y, _ in b.cells()}
-        assert any(o.type == "sign" and o.location == b.location and (o.x, o.y) in cells
-                   for o in m.objects), f"{b.id}: needs a sign object on one of its cells"
+        near = cells | {(x + dx, y + dy) for x, y in cells
+                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))}
+        assert any(o.type == "sign" and o.location == b.location and (o.x, o.y) in near
+                   for o in m.objects), f"{b.id}: needs a sign on or beside one of its cells"
     else:
         assert b.location in {o.location for o in m.objects if o.type == "door"}
     for x, y, name in b.cells():

@@ -107,3 +107,9 @@ You added `research/images/mcshane_lombardi_oldgym.jpg` and `research/images/ari
 The walkways that used to run between the three buildings are gone. Each building keeps its own door, signpost and card.
 
 *Later the same day:* the gym is now about a third the size of McShane, at 5 × 4 tiles. A low cream Lombardi wing fills the space behind it, and the grass to its east is open lawn.
+
+*Follow-up, 2026-10-11 (from play-testing):* Moglia Stadium had no sign you could see. Its card opened from an invisible spot on the grandstand. Lombardi's signpost also sat out at the stadium's corner, right where you'd look for Moglia's. Now:
+- Moglia has a real signpost at its west end, at (61, 21), beside the walkway from the road.
+- A **MOGLIA STADIUM** plaque sits on the press box. A doorless landmark can now carry a plaque by setting `nameplate` in its `building.json`.
+- Lombardi's signpost moved next to its door, on the sidewalk west of the road at (57, 21).
+- The Game Day hint now points to Moglia's signpost.

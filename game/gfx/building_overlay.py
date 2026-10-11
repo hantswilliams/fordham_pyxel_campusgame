@@ -5,7 +5,7 @@ the map once when it loads:
   where its roof meets its front wall
 - a maroon mat outside every door
 - a name plaque above every building's entrance (its `short_name` in
-  content/locations.json)
+  content/locations.json), and on a doorless landmark that sets a `nameplate`
 
 Drawn buildings (assets/buildings/) carry their own outline in map.png;
 they get mats and plaques from here like everyone else, so all plaques
@@ -114,3 +114,9 @@ def draw_overlay(target, m: MapData, locations: dict) -> None:
             if name:
                 cx, ty, _ = plaque_spot(m, loc, group)
                 draw_plaque(target, cx, ty, name)
+    # landmarks with no door (Moglia Stadium) can still carry a plaque
+    for b in m.buildings:
+        name = getattr(locations.get(b.location), "short_name", "")
+        if b.nameplate and name and not b.entrances():
+            ox, oy = b.origin
+            draw_plaque(target, ox * TILE + b.nameplate[0], oy * TILE + b.nameplate[1], name)

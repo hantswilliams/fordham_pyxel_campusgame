@@ -19,7 +19,7 @@
     {"do": "talk", "npc": "Athletics Staffer",
      "say": ["Thanks! Read the sign at each one, then come back and tell me what you learned."]},
     {"do": "collect", "need": 3, "label": "Check the athletics spots",
-     "hint": "The Victory Bell and Rose Hill Gym are by Constitution Row; Moglia Stadium is on Jack Coffey Field's north side.",
+     "hint": "The Victory Bell and Rose Hill Gym are by Constitution Row; Moglia Stadium's signpost is at its west end, just across the road from Lombardi.",
      "targets": [
        {"location": "victory_bell", "say": ["The Victory Bell, outside Rose Hill Gym."]},
        {"location": "moglia_stadium", "say": ["Moglia Stadium: 7,000 seats along Jack Coffey Field."]},

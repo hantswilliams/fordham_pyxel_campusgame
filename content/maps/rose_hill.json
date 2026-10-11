@@ -244,11 +244,11 @@
     },
     {
       "at": [
-        62,
+        61,
         21
       ],
       "type": "sign",
-      "tile": "roof_other",
+      "tile": "sign",
       "location": "moglia_stadium"
     },
     {
@@ -561,6 +561,15 @@
     },
     {
       "at": [
+        57,
+        21
+      ],
+      "type": "sign",
+      "tile": "sign",
+      "location": "lombardi_center"
+    },
+    {
+      "at": [
         25,
         58
       ],
@@ -684,15 +693,6 @@
       "type": "sign",
       "tile": "sign",
       "location": "larkin_hall"
-    },
-    {
-      "at": [
-        61,
-        22
-      ],
-      "type": "sign",
-      "tile": "sign",
-      "location": "lombardi_center"
     },
     {
       "at": [
