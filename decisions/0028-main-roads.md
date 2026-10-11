@@ -42,3 +42,5 @@ I lined up the street map with the game map using seven places both share: the W
 - [x] **Approve** all six changes
 - [ ] **Not approve**: say which
 - [ ] **Other**: e.g. "move the fields so the north road reaches the east gate"
+
+*Follow-up, 2026-10-11 (checked against `research/images/google_map_view.png`):* the north road no longer stops behind Lombardi. It now continues east along the top of Moglia Stadium, then south down the east side of the fields to Xavier Way, just inside the main gate. Moglia Stadium, Jack Coffey Field and Houlihan Park moved **4 tiles north** to sit right against it, so the road runs alongside the fields as it does on the Google map. The fields also no longer reach as far south. The north-east fence now squares off over the fields (two new corners in the campus outline, at (55, 12) and (79, 12)). The rest of the map is unchanged.

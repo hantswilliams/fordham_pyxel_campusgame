@@ -7,7 +7,7 @@
   "landmark": true,
   "faces": "south",
   "status": "in review",
-  "origin": [62, 19],
+  "origin": [62, 15],
   "sprite_offset": [0, 0],
   "gate": {"at": [0, 2], "faces": "west"},
   "nameplate": [80, 3],

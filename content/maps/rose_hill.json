@@ -236,7 +236,7 @@
     {
       "at": [
         62,
-        27
+        23
       ],
       "type": "sign",
       "tile": "field",
@@ -245,7 +245,7 @@
     {
       "at": [
         69,
-        34
+        30
       ],
       "type": "sign",
       "tile": "field",
@@ -281,7 +281,7 @@
     {
       "at": [
         62,
-        21
+        17
       ],
       "type": "sign",
       "tile": "roof_other",
@@ -290,7 +290,7 @@
     {
       "at": [
         61,
-        20
+        16
       ],
       "type": "sign",
       "tile": "sign",

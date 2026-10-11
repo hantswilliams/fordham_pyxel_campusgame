@@ -121,3 +121,8 @@ The walkways that used to run between the three buildings are gone. Each buildin
 - **Bahoshy Field:** the south-east corner by home plate, at (37, 21).
 - **Tennis Courts:** east side, at (29, 15), with a new walkway from the Murphy arch walk.
 - **Moglia Stadium:** the grandstand's west end, at (62, 21). Its signpost moved one tile north to (61, 20).
+
+*Follow-up, 2026-10-11 (fields moved north, see D-0028):* Moglia Stadium, Jack Coffey Field and Houlihan Park are now 4 rows further north, and their gates and paths moved with them:
+- Moglia's gate is at (62, 17) and its signpost at (61, 16).
+- Jack Coffey's gate is at (62, 23).
+- Houlihan's gate is at (69, 30), with the walkway along row 31.
