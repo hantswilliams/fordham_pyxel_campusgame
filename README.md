@@ -23,7 +23,7 @@ uv run python tools/building_gallery.py  # review page for drawn buildings: buil
 - **Z**, Space or Enter talks to people and reads signs.
 - **X** skips text, closes a card, or skips the intro. Once you've borrowed a bike from the rack outside Walsh Library, X also hops you on or off it (decision 0030). Riding is twice as fast.
 - **M** opens the campus map. Arrow keys jump between places, Z shows a place's card, and M or X closes it. A "!" pin marks where your current mission wants you.
-- **TAB** opens the Mission Log and the Ram Passport (decision 0031). Left/Right switch tabs, Z opens a mission's full page (summary, checklist, hint, reward; Z there tracks or drops it), and M turns the on-screen tracker on or off.
+- **TAB** opens the Mission Log and the Ram Passport (decision 0031). Left/Right switch tabs, Z opens a mission's full page (summary, checklist, hint, reward; Z there tracks or drops it), and M pins the mission bar on. By default the bar stays hidden for a clean screen: it pops up for a few seconds when your next step changes, and stays up during a timed ride.
 - People with a **!** over their head have an optional mission for you. A **?** means a mission you're doing is waiting on them.
 - The game saves as you go. With a save, the title screen offers **CONTINUE** or **NEW GAME**.
 - Up and Down scroll a long card.

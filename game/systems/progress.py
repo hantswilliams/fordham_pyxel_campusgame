@@ -44,7 +44,7 @@ class Progress:
     badges: set[str] = field(default_factory=set)
     unlocks: set[str] = field(default_factory=set)        # e.g. "maroon_bike"
     tracked: str | None = None                            # mission shown in the tracker
-    show_tracker: bool = True
+    show_tracker: bool = False                            # pinned on (M in the TAB menu); off = clean screen
 
     def mission(self, mission_id: str) -> MissionState:
         return self.missions.setdefault(mission_id, MissionState())
@@ -65,7 +65,7 @@ class Progress:
             "badges": sorted(self.badges),
             "unlocks": sorted(self.unlocks),
             "tracked": self.tracked,
-            "show_tracker": self.show_tracker,
+            "pin_tracker": self.show_tracker,
         }
 
     @classmethod
@@ -84,7 +84,7 @@ class Progress:
             badges=set(d.get("badges", [])) & set(BADGES),
             unlocks=set(d.get("unlocks", [])),
             tracked=d.get("tracked"),
-            show_tracker=bool(d.get("show_tracker", True)),
+            show_tracker=bool(d.get("pin_tracker", False)),
         )
 
 

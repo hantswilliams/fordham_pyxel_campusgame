@@ -138,3 +138,11 @@ def test_a_damaged_save_starts_fresh(tmp_path):
     path = tmp_path / "save.json"
     path.write_text("{not json")
     assert SaveFile(path).load().to_dict() == Progress().to_dict()
+
+
+def test_mission_bar_is_off_unless_pinned():
+    from game.systems.progress import Progress
+    assert Progress().show_tracker is False
+    assert Progress.from_dict({"show_tracker": True}).show_tracker is False   # old saves: clean screen
+    p = Progress(show_tracker=True)
+    assert Progress.from_dict(p.to_dict()).show_tracker is True

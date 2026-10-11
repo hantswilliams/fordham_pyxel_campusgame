@@ -32,6 +32,7 @@ PLAYER_SPRITE = 0
 BANNER_FRAMES = 75  # how long the area-name banner shows on entry
 TOAST_FRAMES = 45   # how long 'ON THE BIKE' / 'WALKING' shows
 COMPLETE_FRAMES = 90  # the MISSION COMPLETE banner
+TRACKER_FRAMES = 120  # the mission bar pops up this long when your next step changes
 AUTOSAVE_FRAMES = 150  # save your position every 5 seconds while you move
 
 # Held directions, checked in this order.
@@ -103,6 +104,8 @@ class OverworldScene(Scene):
         self.toast_timer = 0
         self.complete_title = ""
         self.complete_timer = 0
+        self.tracker_timer = 0
+        self._tracker_last = ...  # not looked yet: no pop-up when the scene opens
         self.queue: list[Reaction] = []             # mission messages waiting to be shown
         self.autosave_timer = AUTOSAVE_FRAMES
         self.cam = (0, 0)
@@ -123,6 +126,7 @@ class OverworldScene(Scene):
             self.toast_timer -= 1
         if self.complete_timer > 0:
             self.complete_timer -= 1
+        self._watch_tracker()
 
         p = self.player
         if not p.moving and self.queue:
@@ -381,11 +385,35 @@ class OverworldScene(Scene):
         pyxel.camera()
         self._draw_hud()
 
+    def _tracker_key(self):
+        m = self.book.tracked()
+        steps = self.book.current_steps(m) if m else []
+        return (m.id, tuple(steps), tuple(sorted(self.book.state(m).done_steps))) if m else None
+
+    def _watch_tracker(self) -> None:
+        """The mission bar stays hidden (a clean screen) unless pinned on in
+        the TAB menu. It pops up for a few seconds when the next step changes,
+        and stays up while a timed step's clock is running."""
+        key = self._tracker_key()
+        if self._tracker_last is ...:
+            self._tracker_last = key
+        if key != self._tracker_last:
+            self._tracker_last = key
+            self.tracker_timer = TRACKER_FRAMES if key else 0
+        elif self.tracker_timer > 0:
+            self.tracker_timer -= 1
+
+    def _tracker_visible(self) -> bool:
+        if self.progress.show_tracker or self.tracker_timer > 0:
+            return True
+        m = self.book.tracked()
+        return bool(m and self.book.state(m).timer is not None)
+
     def _draw_hud(self) -> None:
         top = 4
         if self.banner_timer > 0:
             top = 26
-        tracker = self.book.tracker() if self.progress.show_tracker else None
+        tracker = self.book.tracker() if self._tracker_visible() else None
         if tracker:
             most = (SCREEN_W - 20) // BIG_CHAR_W
             text = tracker if len(tracker) <= most else tracker[:most - 1] + "."

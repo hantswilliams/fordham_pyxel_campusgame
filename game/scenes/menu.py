@@ -244,8 +244,8 @@ class MenuScene(Scene):
             pyxel.tri(SCREEN_W // 2 - 3, sep - 2, SCREEN_W // 2 + 3, sep - 2, SCREEN_W // 2, sep + 1, Col.GRAY)
         pyxel.line(6, sep, SCREEN_W - 7, sep, Col.GRAY)
         self._draw_preview(listed[self.cursor], sep + 3)
-        tr = "ON" if self.progress.show_tracker else "OFF"
-        self._footer(f"Z: OPEN  M: TRACKER {tr}  LEFT/RIGHT: TAB")
+        tr = "PINNED" if self.progress.show_tracker else "AUTO"
+        self._footer(f"Z: OPEN  M: BAR {tr}  LEFT/RIGHT: TAB")
 
     def _draw_preview(self, m, y: int) -> None:
         """What to do next for the selected mission; the full page has the rest."""

@@ -308,3 +308,6 @@ Following your choices: Option A in Parts 1–4 and 6, and missions **1 Lost and
 
 ## Follow-up: reading font (2026-10-11)
 The Mission Log, the Ram Passport, the campus map labels, the HUD tracker and the "!"/"?" bubbles now use the PixelMplus reading font (decision 0018) instead of Pyxel's small built-in font. The bigger letters don't fit the old side-by-side log, so the log is now a list of missions with a short preview of the selected mission (next step and hint) below it. **Z opens that mission's full page**, which holds the summary, the checklist, the hint and the reward, and scrolls with Up/Down. On that page, Z tracks or drops the mission. On the campus map, the pin key moved to a small panel under the overview. Screenshot: `26b_mission_page`.
+
+## Follow-up: a clean screen (2026-10-11)
+The mission bar at the top of the screen is now **hidden by default**. It pops up for 4 seconds when your next step changes (for example when you accept a mission, find an item or finish one), and it stays up while a timed ride's clock is running. To keep it on all the time, press M in the TAB menu. The footer there reads "M: BAR AUTO" or "M: BAR PINNED". Saves now store this as `pin_tracker`, so older saves start with the bar hidden.
