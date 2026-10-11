@@ -52,6 +52,11 @@ class BuildingAsset:
     # a landmark (fountain, statue) has no entrance; a sign object on one of
     # its cells opens its card (decisions/0022)
     landmark: bool = False
+    # a sports field's way in (decisions/0023): the footprint cell, from its
+    # top-left, where a gate is drawn and which opens the card, and the side
+    # it opens to ("south", "west", "east" or "north")
+    gate: tuple[int, int] | None = None
+    gate_faces: str = "south"
     folder: Path | None = None
     notes: dict = field(default_factory=dict)
 
@@ -115,9 +120,17 @@ def parse_building(d: dict, folder: Path | None = None) -> BuildingAsset:
         sprite_offset=tuple(d.get("sprite_offset", (0, 0))),
         nameplate=tuple(d["nameplate"]) if "nameplate" in d else None,
         landmark=bool(d.get("landmark", False)),
+        gate=tuple(d["gate"]["at"]) if "gate" in d else None,
+        gate_faces=d["gate"].get("faces", "south") if "gate" in d else "south",
         folder=folder,
         notes={k: v for k, v in d.items() if k.startswith("_")},
     )
+    if b.gate is not None:
+        gx, gy = b.gate
+        if not (0 <= gy < len(rows) and 0 <= gx < len(rows[gy]) and rows[gy][gx] != " "):
+            raise BuildingError(f"{where}: gate {b.gate} is not on the footprint")
+        if b.gate_faces not in ("south", "west", "east", "north"):
+            raise BuildingError(f"{where}: gate faces must be south, west, east or north")
     if not b.entrances() and not b.landmark:
         raise BuildingError(f"{where}: footprint has no entrance (e.g. 'A' or 'D')")
     return b

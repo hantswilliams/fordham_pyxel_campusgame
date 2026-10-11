@@ -113,3 +113,11 @@ The walkways that used to run between the three buildings are gone. Each buildin
 - A **MOGLIA STADIUM** plaque sits on the press box. A doorless landmark can now carry a plaque by setting `nameplate` in its `building.json`.
 - Lombardi's signpost moved next to its door, on the sidewalk west of the road at (57, 21).
 - The Game Day hint now points to Moglia's signpost.
+
+*Follow-up, 2026-10-11 (gates):* every sports area now shows clearly where you go in. Each one has an **open gateway** drawn on its edge: stone posts with maroon caps, a maroon header and the gate leaves swung open. It also has a maroon mat outside, a walkway up to it and a name plaque just inside. Reading the gate opens the card, which replaces the invisible spots on the field edges. The gates are set in each `building.json` (`"gate": {"at": [dx, dy], "faces": ...}`) and drawn by `kit.gate_cell`:
+- **Jack Coffey Field:** west side, at (62, 27), where the crosswalk from Lombardi arrives.
+- **Houlihan Park:** behind home plate, at (69, 34), with a new walkway along the south side.
+- **Murphy Field:** the stone archway, with its iron gates now open and a path through.
+- **Bahoshy Field:** the south-east corner by home plate, at (37, 21).
+- **Tennis Courts:** east side, at (29, 15), with a new walkway from the Murphy arch walk.
+- **Moglia Stadium:** the grandstand's west end, at (62, 21). Its signpost moved one tile north to (61, 20).

@@ -149,3 +149,15 @@ def test_a_place_drawn_as_several_buildings_has_one_card_picture():
         if len(bs) > 1:
             assert sum(1 for b in bs if b.card_png) == 1, loc
             assert all(b.nameplate for b in bs), loc
+
+
+@pytest.mark.parametrize("b", [b for b in BUILDINGS if b.gate is not None], ids=lambda b: b.id)
+def test_gate_opens_the_card_from_the_path_in_front(b):
+    """A sports field's gate (decisions/0023) is where you go in: reading it
+    opens the card, and you can stand right in front of it."""
+    m = load_map(b.map_id, config.MAPS_DIR)
+    gx, gy = b.origin[0] + b.gate[0], b.origin[1] + b.gate[1]
+    o = m.object_at(gx, gy)
+    assert o is not None and o.location == b.location, f"{b.id}: no sign on its gate"
+    dx, dy = {"south": (0, 1), "north": (0, -1), "west": (-1, 0), "east": (1, 0)}[b.gate_faces]
+    assert not m.is_blocked(gx + dx, gy + dy), f"{b.id}: can't stand in front of the gate"

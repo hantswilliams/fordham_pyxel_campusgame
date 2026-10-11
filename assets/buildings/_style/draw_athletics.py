@@ -403,8 +403,13 @@ def murphy():
     d.arc([ax0 + 8, H - 26, ax1 - 8, H - 10], 180, 360, fill=ST_HI)
     for lx in range(ax0 + 12, ax1 - 10, 4):                                 # "MURPHY FIELD"
         d.point([lx, H - 19], fill=NAVY)
-    for gx in range(ax0 + 11, ax1 - 9, 3):                                  # iron gates
-        d.line([gx, H - 15, gx, H - 1], fill=NAVY)
+    # the way in: a path through the arch, its iron gates swung open
+    d.rectangle([ax0 + 10, H - 15, ax1 - 10, H - 1], fill=PEACH)
+    for px in range(ax0 + 13, ax1 - 11, 5):
+        d.point([px, H - 6 - (px % 3) * 3], fill=ST_SH)
+    for hx, sgn in ((ax0 + 10, 1), (ax1 - 10, -1)):
+        for k in range(0, 9, 3):
+            d.line([hx + sgn * k // 2, H - 15 + k // 3, hx + sgn * k // 2, H - 4 - k], fill=NAVY)
     d.rectangle([0, H - 21, ax0 - 1, H - 18], fill=NAVY)                    # fence along the field
     d.rectangle([ax1 + 1, H - 21, W - 1, H - 18], fill=NAVY)
     outline(d, 0, 0, W - 1, H - 1)
@@ -509,13 +514,19 @@ def tennis():
     return im
 
 
+def gated(bid, im):
+    """The field with its way in drawn on (decisions/0023 follow-up)."""
+    draw_gate(im, bid)
+    return im
+
+
 if __name__ == "__main__":
     save_building("lombardi_center", lombardi(), lombardi_card())
     save_building("mcshane_center", mcshane(), mcshane_card())
     save_building("rose_hill_gym", gym(), gym_card())
-    save_building("moglia_stadium", moglia(), moglia_card())
-    save_building("jack_coffey_field", jack_coffey(), jack_coffey_card())
-    save_building("houlihan_park", houlihan(), houlihan_card())
-    save_building("murphy_field", murphy(), murphy_card())
-    save_building("bahoshy_field", bahoshy(), bahoshy_card())
-    save_building("tennis_courts", tennis())
+    save_building("moglia_stadium", gated("moglia_stadium", moglia()), moglia_card())
+    save_building("jack_coffey_field", gated("jack_coffey_field", jack_coffey()), jack_coffey_card())
+    save_building("houlihan_park", gated("houlihan_park", houlihan()), houlihan_card())
+    save_building("murphy_field", murphy(), murphy_card())          # its archway is its gate
+    save_building("bahoshy_field", gated("bahoshy_field", bahoshy()), bahoshy_card())
+    save_building("tennis_courts", gated("tennis_courts", tennis()))

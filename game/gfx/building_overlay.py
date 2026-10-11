@@ -5,7 +5,8 @@ the map once when it loads:
   where its roof meets its front wall
 - a maroon mat outside every door
 - a name plaque above every building's entrance (its `short_name` in
-  content/locations.json), and on a doorless landmark that sets a `nameplate`
+  content/locations.json), on a doorless landmark that sets a `nameplate`,
+  and over a sports field's gate
 
 Drawn buildings (assets/buildings/) carry their own outline in map.png;
 they get mats and plaques from here like everyone else, so all plaques
@@ -114,9 +115,47 @@ def draw_overlay(target, m: MapData, locations: dict) -> None:
             if name:
                 cx, ty, _ = plaque_spot(m, loc, group)
                 draw_plaque(target, cx, ty, name)
-    # landmarks with no door (Moglia Stadium) can still carry a plaque
+    # landmarks with no door (Moglia Stadium) can still carry a plaque, and
+    # a sports field's gate gets one just inside it
     for b in m.buildings:
         name = getattr(locations.get(b.location), "short_name", "")
-        if b.nameplate and name and not b.entrances():
-            ox, oy = b.origin
+        if not name or b.entrances():
+            continue
+        ox, oy = b.origin
+        if b.nameplate:
             draw_plaque(target, ox * TILE + b.nameplate[0], oy * TILE + b.nameplate[1], name)
+        elif b.gate is not None:
+            draw_plaque(target, *gate_plaque_spot(b, name), name)
+    for b in m.buildings:                        # a mat outside each field's gate
+        if b.gate is None:
+            continue
+        dx, dy = {"south": (0, 1), "north": (0, -1), "west": (-1, 0), "east": (1, 0)}[b.gate_faces]
+        x, y = b.origin[0] + b.gate[0] + dx, b.origin[1] + b.gate[1] + dy
+        if 0 <= x < m.width and 0 <= y < m.height and not m.is_blocked(x, y):
+            px, py = x * TILE, y * TILE
+            if dy:
+                py += 0 if dy > 0 else TILE - 3
+                target.rect(px + 2, py, TILE - 4, 3, Col.MAROON)
+                target.line(px + 2, py + 1, px + TILE - 3, py + 1, Col.PINK)
+            else:
+                px += 0 if dx > 0 else TILE - 3
+                target.rect(px, py + 2, 3, TILE - 4, Col.MAROON)
+                target.line(px + 1, py + 2, px + 1, py + TILE - 3, Col.PINK)
+
+
+def gate_plaque_spot(b, name: str) -> tuple[int, int]:
+    """(centre x, top y) for the plaque over a field's gate: just above the
+    gate, lined up with the side it opens to, kept on the field."""
+    ox, oy = b.origin
+    gx, gy = ox + b.gate[0], oy + b.gate[1]
+    w = plaque_width(name)
+    if b.gate_faces == "west":
+        cx = gx * TILE + w // 2
+    elif b.gate_faces == "east":
+        cx = (gx + 1) * TILE - w // 2
+    else:
+        cx = gx * TILE + TILE // 2
+    left, right = ox * TILE, (ox + b.size[0]) * TILE
+    cx = min(max(cx, left + w // 2 + 1), right - w // 2 - 1)
+    ty = gy * TILE - PLAQUE_H - 1 if b.gate_faces != "north" else (gy + 1) * TILE + 1
+    return cx, max(ty, oy * TILE + 1)

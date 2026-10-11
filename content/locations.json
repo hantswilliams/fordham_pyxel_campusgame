@@ -183,6 +183,7 @@
   },
   "jack_coffey_field": {
     "name": "Jack Coffey Field",
+    "short_name": "JACK COFFEY FIELD",
     "kind": "athletics",
     "blurb": "Fordham's football and soccer field, with FieldTurf and lights. The Moglia Stadium grandstand runs along its north side. In baseball season the same turf is also Houlihan Park: the diamond sits at the south end, and the outfield runs up over the football field.",
     "guide": true
@@ -209,7 +210,7 @@
   },
   "tennis_courts": {
     "name": "Hawthorn/Rooney Tennis Courts",
-    "short_name": "TENNIS",
+    "short_name": "TENNIS COURTS",
     "kind": "athletics",
     "blurb": "Six tennis courts beside Murphy Field, shared by the Fordham and Fordham Prep teams."
   },

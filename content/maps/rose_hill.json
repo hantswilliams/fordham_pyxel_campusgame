@@ -244,17 +244,8 @@
     },
     {
       "at": [
-        61,
-        21
-      ],
-      "type": "sign",
-      "tile": "sign",
-      "location": "moglia_stadium"
-    },
-    {
-      "at": [
-        62,
-        29
+        69,
+        34
       ],
       "type": "sign",
       "tile": "field",
@@ -271,8 +262,8 @@
     },
     {
       "at": [
-        31,
-        16
+        37,
+        21
       ],
       "type": "sign",
       "tile": "field",
@@ -281,11 +272,29 @@
     {
       "at": [
         29,
-        17
+        15
       ],
       "type": "sign",
       "tile": "field",
       "location": "tennis_courts"
+    },
+    {
+      "at": [
+        62,
+        21
+      ],
+      "type": "sign",
+      "tile": "roof_other",
+      "location": "moglia_stadium"
+    },
+    {
+      "at": [
+        61,
+        20
+      ],
+      "type": "sign",
+      "tile": "sign",
+      "location": "moglia_stadium"
     },
     {
       "at": [

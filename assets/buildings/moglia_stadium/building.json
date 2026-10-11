@@ -9,6 +9,7 @@
   "status": "in review",
   "origin": [62, 19],
   "sprite_offset": [0, 0],
+  "gate": {"at": [0, 2], "faces": "west"},
   "nameplate": [80, 3],
   "footprint": [
     "GGGGGGGGGG",

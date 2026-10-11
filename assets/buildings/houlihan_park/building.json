@@ -15,6 +15,7 @@
     0,
     0
   ],
+  "gate": {"at": [7, 5], "faces": "south"},
   "footprint": [
     "FFFFFFFFFFFFFF",
     "FFFFFFFFFFFFFF",

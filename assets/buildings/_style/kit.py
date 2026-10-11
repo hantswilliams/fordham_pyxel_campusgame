@@ -290,3 +290,41 @@ def p_sign(d, x, y, s=9):
     px = x + s // 2 - 2
     d.line([px, y + 2, px, y + s - 3], fill=WHITE)
     d.rectangle([px, y + 2, px + 3, y + 4], outline=WHITE)
+
+
+# ---------------------------------------------------------------- gates
+def gate_cell(faces="south"):
+    """A 16 x 16 open gateway for a sports field's way in (decisions/0023):
+    two stone posts with maroon caps under a maroon header, the peach path
+    running in between them and the iron gate leaves folded back. Drawn
+    facing south (the path comes in from the bottom), then turned to
+    `faces`."""
+    im = Image.new("RGBA", (16, 16), CLEAR)
+    d = ImageDraw.Draw(im)
+    d.rectangle([3, 0, 12, 15], fill=PEACH)                     # the path in
+    for px, py in ((6, 7), (9, 10), (5, 13), (10, 14)):
+        d.point([px, py], fill=ST_SH)
+    for x0 in (0, 13):                                          # stone posts
+        d.rectangle([x0, 3, x0 + 2, 15], fill=ST_HI)
+        d.line([x0 + 2, 4, x0 + 2, 15], fill=ST_SH)
+        d.rectangle([x0, 3, x0 + 2, 15], outline=NAVY)
+    d.rectangle([0, 0, 15, 3], fill=MAROON)                     # the header over the way in
+    d.line([1, 1, 14, 1], fill=PINK)
+    d.rectangle([0, 0, 15, 3], outline=NAVY)
+    for hx, sgn in ((3, 1), (12, -1)):                          # gate leaves, swung open
+        d.line([hx, 14, hx + sgn * 2, 6], fill=NAVY)
+        d.line([hx, 10, hx + sgn, 6], fill=NAVY)
+    turn = {"south": None, "west": Image.Transpose.ROTATE_270,
+            "east": Image.Transpose.ROTATE_90, "north": Image.Transpose.ROTATE_180}[faces]
+    return im.transpose(turn) if turn else im
+
+
+def draw_gate(im, bid):
+    """Paste the building's gate (building.json "gate") onto its map image."""
+    m = meta(bid)
+    if "gate" not in m:
+        return
+    gx, gy = m["gate"]["at"]
+    dx, dy = m.get("sprite_offset", [0, 0])
+    cell = gate_cell(m["gate"].get("faces", "south"))
+    im.alpha_composite(cell, (gx * 16 - dx, gy * 16 - dy))
