@@ -1,5 +1,5 @@
 {
-  "_about": "Jack Coffey Field (decisions/0023): Fordham's FieldTurf football and soccer field. A landmark: the sign at its south-west corner opens its card.",
+  "_about": "Jack Coffey Field (decisions/0023, redrawn in 0029): Fordham's FieldTurf football and soccer field, with Moglia Stadium along its north side. Houlihan Park's baseball diamond is laid on the same turf at its south end; the two landmarks are drawn as one picture split between them. A landmark: the sign on its west edge opens its card.",
   "id": "jack_coffey_field",
   "name": "Jack Coffey Field",
   "map": "rose_hill",
@@ -7,9 +7,16 @@
   "landmark": true,
   "faces": "south",
   "status": "in review",
-  "origin": [62, 22],
-  "sprite_offset": [0, 0],
+  "origin": [
+    62,
+    22
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
   "footprint": [
+    "FFFFFFFFFFFFFF",
     "FFFFFFFFFFFFFF",
     "FFFFFFFFFFFFFF",
     "FFFFFFFFFFFFFF",
@@ -18,6 +25,7 @@
     "FFFFFFFFFFFFFF"
   ],
   "sources": [
+    "research/images/sports_satelitte.png (satellite view of the athletics fields; owner unknown, tracing reference only)",
     "research/images/web/athletics_commons_jack_coffey_murphy.jpg (contact sheet of Wikimedia Commons photos)",
     "https://commons.wikimedia.org/wiki/Category:Jack_Coffey_Field (JCF-2014.jpg, FU-2014.jpg CC BY-SA 4.0 PrideMatters)",
     "https://en.wikipedia.org/wiki/Coffey_Field"

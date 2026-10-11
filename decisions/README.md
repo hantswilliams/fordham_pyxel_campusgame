@@ -53,5 +53,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0026](0026-parking-cars.md) | Parking: 1 a solid `c` parked-car tile for the lot, 2 the garage drawn with cars, ramp and stair towers, 3 a Parking Lot card | All Option A (built at your request) | Yes | Built, for your review |
 | [0027](0027-southwest-trees-and-old-elm-loop.md) | Southwest corner: 1 Old Elm Road's east side closes the loop round Martyrs' Court, 2 woods and open lawns from the aerial photo, 3 copper beech tile `V` | All Option A (built at your request) | Yes | Built, for your review |
 | [0028](0028-main-roads.md) | Main roads matched to the street map: Mill River Road north, Old Elm Road east past Hughes, road in front of Dealy, north road behind the fields, roads either side of McShane | Approve all (built at your request) | Yes | Built, for your review |
+| [0029](0029-baseball-fields.md) | Baseball and softball: 1 Houlihan Park drawn on Jack Coffey Field's turf (one field, two cards), 2 Bahoshy turned home-plate south-east with an all-dirt infield, 3 red tennis courts | All Option A (built at your request) | Yes | Built, for your review |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

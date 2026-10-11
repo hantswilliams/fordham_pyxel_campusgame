@@ -7,8 +7,14 @@
   "landmark": true,
   "faces": "south",
   "status": "in review",
-  "origin": [26, 12],
-  "sprite_offset": [0, 0],
+  "origin": [
+    26,
+    12
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
   "footprint": [
     "FFFF",
     "FFFF",
@@ -18,6 +24,7 @@
     "FFFF"
   ],
   "sources": [
+    "research/images/sports_satelitte.png (satellite view of the athletics fields; owner unknown, tracing reference only)",
     "research/images/web/athletics_search_murphy_bahoshy.jpg (aerial views of the complex)",
     "https://www.fordhamprep.org/athletics/athletic-facilities"
   ]

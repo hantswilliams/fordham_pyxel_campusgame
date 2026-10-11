@@ -17,3 +17,4 @@ A 14 × 6 landmark: striped FieldTurf, maroon end zones, yard lines, the Fordham
 ## History
 
 - v1, 2026-10-10: first draft drawn in code (`../_style/draw_athletics.py`).
+- v2, 2026-10-10: redrawn from `research/images/sports_satelitte.png` (decisions/0029).

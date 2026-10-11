@@ -182,16 +182,16 @@
     "blurb": "The 7,000-seat grandstand and press box along Jack Coffey Field, home of Fordham Rams football. It's named for Joe Moglia (FCRH '71)."
   },
   "jack_coffey_field": {
-    "name": "Jack Coffey Field & Houlihan Park",
+    "name": "Jack Coffey Field",
     "kind": "athletics",
-    "blurb": "Fordham's football and soccer field, with FieldTurf and lights. The Moglia Stadium grandstand runs along its north side, and Houlihan Park, the baseball field, is just south of it.",
+    "blurb": "Fordham's football and soccer field, with FieldTurf and lights. The Moglia Stadium grandstand runs along its north side. In baseball season the same turf is also Houlihan Park: the diamond sits at the south end, and the outfield runs up over the football field.",
     "guide": true
   },
   "houlihan_park": {
     "name": "Houlihan Park",
     "short_name": "HOULIHAN PARK",
     "kind": "athletics",
-    "blurb": "Jim Houlihan Park, home of Fordham Rams baseball: a FieldTurf diamond with about 1,000 seats, lights and a scoreboard, just south of Jack Coffey Field.",
+    "blurb": "Jim Houlihan Park at Jack Coffey Field, home of Fordham Rams baseball. It isn't a separate field: the diamond is laid on Jack Coffey Field's FieldTurf, with home plate and about 1,000 seats at the south end and the outfield stretching north over the football field.",
     "guide": true
   },
   "murphy_field": {
@@ -205,7 +205,7 @@
     "name": "Bahoshy Softball Field",
     "short_name": "BAHOSHY FIELD",
     "kind": "athletics",
-    "blurb": "Home of Fordham softball, part of the Murphy Field complex: a clay infield and a FieldTurf outfield with the Fordham F."
+    "blurb": "Home of Fordham softball, beside the tennis courts and Murphy Field. Home plate is in the south-east corner by a paved plaza. It has an all-dirt infield and a FieldTurf outfield with the Fordham F, ringed by a red-brown warning track."
   },
   "tennis_courts": {
     "name": "Hawthorn/Rooney Tennis Courts",

@@ -11,7 +11,9 @@ from kit import (BROWN, CYAN, DBLUE, GRAY, GREEN, LBLUE, LIME, MAROON, NAVY, ORA
                  PINK, RED, ROOF, ROOF_SH, ST, ST_DK, ST_HI, ST_SH, WHITE, YELLOW,
                  arched_window, ashlar, battlements, canvas, card, clouds, diamond, door, eave,
                  fieldstone, flat_roof, fordham_f, gothic_window, lawn, light_tower, outline,
-                 panels, person, save_building, tree, turf, window, BRICK_DK, slope_roof)
+                 panels, person, save_building, tree, turf, window, BRICK_DK, slope_roof,
+                 PBRICK_SH)
+from PIL import ImageDraw
 
 
 # ---------------------------------------------------------------- buildings
@@ -258,12 +260,19 @@ def moglia_card():
     return im
 
 
-def jack_coffey():
-    im, d, ox, oy = canvas("jack_coffey_field")
-    W, H = im.size
+def coffey_complex():
+    """Jack Coffey Field and Houlihan Park as one turf (D-0029): the football
+    and soccer field, with the baseball diamond laid on the same FieldTurf,
+    home plate at the south end, the outfield running up over the football
+    field. Drawn whole, then split between the two landmarks."""
+    from PIL import Image, ImageDraw
+    W, H = 224, 208
+    im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
     d.rectangle([0, 0, W - 1, H - 1], fill=GREEN)                          # surround
-    x0, x1, y0, y1 = 10, W - 11, 8, H - 9
-    turf(d, x0, y0, x1, y1, stripe=17)
+    turf(d, 6, 4, W - 7, H - 5, stripe=16)
+    # the football / soccer field across the north half
+    x0, x1, y0, y1 = 12, W - 13, 10, 104
     d.rectangle([x0, y0, x0 + 17, y1], fill=MAROON)                        # end zones
     d.rectangle([x1 - 17, y0, x1, y1], fill=MAROON)
     for zx in (x0 + 8, x1 - 8):
@@ -272,15 +281,48 @@ def jack_coffey():
     d.rectangle([x0, y0, x1, y1], outline=WHITE)
     for yx in range(x0 + 17, x1 - 16, 17):                                 # yard lines
         d.line([yx, y0, yx, y1], fill=WHITE)
-        for hy in (y0 + 28, y1 - 28):
-            d.point([yx + 8, hy], fill=WHITE)
-    fordham_f(d, W // 2, H // 2, 8)
     for gx in (x0 - 4, x1 + 4):                                            # goal posts
-        d.line([gx, H // 2 - 8, gx, H // 2 + 8], fill=YELLOW)
-        d.line([gx - 3 if gx < W // 2 else gx + 3, H // 2, gx, H // 2], fill=YELLOW)
-    for tx, ty in ((3, 2), (W - 5, 2), (3, H - 14), (W - 5, H - 14)):
+        d.line([gx, (y0 + y1) // 2 - 8, gx, (y0 + y1) // 2 + 8], fill=YELLOW)
+    fordham_f(d, W // 2, (y0 + y1) // 2, 8)
+    # Houlihan Park: the diamond on the same turf
+    cx, home = W // 2, H - 18
+    r = 150                                                                # to the seasonal fence
+    for k in range(0, 91, 3):                                              # dashed outfield fence
+        a0 = 225 + k
+        d.arc([cx - r, home - r, cx + r, home + r], a0, a0 + 1.6, fill=NAVY)
+    for sgn in (-1, 1):                                                    # foul lines + poles
+        ex, ey = cx + sgn * int(r * 0.707), home - int(r * 0.707)
+        d.line([cx, home, ex, ey], fill=WHITE)
+        d.rectangle([ex - 1, ey - 5, ex + 1, ey], fill=YELLOW)
+    s_ = 30                                                                # base distance
+    bases = [(cx, home), (cx + s_, home - s_), (cx, home - 2 * s_), (cx - s_, home - s_)]
+    for i in range(4):                                                     # base paths
+        d.line([bases[i], bases[(i + 1) % 4]], fill=PEACH)
+    for bx, by in bases[1:]:                                               # dirt cutouts round the bases
+        d.ellipse([bx - 5, by - 5, bx + 5, by + 5], fill=ORANGE)
+        d.rectangle([bx - 1, by - 1, bx + 1, by + 1], fill=WHITE)
+    d.ellipse([cx - 9, home - 7, cx + 9, home + 7], fill=ORANGE)            # home plate circle
+    d.rectangle([cx - 1, home - 1, cx + 1, home + 1], fill=WHITE)
+    d.ellipse([cx - 5, home - s_ - 5, cx + 5, home - s_ + 5], fill=ORANGE)  # mound
+    d.point([cx, home - s_], fill=WHITE)
+    d.arc([cx - 22, home - 14, cx + 22, home + 26], 200, 340, fill=NAVY)    # backstop
+    for sgn in (-1, 1):                                                    # dugouts
+        dx = cx + sgn * 40
+        d.rectangle([dx - 10, home + 2, dx + 10, home + 7], fill=NAVY)
+        d.line([dx - 10, home + 2, dx + 10, home + 2], fill=LBLUE)
+    for i, y in enumerate(range(H - 8, H - 2, 2)):                         # stands behind home
+        d.rectangle([cx - 46, y, cx + 46, y + 1], fill=GRAY if i % 2 else WHITE)
+    for tx, ty in ((3, 2), (W - 5, 2), (3, H - 30), (W - 5, H - 30)):
         light_tower(d, tx, ty, 10)
     outline(d, 0, 0, W - 1, H - 1)
+    return im
+
+
+def jack_coffey():
+    im, d, ox, oy = canvas("jack_coffey_field")
+    whole = coffey_complex()
+    im.paste(whole.crop((0, 0, im.size[0], im.size[1])), (0, 0))
+    ImageDraw.Draw(im).line([0, 0, im.size[0] - 1, 0], fill=NAVY)
     return im
 
 
@@ -307,14 +349,33 @@ def jack_coffey_card():
 
 def houlihan():
     im, d, ox, oy = canvas("houlihan_park")
-    W, H = im.size
-    diamond(d, 0, 0, W, H, infield=PEACH, base_path=ST_HI, track=BROWN)
-    d.rectangle([W // 2 - 24, H - 5, W // 2 + 24, H - 1], fill=GRAY)      # grandstand behind home
-    d.rectangle([W // 2 - 12, 2, W // 2 + 12, 9], fill=NAVY)              # scoreboard
-    d.rectangle([W // 2 - 10, 4, W // 2 + 10, 7], fill=YELLOW)
-    for tx in (4, W - 6):
-        light_tower(d, tx, 3, 10)
-    outline(d, 0, 0, W - 1, H - 1)
+    whole = coffey_complex()
+    top = whole.size[1] - im.size[1]
+    im.paste(whole.crop((0, top, whole.size[0], whole.size[1])), (0, 0))
+    return im
+
+
+def houlihan_card():
+    im, d = card()
+    clouds(d)
+    d.rectangle([0, 30, 227, 40], fill=GRAY)                               # Moglia's stands, far side
+    for x in range(4, 224, 8):
+        d.rectangle([x, 32, x + 4, 34], fill=WHITE)
+    light_tower(d, 8, 2, 36)
+    light_tower(d, 218, 2, 36)
+    turf(d, 0, 40, 227, 87, stripe=12, vertical=False)
+    for k in range(0, 228, 10):                                            # seasonal outfield fence
+        d.rectangle([k, 44, k + 6, 48], fill=NAVY)
+    d.line([114, 86, 10, 50], fill=WHITE)                                  # foul lines
+    d.line([114, 86, 218, 50], fill=WHITE)
+    for bx, by in ((150, 72), (114, 56), (78, 72)):                        # bases on turf cutouts
+        d.ellipse([bx - 7, by - 3, bx + 7, by + 3], fill=ORANGE)
+        d.rectangle([bx - 2, by - 1, bx + 2, by + 1], fill=WHITE)
+    d.ellipse([106, 68, 122, 74], fill=ORANGE)                             # mound
+    d.ellipse([100, 80, 128, 87], fill=ORANGE)                             # home
+    person(d, 113, 70, MAROON)                                             # pitcher
+    person(d, 120, 78, WHITE)                                              # batter
+    person(d, 152, 64, MAROON)
     return im
 
 
@@ -374,24 +435,70 @@ def murphy_card():
 
 
 def bahoshy():
+    """Bahoshy Softball Field (D-0029), as in the satellite photo: home
+    plate in the south-east corner by the paved plaza, an all-dirt infield,
+    the outfield fanning north-west towards the tennis courts and Murphy
+    Field, with a red-brown warning track inside the fence."""
     im, d, ox, oy = canvas("bahoshy_field")
-    W, H = im.size
-    diamond(d, 0, 0, W, H, infield=ORANGE, base_path=PEACH, track=RED)
-    d.rectangle([4, H - 8, 28, H - 4], fill=NAVY)                            # dugouts
-    d.rectangle([W - 29, H - 8, W - 5, H - 4], fill=NAVY)
-    light_tower(d, W - 5, 3, 10)
+    W, H = im.size                                                         # 112 x 96
+    d.rectangle([0, 0, W - 1, H - 1], fill=GREEN)                          # foul ground
+    hx, hy = W - 14, H - 14
+    R = 88
+    box = [hx - R, hy - R, hx + R, hy + R]
+    d.pieslice(box, 180, 270, fill=BROWN)                                  # warning track
+    d.pieslice([hx - R + 7, hy - R + 7, hx + R - 7, hy + R - 7], 180, 270, fill=LIME)
+    for k in range(18, R - 8, 10):                                         # mowing arcs
+        d.arc([hx - k, hy - k, hx + k, hy + k], 180, 270, fill=GREEN)
+    d.arc(box, 180, 270, fill=NAVY)                                        # outfield fence
+    s_ = 30                                                                # bases
+    d.pieslice([hx - 50, hy - 50, hx + 50, hy + 50], 180, 270, fill=ORANGE)  # all-dirt infield
+    d.rectangle([hx - 50, hy - 2, hx, hy + 2], fill=ORANGE)
+    d.line([hx, hy, hx - R + 2, hy], fill=WHITE)                           # foul lines
+    d.line([hx, hy, hx, hy - R + 2], fill=WHITE)
+    for bx, by in ((hx, hy), (hx, hy - s_), (hx - s_, hy - s_), (hx - s_, hy)):
+        d.rectangle([bx - 1, by - 1, bx + 1, by + 1], fill=WHITE)
+    d.ellipse([hx - s_ // 2 - 3, hy - s_ // 2 - 3, hx - s_ // 2 + 3, hy - s_ // 2 + 3], fill=PEACH)
+    d.rectangle([hx - R, hy - 6, hx - R + 2, hy - 1], fill=YELLOW)          # foul poles
+    d.rectangle([hx + 1, hy - R, hx + 6, hy - R + 2], fill=YELLOW)
+    d.rectangle([hx + 3, hy + 3, W - 2, H - 2], fill=GRAY)                 # the paved plaza behind home
+    d.arc([hx - 12, hy - 4, hx + 16, hy + 20], 180, 360, fill=NAVY)         # backstop
+    d.rectangle([hx - 44, hy + 6, hx - 24, hy + 10], fill=NAVY)             # dugouts
+    d.rectangle([hx + 6, hy - 44, hx + 10, hy - 24], fill=NAVY)
+    fordham_f(d, hx - 52, hy - 52, 5)
+    light_tower(d, 3, H - 12, 9)
     outline(d, 0, 0, W - 1, H - 1)
     return im
 
 
+def bahoshy_card():
+    im, d = card()
+    clouds(d)
+    d.rectangle([0, 34, 227, 40], fill=PBRICK_SH)                          # the tennis courts beyond
+    d.rectangle([0, 40, 227, 42], fill=NAVY)                               # outfield fence
+    turf(d, 0, 42, 227, 87, stripe=12, vertical=False)
+    d.rectangle([0, 42, 227, 46], fill=BROWN)                              # warning track
+    d.pieslice([30, 50, 198, 130], 180, 360, fill=ORANGE)                   # all-dirt infield
+    d.line([114, 86, 0, 52], fill=WHITE)
+    d.line([114, 86, 227, 52], fill=WHITE)
+    for bx, by in ((160, 72), (114, 62), (68, 72)):
+        d.rectangle([bx - 2, by - 1, bx + 2, by + 1], fill=WHITE)
+    d.ellipse([108, 70, 120, 75], fill=PEACH)                              # pitcher's circle
+    fordham_f(d, 196, 50, 4)
+    person(d, 113, 66, MAROON)
+    person(d, 120, 78, WHITE)
+    person(d, 70, 66, MAROON)
+    return im
+
+
 def tennis():
+    """The tennis courts, red as in the satellite photo (D-0029)."""
     im, d, ox, oy = canvas("tennis_courts")
     W, H = im.size
     d.rectangle([0, 0, W - 1, H - 1], fill=GREEN)
     for cy in range(3):
         for cx in range(2):
             x0, y0 = 3 + cx * 30, 3 + cy * 31
-            d.rectangle([x0, y0, x0 + 27, y0 + 28], fill=DBLUE)
+            d.rectangle([x0, y0, x0 + 27, y0 + 28], fill=PBRICK_SH)
             d.rectangle([x0 + 4, y0 + 3, x0 + 23, y0 + 25], outline=WHITE)
             d.line([x0 + 4, y0 + 14, x0 + 23, y0 + 14], fill=NAVY)           # net
             d.line([x0 + 13, y0 + 7, x0 + 13, y0 + 21], fill=WHITE)
@@ -408,7 +515,7 @@ if __name__ == "__main__":
     save_building("rose_hill_gym", gym(), gym_card())
     save_building("moglia_stadium", moglia(), moglia_card())
     save_building("jack_coffey_field", jack_coffey(), jack_coffey_card())
-    save_building("houlihan_park", houlihan())
+    save_building("houlihan_park", houlihan(), houlihan_card())
     save_building("murphy_field", murphy(), murphy_card())
-    save_building("bahoshy_field", bahoshy())
+    save_building("bahoshy_field", bahoshy(), bahoshy_card())
     save_building("tennis_courts", tennis())

@@ -16,3 +16,4 @@ A 7 × 6 landmark: a softball diamond with a clay infield, a red warning track, 
 ## History
 
 - v1, 2026-10-10: first draft drawn in code (`../_style/draw_athletics.py`).
+- v2, 2026-10-10: redrawn from `research/images/sports_satelitte.png` (decisions/0029).

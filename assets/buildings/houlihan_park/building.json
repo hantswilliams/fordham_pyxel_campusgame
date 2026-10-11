@@ -1,5 +1,5 @@
 {
-  "_about": "Jim Houlihan Park (decisions/0023), home of Fordham baseball, on the far side of Jack Coffey Field from the grandstand. A landmark.",
+  "_about": "Jim Houlihan Park at Jack Coffey Field (decisions/0029), home of Fordham baseball: the diamond on Jack Coffey Field's FieldTurf, home plate at the south end with stands behind it, the outfield running north over the football field to a dashed outfield fence. A landmark.",
   "id": "houlihan_park",
   "name": "Houlihan Park",
   "map": "rose_hill",
@@ -7,18 +7,24 @@
   "landmark": true,
   "faces": "south",
   "status": "in review",
-  "origin": [62, 29],
-  "sprite_offset": [0, 0],
+  "origin": [
+    62,
+    29
+  ],
+  "sprite_offset": [
+    0,
+    0
+  ],
   "footprint": [
-    "FFFFFFFF",
-    "FFFFFFFF",
-    "FFFFFFFF",
-    "FFFFFFFF",
-    "FFFFFFFF",
-    "FFFFFFFF"
+    "FFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFF"
   ],
   "sources": [
-    "research/images/web/athletics_commons_jack_coffey_murphy.jpg (Jack Coffey Field from above; Houlihan Park is beside it)",
-    "https://en.wikipedia.org/wiki/Jim_Houlihan_Park_at_Jack_Coffey_Field"
+    "research/images/sports_satelitte.png (satellite view of the athletics fields; owner unknown, tracing reference only)",
+    "https://en.wikipedia.org/wiki/Jim_Houlihan_Park_at_Jack_Coffey_Field (the baseball field within Jack Coffey Field; FieldTurf; 338-400-338 ft)"
   ]
 }
