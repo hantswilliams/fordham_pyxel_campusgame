@@ -28,3 +28,15 @@ You didn't like it, so it has been taken out.
 **Your notes:**
 
 > Didn't like the painted neighbourhood; make everything outside the university boundaries a tan grey.
+
+## Follow-up: no breaks in the perimeter fence (2026-10-11)
+
+The fence used to be drawn only on grass at the campus edge. Wherever a road, a walkway or a diagonal step in the boundary reached the edge, there was a gap, most visibly along the north and north-west. Now the map generator adds fence just outside every exposed edge, so the fence runs all the way round.
+
+The four gates stay open:
+- the main gate on Xavier Way
+- the south-east gate
+- the south gate by Finlay
+- the Webster Avenue gate
+
+The street where you start, outside the Webster Avenue gate, is left unfenced.
