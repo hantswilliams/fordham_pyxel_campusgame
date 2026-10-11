@@ -101,14 +101,15 @@ def loschert_card():
 
 def alumni_south():
     im, d, ox, oy = canvas("alumni_court_south")
-    W, H = im.size
-    flat_roof(d, 0, 0, W - 1, 61, rim=ST_HI, fill=ROOF, seam=ROOF_SH, units=((6, 10), (30, 34)))
-    front(d, W, 64, H, "brick", base=PEACH, mortar=PBRICK)
-    d.rectangle([0, 64, W - 1, 66], fill=ST_HI)
-    for y in (70, 82, 94, 106):
+    W, H = im.size                                                        # 48 x 112
+    top = H - 64                                                          # the front wall
+    flat_roof(d, 0, 0, W - 1, top - 3, rim=ST_HI, fill=ROOF, seam=ROOF_SH, units=((6, 8), (30, 24)))
+    front(d, W, top, H, "brick", base=PEACH, mortar=PBRICK)
+    d.rectangle([0, top, W - 1, top + 2], fill=ST_HI)
+    for y in (top + 6, top + 18, top + 30, top + 42):
         window(d, 3, y, 7, 8)
         window(d, 38, y, 7, 8)
-    gabled_glass_bay(d, 24, 46, H - 1, w=18, gable=9)
+    gabled_glass_bay(d, 24, top - 18, H - 1, w=18, gable=9)
     door(d, 18, H - 14, 12, 14, frame=NAVY, glass=True)
     outline(d, 0, 0, W - 1, H - 1)
     return im

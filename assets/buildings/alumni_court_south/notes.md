@@ -15,3 +15,4 @@ Found online for this batch (decisions/0024). Photos are tracing references only
 ## History
 
 - v1, 2026-10-10: first draft drawn in code (`../_style/draw_residence.py`).
+- v2, 2026-10-10: moved one tile east and made one tile shorter (3 × 7), so Mill River Road can run up its west side as it does on the real map (decisions/0028).
