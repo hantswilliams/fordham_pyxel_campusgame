@@ -17,6 +17,7 @@ CONTENT_DIR = ROOT / "content"
 MAPS_DIR = CONTENT_DIR / "maps"
 LOCATIONS_FILE = CONTENT_DIR / "locations.json"
 INTRO_FILE = CONTENT_DIR / "intro.json"
+SAVE_DIR = ("fordham", "campus_quest")  # pyxel.user_data_dir(vendor, app): where the save lives
 BUILDINGS_DIR = ROOT / "assets" / "buildings"  # drawn buildings, decisions/0020
 
 START_MAP = "rose_hill"

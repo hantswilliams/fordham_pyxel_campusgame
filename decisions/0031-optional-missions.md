@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved by you (2026-10-11): Option A in every part; missions 1, 5 and 6 for the first batch. Built the same day |
 | **Raised** | 2026-10-11. You asked for something like Pokémon's missions, with no fights: optional, and written in a format we can reuse |
 | **Affects** | New `content/missions/` folder, a small mission engine, NPC dialogue, the TAB menu (Campus Guide, M3), save data, the First Week Checklist (D-0014) |
-| **Built provisionally?** | No. Nothing is built until you've ticked the boxes below |
+| **Built?** | Yes. See "What was built" at the end |
 
 ## What's being decided
 
@@ -71,7 +71,7 @@ An example, the "Lost ID" mission from Part 5:
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -110,7 +110,7 @@ Every mission is a list of steps, and each step is one of a few kinds. New missi
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -142,7 +142,7 @@ Every mission is a list of steps, and each step is one of a few kinds. New missi
 
 ## Your decision (Part 3)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below (for example, C)
 
@@ -172,7 +172,7 @@ Every mission is a list of steps, and each step is one of a few kinds. New missi
 
 ## Your decision (Part 4)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -188,12 +188,12 @@ Each idea teaches something real. Time is for a first-time player. "Needs Fordha
 
 | ✓ | Mission | The story | What it teaches | Steps used | Time | Needs Fordham? |
 |---|---|---|---|---|---|---|
-| [ ] | **1. Lost and Found** | A student dropped their ID near McShane. Find it and take it to Public Safety | Where Public Safety is; what to do with a lost ID | talk, find, go_to | 3 min | That lost IDs go to Public Safety in Thebaud |
+| [x] | **1. Lost and Found** | A student dropped their ID near McShane. Find it and take it to Public Safety | Where Public Safety is; what to do with a lost ID | talk, find, go_to | 3 min | That lost IDs go to Public Safety in Thebaud |
 | [ ] | **2. Ram Van Run** | Make it to the shuttle stop by Dealy before the Ram Van leaves, on the bike | Shuttle stops; the bike | ride (timer), read | 2 min | Shuttle stop locations (already on the cards) |
 | [ ] | **3. Study Spot Scout** | Your roommate wants a quiet place to study. Check out three spots and report back | Walsh Library, McShane, a lawn | collect (3 of 4), talk | 4 min | Which spaces are open for studying |
 | [ ] | **4. Landmark Photo Hunt** | The campus paper wants photos of five landmarks | Ram Statue, Victory Bell, Archbishop Hughes Statue, Cunniffe Fountain, Seismic Observatory | collect (5), answer | 6 min | No: the facts are already on the cards |
-| [ ] | **5. Bike Courier** | Deliver a package from the McShane mail room to O'Hare before time runs out | McShane, O'Hare, the bike | find, ride (timer) | 2 min | Where the mail room is |
-| [ ] | **6. Game Day** | Help the Athletics staffer get ready: ring the Victory Bell, find Moglia Stadium, check the gym's court | Athletics venues, traditions | collect (3), answer | 4 min | The Victory Bell tradition |
+| [x] | **5. Bike Courier** | Deliver a package from the McShane mail room to O'Hare before time runs out | McShane, O'Hare, the bike | find, ride (timer) | 2 min | Where the mail room is |
+| [x] | **6. Game Day** | Help the Athletics staffer get ready: ring the Victory Bell, find Moglia Stadium, check the gym's court | Athletics venues, traditions | collect (3), answer | 4 min | The Victory Bell tradition |
 | [ ] | **7. Wellness Walk** | A friend is feeling overwhelmed. Find where they can get help | Health Center and Counseling (O'Hare); a calm walk round Edwards Parade | go_to, read, talk | 3 min | **Yes**: office locations and hours. The wording would be reviewed by Counseling |
 | [ ] | **8. Dining Passport** | Try three places to eat on campus | McShane Marketplace, Campbell, Queen's Court and O'Hare dining | collect (3 of 4) | 5 min | Which dining spots are open to first-years |
 | [ ] | **9. History Detective** | A professor leaves questions on three plaques | Cunniffe House (the old manor), Rose Hill Gym (1925), University Church (1845) | go_to, answer ×3 | 5 min | The facts are on the cards; a quick check |
@@ -230,7 +230,7 @@ Together they use every step type except "someone following you", and none needs
 
 ## Your decision (Part 6)
 
-- [ ] **Approve**: go with Option A
+- [x] **Approve**: go with Option A
 - [ ] **Not approve**
 - [ ] **Other**
 
@@ -250,3 +250,58 @@ Together they use every step type except "someone following you", and none needs
 3. `content/missions/_TEMPLATE.json`, plus a short how-to in `content/missions/README.md`.
 4. The missions you ticked in Part 5.
 5. The "!" markers, the Missions tab, the tracker and the map pins.
+
+
+---
+
+## What was built (2026-10-11)
+
+Following your choices: Option A in Parts 1–4 and 6, and missions **1 Lost and Found**, **5 Bike Courier** and **6 Game Day** from Part 5.
+
+**Saving comes first**
+- `game/systems/progress.py` remembers:
+  - your position and the open gate
+  - the bike, and the places you've visited
+  - every mission's progress, your stamps, badges and unlocks
+  - which mission you're tracking
+- It saves as you go: on each mission event, and every 5 seconds while you move.
+- The title screen offers **CONTINUE** (back where you were) or **NEW GAME**.
+
+**The format (Part 1)**
+- One file per mission in `content/missions/`, plus `_TEMPLATE.json` and a README.
+- `tests/test_missions.py` checks every file against the map and the cards.
+
+**The engine (Part 2)**
+- `game/systems/missions.py` runs all seven step types.
+- Missions can run in order or any order, a timed ride sends you back a step when time runs out, and a person can ask two questions in a row.
+- It's pure logic, with tests for each mission.
+
+**In the game (Part 3)**
+- Givers stand where their file says, with a bobbing **!** over them. A **?** marks someone a mission is waiting on.
+- Talking to a giver offers the mission (**YES / NOT NOW**).
+- Items (a dropped ID, a package) appear while you're meant to find them.
+- **The tracker:** a line at the top-left shows the current step, with the countdown on timed rides.
+- **Finishing:** a **MISSION COMPLETE!** banner shows when you finish.
+- **TAB** opens the **Mission Log**: active, available and finished missions, steps ticked off, a hint, and TRACK / DROP.
+- **The campus map:** pins a **!** on where the tracked mission wants you, on the main view and the overview.
+
+**Rewards (Part 4)**
+- A **Ram Passport** tab: a stamp for each mission and the five badges from D-0003.
+- Bike Courier unlocks a **maroon bike**.
+
+**The checklist (Part 6)**
+- `first_week.json` is the required mission. It starts by itself, takes its seven D-0014 steps in any order, and gives badges along the way.
+
+**The three missions**
+
+| Mission | Giver, and where | What you do | Reward |
+|---|---|---|---|
+| **Lost and Found** | Worried Student, west of McShane | Find the ID on the walkway towards Edwards Parade, take it to Public Safety in Thebaud Hall | Stamp, Wellness badge |
+| **Bike Courier** | Mail Room Staffer, west of McShane (needs a bike first) | Pick up the package, ride it to O'Hare Hall within 15 seconds (about 8 s on the bike by the shortest route, about 16 s on foot) | Stamp, Community badge, maroon bike |
+| **Game Day** | Athletics Staffer, by the Victory Bell | Read the signs at the Victory Bell, Moglia Stadium and Rose Hill Gym, then answer two questions taken from their cards | Stamp, Community badge |
+
+**Screenshots:** `tools/capture.py` adds `22_mission_giver` through `30_passport_stamp`.
+
+**Still to confirm with Fordham**
+- That a found ID goes to Public Safety.
+- Where the mail room is. The mission says "McShane", without naming a room.

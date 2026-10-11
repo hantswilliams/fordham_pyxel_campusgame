@@ -4,6 +4,8 @@ Pokemon-style. Pure logic, no Pyxel."""
 
 from game import config
 
+from .progress import Progress
+
 TAKE_LINES = [
     "A bike rack outside Walsh Library. You borrow a bike!",
     "Press X to hop on or off. Riding is twice as fast as walking.",
@@ -14,9 +16,27 @@ NO_BIKE_LINES = ["A bike rack outside Walsh Library. Bikes are free to borrow."]
 
 
 class Bike:
-    def __init__(self):
-        self.have = False    # borrowed from a rack
-        self.riding = False  # on it right now
+    """Whether you've borrowed a bike and are riding it, kept in Progress so
+    it's saved (decisions/0031)."""
+
+    def __init__(self, progress: Progress | None = None):
+        self.progress = progress or Progress()
+
+    @property
+    def have(self) -> bool:          # borrowed from a rack
+        return self.progress.has_bike
+
+    @have.setter
+    def have(self, value: bool) -> None:
+        self.progress.has_bike = value
+
+    @property
+    def riding(self) -> bool:        # on it right now
+        return self.progress.riding
+
+    @riding.setter
+    def riding(self, value: bool) -> None:
+        self.progress.riding = value
 
     @property
     def speed(self) -> int:

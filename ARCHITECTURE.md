@@ -154,6 +154,12 @@
 - Only Faculty Memorial Hall, the parking garage and the small landmarks (statues, the Victory Bell, the observatory and the cemetery) still use tiles.
 - A place can span several drawn buildings, such as Martyrs' Court's two blocks. The overlay matches each plaque to its block, and the card uses the block that has a picture.
 
+**7. Missions and saving (decision 0031).** `content/missions/*.json` holds one mission per file: who offers it, its steps and its reward. The First Week Checklist is one of them, the only required one.
+- `game/systems/missions.py` is a pure-logic engine. The overworld tells it what the player did (talked to someone, opened a card, stood by a door, picked something up, answered a question) and shows the Reactions it returns.
+- Givers and items are added to the map at runtime from the mission files.
+- `game/systems/progress.py` keeps everything worth remembering (position, gate, bike, visited places, missions, stamps, badges, unlocks). It saves it as JSON in `pyxel.user_data_dir`, which on the web build is the browser's storage.
+- Headless runs (tests, screenshots) never touch a real save.
+
 A `tests/test_content.py` check validates the data: every NPC's dialogue exists, every quest references real locations, and every URL is well-formed. Content edits then can't break the game.
 
 ---

@@ -22,7 +22,10 @@ uv run python tools/building_gallery.py  # review page for drawn buildings: buil
 - Arrows or WASD move.
 - **Z**, Space or Enter talks to people and reads signs.
 - **X** skips text, closes a card, or skips the intro. Once you've borrowed a bike from the rack outside Walsh Library, X also hops you on or off it (decision 0030). Riding is twice as fast.
-- **M** opens the campus map. Arrow keys jump between places, Z shows a place's card, and M or X closes it.
+- **M** opens the campus map. Arrow keys jump between places, Z shows a place's card, and M or X closes it. A "!" pin marks where your current mission wants you.
+- **TAB** opens the Mission Log and the Ram Passport (decision 0031). Left/Right switch tabs, Z tracks or drops a mission, and M turns the on-screen tracker on or off.
+- People with a **!** over their head have an optional mission for you. A **?** means a mission you're doing is waiting on them.
+- The game saves as you go. With a save, the title screen offers **CONTINUE** or **NEW GAME**.
 - Up and Down scroll a long card.
 - Esc quits.
 
@@ -34,12 +37,13 @@ uv run python tools/building_gallery.py  # review page for drawn buildings: buil
 | `decisions/` | **Decisions for review.** Each one has options, a recommendation, and Approve / Not approve / Other boxes |
 | `content/maps/*.txt` | Maps as text grids (see the legend in `game/world/tiles.py`) |
 | `content/maps/*.json` | Area names, plus everything placed on the map: NPCs and what they say, signs, landmarks, doors |
+| `content/missions/` | **Missions** (decision 0031): one JSON file per mission, plus `_TEMPLATE.json` to copy and a README on how to write one. The First Week Checklist is `first_week.json` |
 | `content/intro.json` | The opening sequence: captions, how long each stays up, and the controls card. Edit the text here |
 | `content/locations.json` | Building cards: name, type, description, what's inside. Will feed the Campus Guide in M3 |
 | `assets/buildings/` | **Drawn buildings** (decision 0020): one folder per building with its map drawing, card picture, footprint and notes. See its README for how to add one |
 | `assets/fonts/` | The reading font (PixelMplus 12, free M+ license, decision 0018) |
 | `research/` | The official Rose Hill campus map and notes taken from it |
-| `game/` | Engine code: `scenes/` (title, overworld, dialogue), `world/` (map, movement, camera), `systems/` (input), `gfx/` (placeholder art) |
+| `game/` | Engine code: `scenes/` (title, overworld, dialogue), `world/` (map, movement, camera), `systems/` (input, bike, missions, saved progress), `gfx/` (placeholder art) |
 | `tests/` | Unit tests plus content checks (`test_content.py`: every map loads, everything is reachable, every door has a building card) |
 | `tools/capture.py` | Scripted headless playthrough that saves screenshots |
 | `tools/render_map.py` | Draws a whole map as one picture, to compare with the real campus map |

@@ -23,8 +23,10 @@ CHARACTERS = [
 ]
 
 
-# The player on the bike (decisions/0030) has its own sheet row after the people.
+# The player on the bike (decisions/0030) has its own sheet row after the
+# people, and the maroon bike you earn on the Bike Courier mission (0031) the next.
 BIKE_SPRITE = len(CHARACTERS)
+MAROON_BIKE_SPRITE = BIKE_SPRITE + 1
 
 
 def character_uv(sprite: int, facing: Direction, frame: int) -> tuple[int, int]:
@@ -127,6 +129,30 @@ def _bike_rack(img, x, y):
         img.line(x + bx - 1, y + 3, x + bx + 3, y + 3, Col.GRAY)       # handlebars
     for rx in (2, 8, 14):                                   # the rack's hoops
         img.line(x + rx, y + 6, x + rx, y + 12, Col.GRAY)
+
+
+def _item_card(img, x, y):
+    """A dropped Fordham ID card on the walkway, with a sparkle (decisions/0031)."""
+    _path(img, x, y)
+    img.rect(x + 4, y + 7, 9, 6, Col.WHITE)
+    img.rectb(x + 4, y + 7, 9, 6, Col.NAVY)
+    img.rect(x + 5, y + 8, 7, 2, Col.MAROON)
+    img.rect(x + 5, y + 10, 2, 2, Col.PEACH)
+    for px, py in ((3, 3), (12, 2), (8, 4)):
+        img.pset(x + px, y + py, Col.YELLOW)
+    img.line(x + 12, y + 1, x + 12, y + 3, Col.WHITE)
+    img.line(x + 11, y + 2, x + 13, y + 2, Col.WHITE)
+
+
+def _item_package(img, x, y):
+    """A cardboard package waiting on the walkway (decisions/0031)."""
+    _path(img, x, y)
+    img.rect(x + 3, y + 6, 10, 8, Col.ORANGE)
+    img.rectb(x + 3, y + 6, 10, 8, Col.BROWN)
+    img.line(x + 8, y + 6, x + 8, y + 13, Col.PEACH)
+    img.rect(x + 9, y + 9, 3, 2, Col.WHITE)
+    for px, py in ((2, 3), (13, 2)):
+        img.pset(x + px, y + py, Col.YELLOW)
 
 
 def _flowers(img, x, y):
@@ -444,7 +470,7 @@ def _car(img, x, y):
 
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
-    "door": _door, "window": _window, "tree": _tree, "tree_purple": _tree_purple, "bike_rack": _bike_rack, "flowers": _flowers,
+    "door": _door, "window": _window, "tree": _tree, "tree_purple": _tree_purple, "bike_rack": _bike_rack, "item_card": _item_card, "item_package": _item_package, "flowers": _flowers,
     "hedge": _hedge, "water": _water, "bench": _bench, "sign": _sign,
     "banner": _banner, "lamp": _lamp,
     "roof_res": _roof_colored(Col.ORANGE, Col.BROWN, Col.PEACH),
@@ -504,22 +530,22 @@ def _character(img, ox, oy, facing: Direction, frame: int, colors) -> None:
     img.rect(ox + 9, oy + 12 + right_len, 2, 1, Col.NAVY)
 
 
-def _bike(img, ox, oy, facing: Direction, frame: int) -> None:
+def _bike(img, ox, oy, facing: Direction, frame: int, color: int = Col.LIGHT_BLUE) -> None:
     """The player riding: the bike under them, pedals turning with `frame`.
     A light-blue frame so it stands out against the maroon shirt."""
     if facing in (Direction.LEFT, Direction.RIGHT):
         img.circb(ox + 3, oy + 13, 2, Col.NAVY)             # wheels
         img.circb(ox + 12, oy + 13, 2, Col.NAVY)
-        img.line(ox + 3, oy + 13, ox + 8, oy + 11, Col.LIGHT_BLUE)   # frame
-        img.line(ox + 8, oy + 11, ox + 12, oy + 13, Col.LIGHT_BLUE)
-        img.line(ox + 7, oy + 11, ox + 10, oy + 11, Col.LIGHT_BLUE)
+        img.line(ox + 3, oy + 13, ox + 8, oy + 11, color)   # frame
+        img.line(ox + 8, oy + 11, ox + 12, oy + 13, color)
+        img.line(ox + 7, oy + 11, ox + 10, oy + 11, color)
         hx = ox + 12 if facing == Direction.RIGHT else ox + 3
         img.line(hx, oy + 9, hx, oy + 12, Col.GRAY)          # handlebars
         img.pset(ox + 7 + (frame % 2), oy + 14 - (frame % 2), Col.WHITE)  # pedal
     else:
         img.rect(ox + 7, oy + 11, 2, 5, Col.NAVY)            # the wheel, end-on
         img.pset(ox + 7 + (frame % 2), oy + 12 + frame, Col.GRAY)    # spokes turning
-        img.rect(ox + 6, oy + 11, 4, 1, Col.LIGHT_BLUE)      # frame / mudguard
+        img.rect(ox + 6, oy + 11, 4, 1, color)      # frame / mudguard
         img.line(ox + 2, oy + 9, ox + 13, oy + 9, Col.GRAY)  # handlebars, wider than the rider
         img.pset(ox + 2, oy + 10, Col.NAVY)                  # grips
         img.pset(ox + 13, oy + 10, Col.NAVY)
@@ -533,13 +559,14 @@ def build_characters() -> None:
                 u, v = character_uv(sprite, d, frame)
                 _character(img, u, v, d, frame, colors)
     # the player on the bike: sitting up, legs tucked, the bike drawn over them
-    for d in Direction:
-        for frame in range(3):
-            u, v = character_uv(BIKE_SPRITE, d, frame)
-            img.rect(u, v, 16, 16, Col.BLACK)
-            _character(img, u, v, d, 0, CHARACTERS[0])
-            img.rect(u + 3, v + 13, 10, 3, Col.BLACK)        # legs on the pedals, not the ground
-            _bike(img, u, v, d, frame)
+    for sprite, color in ((BIKE_SPRITE, Col.LIGHT_BLUE), (MAROON_BIKE_SPRITE, Col.MAROON)):
+        for d in Direction:
+            for frame in range(3):
+                u, v = character_uv(sprite, d, frame)
+                img.rect(u, v, 16, 16, Col.BLACK)
+                _character(img, u, v, d, 0, CHARACTERS[0])
+                img.rect(u + 3, v + 13, 10, 3, Col.BLACK)    # legs on the pedals, not the ground
+                _bike(img, u, v, d, frame, color)
 
 
 def build_all() -> None:

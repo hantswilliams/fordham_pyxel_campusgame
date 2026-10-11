@@ -1,0 +1,30 @@
+{
+  "id": "my_mission",
+  "title": "Short Title",
+  "summary": "One or two sentences: what the player is asked to do and why.",
+  "optional": true,
+  "order": "in_order",
+  "requires": [],
+  "giver": {
+    "npc": "Name Shown In The Text Box",
+    "at": [0, 0],
+    "sprite": 2,
+    "facing": "down",
+    "offer": ["What they say when they ask for your help.", "Can you help?"],
+    "requires_say": ["What they say if a requirement isn't met yet (e.g. no bike)."],
+    "decline_say": ["What they say if you choose NOT NOW."]
+  },
+  "teaches": ["The real thing a student learns"],
+  "steps": [
+    {"do": "talk", "npc": "Name Shown In The Text Box", "say": ["Said when you agree to help."]},
+    {"do": "go_to", "location": "a_location_id", "hint": "Shown in the Mission Log.", "say": ["Said when you get there."]},
+    {"do": "read", "location": "a_location_id", "say": ["Said when you open its card."]},
+    {"do": "find", "item": "an_item_id", "name": "item name", "at": [0, 0], "tile": "item_card", "say": ["You found it!"]},
+    {"do": "answer", "npc": "Name Shown In The Text Box", "question": "A question?", "options": ["Right", "Wrong", "Also wrong"], "correct": 0,
+     "ask_say": ["Said before the question."], "wrong_say": ["Said after a wrong answer."], "say": ["Said after the right answer."]},
+    {"do": "ride", "location": "a_location_id", "seconds": 30, "restart_from": 1, "fail_say": ["Out of time!"], "say": ["Made it!"]},
+    {"do": "collect", "need": 2, "label": "Visit the places", "targets": [{"location": "a_location_id", "say": ["One!"]}, {"location": "another_id", "do": "go_to"}]}
+  ],
+  "reward": {"stamp": "my_mission", "stamp_name": "Short Title", "badge": "community"},
+  "done_say": ["Said when the mission is finished."]
+}

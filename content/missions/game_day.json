@@ -1,0 +1,42 @@
+{
+  "id": "game_day",
+  "title": "Game Day",
+  "summary": "Help the Athletics Staffer get ready for game day: visit the Victory Bell, Moglia Stadium and Rose Hill Gym, then answer two questions.",
+  "optional": true,
+  "giver": {
+    "npc": "Athletics Staffer",
+    "at": [56, 29],
+    "sprite": 4,
+    "facing": "left",
+    "offer": [
+      "Game day's coming and I'm short on helpers!",
+      "Can you check on the Victory Bell, Moglia Stadium and Rose Hill Gym for me?"
+    ],
+    "decline_say": ["All good. Go Rams!"]
+  },
+  "teaches": ["The Victory Bell", "Moglia Stadium and Jack Coffey Field", "Rose Hill Gym, home of Fordham basketball"],
+  "steps": [
+    {"do": "talk", "npc": "Athletics Staffer",
+     "say": ["Thanks! Read the sign at each one, then come back and tell me what you learned."]},
+    {"do": "collect", "need": 3, "label": "Check the athletics spots",
+     "hint": "The Victory Bell and Rose Hill Gym are by Constitution Row; Moglia Stadium is on Jack Coffey Field's north side.",
+     "targets": [
+       {"location": "victory_bell", "say": ["The Victory Bell, outside Rose Hill Gym."]},
+       {"location": "moglia_stadium", "say": ["Moglia Stadium: 7,000 seats along Jack Coffey Field."]},
+       {"location": "rose_hill_gym", "say": ["Rose Hill Gym, where Fordham plays basketball."]}
+     ]},
+    {"do": "answer", "npc": "Athletics Staffer",
+     "ask_say": ["You're back! Quick quiz before you go."],
+     "question": "Since what year has Rose Hill Gym been home to Fordham basketball?",
+     "options": ["1925", "1965", "2001"], "correct": 0,
+     "wrong_say": ["Not quite. Have another look at the gym's sign, then come back."],
+     "say": ["Right: since 1925. It's the oldest on-campus arena still used by a Division I team!"]},
+    {"do": "answer", "npc": "Athletics Staffer",
+     "question": "Houlihan Park, the baseball diamond, is on which field?",
+     "options": ["Murphy Field", "Jack Coffey Field", "Bahoshy Field"], "correct": 1,
+     "wrong_say": ["Close! Look at Houlihan Park's sign, south of Moglia Stadium."],
+     "say": ["Yes! It's laid out on Jack Coffey Field's turf."]}
+  ],
+  "reward": {"stamp": "game_day", "stamp_name": "Game Day", "badge": "community"},
+  "done_say": ["You're ready for game day. Go Rams!"]
+}

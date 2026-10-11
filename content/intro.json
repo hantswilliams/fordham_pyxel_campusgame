@@ -15,7 +15,7 @@
       ["Z/SPACE/ENTER", "Talk, read, open a card"],
       ["X", "Back, skip, bike on/off"],
       ["M", "Campus map"],
-      ["TAB", "Campus Guide (soon)"]
+      ["TAB", "Missions, Ram Passport"]
     ],
     "tip": "Gray = road, tan = walkway. Cross at the crosswalks.",
     "prompt": "Press Z, then walk through the gate!"

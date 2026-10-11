@@ -65,6 +65,8 @@ TILES: dict[str, TileDef] = {
         TileDef("car", 42, True),          # a parked car in a parking stall
         TileDef("tree_purple", 43, True),  # copper beech: dark purple leaves (southwest corner)
         TileDef("bike_rack", 44, True),    # bike rack with bikes in it (decisions/0030)
+        TileDef("item_card", 45, True),    # a mission item: a dropped ID card, sparkling (decisions/0031)
+        TileDef("item_package", 46, True), # a mission item: a package (decisions/0031)
     ]
 }
 

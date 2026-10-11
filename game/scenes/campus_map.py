@@ -71,7 +71,25 @@ class CampusMapScene(Scene):
         self.pins: list[Pin] = build_pins(game_map, app.locations)
         self.selected: int | None = None
         self.image, self.overview = map_images(game_map, app.locations)
+        self.goals = self._mission_goals(app)
         self.cam_x, self.cam_y = self._target()
+
+    def _mission_goals(self, app) -> list[tuple[int, int]]:
+        """Where the tracked mission wants you next (decisions/0031)."""
+        book = getattr(app, "missions", None)
+        if book is None:
+            return []
+        out = []
+        for t in book.targets():
+            if "at" in t:
+                out.append(tuple(t["at"]))
+                continue
+            for o in self.map.objects:
+                if ("location" in t and o.location == t["location"] and o.type in ("door", "sign")) or \
+                        ("npc" in t and o.type == "npc" and o.name == t["npc"]):
+                    out.append((o.x, o.y))
+                    break
+        return out
 
     # --- where the view looks -----------------------------------------------------
     def _focus(self) -> tuple[int, int]:
@@ -127,6 +145,12 @@ class CampusMapScene(Scene):
             if i != self.selected:
                 self._draw_pin(pin, selected=False, blink=blink)
         self._draw_player(blink)
+        for gx, gy in self.goals:
+            cx, cy = self._screen_xy(gx, gy)
+            pyxel.rect(cx - 3, cy - 12, 7, 10, Col.WHITE)
+            pyxel.rectb(cx - 3, cy - 12, 7, 10, Col.MAROON)
+            pyxel.text(cx - 1, cy - 10, "!", Col.MAROON)
+            pyxel.pset(cx, cy - 1, Col.MAROON)
         if self.selected is not None:
             self._draw_pin(self.pins[self.selected], selected=True, blink=blink)
         pyxel.clip()
@@ -178,6 +202,9 @@ class CampusMapScene(Scene):
         pyxel.clip(x0, y0, w, h)
         pyxel.rectb(x0 + round(self.cam_x / OVERVIEW), y0 + round(self.cam_y / OVERVIEW) - skip,
                     SCREEN_W // OVERVIEW, VIEW_H // OVERVIEW, Col.YELLOW)
+        for gx, gy in self.goals:
+            pyxel.rect(x0 + gx * DETAIL // OVERVIEW - 1, y0 + gy * DETAIL // OVERVIEW - skip - 1, 3, 3,
+                       Col.WHITE if blink else Col.MAROON)
         px, py = self.player_xy
         pyxel.rect(x0 + px * DETAIL // OVERVIEW - 1, y0 + py * DETAIL // OVERVIEW - skip - 1, 3, 3,
                    Col.MAROON if blink else Col.WHITE)

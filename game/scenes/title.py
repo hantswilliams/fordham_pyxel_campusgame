@@ -30,9 +30,26 @@ def centered_text(y: int, s: str, col: int) -> None:
 
 
 class TitleScene(Scene):
+    """With a saved game (decisions/0031): CONTINUE drops you back where you
+    were; NEW GAME forgets the save and starts again from the train."""
+
+    def __init__(self, app):
+        super().__init__(app)
+        self.can_continue = bool(app.progress.started)
+        self.cursor = 0
+
     def update(self) -> None:
+        if self.can_continue and (self.input.pressed(Action.UP) or self.input.pressed(Action.DOWN)):
+            self.cursor = 1 - self.cursor
+            return
         if self.input.pressed(Action.CONFIRM):
-            self.app.scenes.replace(IntroScene(self.app))
+            if self.can_continue and self.cursor == 0:
+                from .overworld import OverworldScene  # avoid an import cycle
+                self.app.scenes.replace(OverworldScene(self.app))
+            else:
+                if self.can_continue:
+                    self.app.new_game()
+                self.app.scenes.replace(IntroScene(self.app))
 
     def draw(self) -> None:
         pyxel.cls(Col.MAROON)
@@ -45,7 +62,16 @@ class TitleScene(Scene):
         _big_title(62, "FORDHAM")
         _big_title(90, "CAMPUS QUEST")
 
-        if (pyxel.frame_count // 15) % 2 == 0:
+        if self.can_continue:
+            for i, label in enumerate(("CONTINUE", "NEW GAME")):
+                y = 122 + i * 16
+                col = Col.YELLOW if i == self.cursor else Col.PEACH
+                font.centered(y, label, col)
+                if i == self.cursor and (pyxel.frame_count // 15) % 2 == 0:
+                    w = font.width(label)
+                    x = (SCREEN_W - w) // 2 - 12
+                    pyxel.tri(x, y + 2, x, y + 10, x + 5, y + 6, Col.YELLOW)
+        elif (pyxel.frame_count // 15) % 2 == 0:
             font.centered(128, "PRESS Z / ENTER TO START", Col.YELLOW)
 
         centered_text(160, "PROTOTYPE - PLACEHOLDER ART", Col.GRAY)

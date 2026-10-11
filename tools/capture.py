@@ -19,6 +19,11 @@ from game import config  # noqa: E402
 from game.app import App  # noqa: E402
 from game.scenes.dialogue import paginate  # noqa: E402
 from game.systems.bike import TAKE_LINES  # noqa: E402
+from game.systems.missions import MissionBook, load_missions  # noqa: E402
+from game.systems.progress import Progress  # noqa: E402
+from game.scenes.overworld import add_mission_people  # noqa: E402
+from game.world.locations import load_locations  # noqa: E402
+from game.world.mapdata import MapObject  # noqa: E402
 from game.systems.input import Action, ScriptedInput  # noqa: E402
 from game.world.directions import Direction  # noqa: E402
 from game.world.mapdata import load_map  # noqa: E402
@@ -44,6 +49,26 @@ def read(pages: int, settle: int = 120) -> list[set[Action]]:
     for _ in range(pages):
         out += tap(Action.CONFIRM) + wait(settle)
     return out
+
+
+def pages(n: int) -> list[set[Action]]:
+    """Let each of n text-box pages finish typing, then press Z."""
+    out = []
+    for _ in range(n):
+        out += wait(75) + tap(Action.CONFIRM)
+    return out
+
+
+def drain(reactions) -> list[set[Action]]:
+    """Click through the mission messages (decisions/0031) that a step of the
+    script sets off, page by page, as the game shows them."""
+    out = []
+    for r in reactions:
+        pages = len(paginate(r.lines)) if r.lines else 0
+        pages += len(paginate([f"You got: {x}!" for x in r.rewards])) if r.rewards else 0
+        for _ in range(pages):
+            out += wait(75) + tap(Action.CONFIRM)
+    return out + wait(4)
 
 
 class Walker:
@@ -95,6 +120,13 @@ def main() -> None:
         if o.type == "door":
             door.setdefault(o.location, (o.x, o.y))
 
+    # the game's missions, run alongside the script so it knows what pops up
+    progress = Progress()
+    book = MissionBook(load_missions(config.CONTENT_DIR / "missions"), progress,
+                       {k: v.name for k, v in load_locations(config.LOCATIONS_FILE).items()},
+                       has_bike=lambda: progress.has_bike)
+    add_mission_people(m, book)
+    book.auto_start()
     fountain = next((o.x, o.y) for o in m.objects if o.location == "cunniffe_fountain")
     greeter = next(o for o in m.objects if o.type == "npc" and o.auto)
     gate_steps = abs(m.spawn[1] - (greeter.y + 1))  # walk up through the gate
@@ -127,13 +159,14 @@ def main() -> None:
     segments += [
         # Walsh Library's north entrance, seen from the walkway (D-0019)
         ("17_walsh_library_front", read(len(paginate(greeter.lines)) - 1)
-         + walk.to_face(*door["walsh_library"]) + wait(4)),
+         + drain(book.talk(greeter.name)) + walk.to_face(*door["walsh_library"]) + wait(4)),
         ("17b_walsh_library_card", tap(Action.CONFIRM) + wait(5)),
     ]
     # the bike rack outside the library (decisions/0030): borrow a bike, ride, hop off
     rack = next(o for o in m.objects if o.type == "bike_rack")
     segments += [
-        ("17ba_bike_rack", tap(Action.CONFIRM) + walk.to_face(rack.x, rack.y)
+        ("17ba_bike_rack", tap(Action.CONFIRM) + drain(book.read("walsh_library"))
+         + walk.to_face(rack.x, rack.y)
          + tap(Action.CONFIRM) + wait(120)),
         ("17bb_riding", read(len(paginate(TAKE_LINES)) - 1) + tap(Action.CONFIRM) + wait(4)
          + walk.to_face(*door["larkin_hall"], frames=BIKE_FRAMES_PER_STEP) + wait(4)),
@@ -141,21 +174,54 @@ def main() -> None:
         ("17c_campbell_entrance", walk.to_face(*door["campbell_hall"]) + wait(4)),
         ("17cb_campbell_card", tap(Action.CONFIRM) + wait(5)),
         # Dealy Hall's columned entrance faces west, toward Cunniffe House
-        ("17cc_dealy_portico", tap(Action.CONFIRM) + walk.to_face(*door["dealy_hall"]) + wait(4)),
+        ("17cc_dealy_portico", tap(Action.CONFIRM) + drain(book.read("campbell_hall"))
+         + walk.to_face(*door["dealy_hall"]) + wait(4)),
         ("17cd_dealy_card", tap(Action.CONFIRM) + wait(5)),
         # the fountain quad (decisions/0022): the fountain, then Hughes Hall
-        ("17ce_fountain_plaza", tap(Action.CONFIRM) + walk.to_face(*fountain) + wait(4)),
+        ("17ce_fountain_plaza", tap(Action.CONFIRM) + drain(book.read("dealy_hall"))
+         + walk.to_face(*fountain) + wait(4)),
         ("17cf_fountain_card", tap(Action.CONFIRM) + wait(5)),
-        ("17cg_hughes_card", tap(Action.CONFIRM) + walk.to_face(*door["hughes_hall"])
-         + tap(Action.CONFIRM) + wait(5)),
-        ("17d_keating_card", tap(Action.CONFIRM) + walk.to_face(*door["keating_hall"])
-         + tap(Action.CONFIRM) + wait(5)),
-        ("18_ohare_card", tap(Action.CONFIRM) + walk.to_face(*door["ohare_hall"])
-         + tap(Action.CONFIRM) + wait(5)),
+        ("17cg_hughes_card", tap(Action.CONFIRM) + drain(book.read("cunniffe_fountain"))
+         + walk.to_face(*door["hughes_hall"]) + tap(Action.CONFIRM) + wait(5)),
+        ("17d_keating_card", tap(Action.CONFIRM) + drain(book.read("hughes_hall"))
+         + walk.to_face(*door["keating_hall"]) + tap(Action.CONFIRM) + wait(5)),
+        ("18_ohare_card", tap(Action.CONFIRM) + drain(book.read("keating_hall"))
+         + walk.to_face(*door["ohare_hall"]) + tap(Action.CONFIRM) + wait(5)),
         # campus map (decisions/0017): open, pick a place, open its card
-        ("19_campus_map", tap(Action.CONFIRM) + wait(4) + tap(Action.MAP) + wait(10)),
+        ("19_campus_map", tap(Action.CONFIRM) + drain(book.read("ohare_hall")) + tap(Action.MAP) + wait(10)),
         ("20_map_pin", tap(Action.LEFT) + wait(2) + tap(Action.LEFT) + wait(6)),
         ("21_map_card", tap(Action.CONFIRM) + wait(5)),
+    ]
+    # a mission (decisions/0031): Lost and Found, from the "!" to the stamp
+    lost = book.missions["lost_and_found"]
+    giver = lost.giver
+    item = next(st for st in lost.steps if st["do"] == "find")
+    segments += [
+        ("22_mission_giver", tap(Action.CONFIRM) + wait(4) + tap(Action.MAP) + wait(4)
+         + walk.to_face(*giver["at"]) + wait(4)),
+        ("23_mission_offer", tap(Action.CONFIRM) + pages(len(paginate(giver["offer"]))) + wait(10)),
+    ]
+    accepted = book.accept("lost_and_found")
+    m.add_object(MapObject(type="item", x=item["at"][0], y=item["at"][1], name=item["item"],
+                           tile=item["tile"], lines=["item"]))
+    segments += [
+        ("24_mission_tracker", tap(Action.CONFIRM) + drain(accepted) + wait(10)),
+        ("25_mission_found_item", walk.to_face(*item["at"]) + tap(Action.CONFIRM) + wait(60)),
+    ]
+    found = book.pickup(item["item"])
+    m.remove_object(*item["at"])
+    segments += [
+        ("26_mission_log", wait(15) + tap(Action.CONFIRM) + drain(found[1:]) + wait(4) + tap(Action.MENU) + wait(6)),
+        ("27_ram_passport", tap(Action.RIGHT) + wait(6)),
+        ("28_mission_map_pin", tap(Action.MENU) + wait(4) + tap(Action.MAP) + wait(12)),
+    ]
+    done = book.near("thebaud_hall")
+    segments += [
+        # arriving at Thebaud: the step's line, then the finish line, then the banner and rewards
+        ("29_mission_complete", tap(Action.MAP) + wait(4) + walk.to_face(*door["thebaud_hall"])
+         + pages(len(paginate(done[0].lines)) + len(paginate(done[1].lines))) + wait(20)),
+        ("30_passport_stamp", pages(len(paginate([f"You got: {x}!" for x in done[1].rewards])))
+         + wait(10) + tap(Action.MENU) + wait(4) + tap(Action.RIGHT) + wait(6)),
     ]
     script: list[set[Action]] = []
     shot_at: dict[int, str] = {}

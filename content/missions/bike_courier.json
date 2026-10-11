@@ -1,0 +1,38 @@
+{
+  "id": "bike_courier",
+  "title": "Bike Courier",
+  "summary": "Pick up a package at McShane and ride it to O'Hare Hall before time runs out.",
+  "optional": true,
+  "requires": ["bike"],
+  "giver": {
+    "npc": "Mail Room Staffer",
+    "at": [44, 28],
+    "sprite": 3,
+    "facing": "down",
+    "offer": [
+      "We've got a package here for a student over in O'Hare Hall, and it needs to get there fast.",
+      "You've got a bike. Can you run it over?"
+    ],
+    "requires_say": [
+      "I need a fast courier for a delivery to O'Hare Hall.",
+      "Borrow a bike from the rack outside Walsh Library, then come back and see me!"
+    ],
+    "decline_say": ["Okay. Come back if you change your mind!"]
+  },
+  "teaches": ["McShane Campus Center", "O'Hare Hall on the east side", "Getting round fast on the bike"],
+  "steps": [
+    {"do": "talk", "npc": "Mail Room Staffer",
+     "say": ["Great! The package is on the walkway just here. Grab it and the clock starts."]},
+    {"do": "find", "item": "package", "name": "package", "at": [42, 28], "tile": "item_package",
+     "hint": "It's on the walkway beside the Mail Room Staffer, west of McShane.",
+     "say": ["You picked up the package. Ride to O'Hare Hall, quick!"]},
+    {"do": "ride", "location": "ohare_hall", "seconds": 15, "restart_from": 1,
+     "label": "Deliver the package to O'Hare Hall",
+     "hint": "O'Hare is on the east side: east along Constitution Row, then south. Press X to hop on your bike.",
+     "fail_say": ["Out of time! The package went back to McShane. Pick it up and try again."],
+     "say": ["Delivered with time to spare!"]}
+  ],
+  "reward": {"stamp": "bike_courier", "stamp_name": "Bike Courier", "badge": "community",
+             "unlock": "maroon_bike", "unlock_name": "Maroon bike"},
+  "done_say": ["Nice riding! Your bike is maroon now: courier colors."]
+}

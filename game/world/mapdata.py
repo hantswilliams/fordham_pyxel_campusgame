@@ -22,7 +22,7 @@ from .tiles import LEGEND, SPAWN_CHAR, SPAWN_GROUND, TILES
 # so this module stays importable without Pyxel or the config.
 BUILDINGS_DIR = Path(__file__).resolve().parents[2] / "assets" / "buildings"
 
-OBJECT_TYPES = {"sign", "npc", "door", "checkpoint", "bike_rack"}
+OBJECT_TYPES = {"sign", "npc", "door", "checkpoint", "bike_rack", "item"}
 
 
 class MapError(ValueError):
@@ -31,7 +31,7 @@ class MapError(ValueError):
 
 @dataclass
 class MapObject:
-    type: str  # "sign" | "npc" | "door" | "checkpoint" | "bike_rack"
+    type: str  # "sign" | "npc" | "door" | "checkpoint" | "bike_rack" | "item"
     x: int
     y: int
     name: str = ""
@@ -71,6 +71,7 @@ class MapData:
     areas: list[Area] = field(default_factory=list)
     buildings: list[BuildingAsset] = field(default_factory=list)
     _by_pos: dict = field(default_factory=dict, repr=False)
+    _under: dict = field(default_factory=dict, repr=False)  # tiles hidden by runtime objects
 
     def __post_init__(self):
         self._by_pos = {(o.x, o.y): o for o in self.objects}
@@ -107,6 +108,27 @@ class MapData:
         self.objects.remove(obj)
         self.tiles[y][x] = obj.open_tile
         return True
+
+    def add_object(self, obj: MapObject) -> bool:
+        """Put an object on the map at runtime (a mission's giver or item,
+        decisions/0031). An object with a tile shows that tile; the cell's
+        own tile comes back when it's removed. False if the cell is taken."""
+        if (obj.x, obj.y) in self._by_pos:
+            return False
+        self.objects.append(obj)
+        self._by_pos[(obj.x, obj.y)] = obj
+        if obj.tile:
+            self._under[(obj.x, obj.y)] = self.tiles[obj.y][obj.x]
+            self.tiles[obj.y][obj.x] = obj.tile
+        return True
+
+    def remove_object(self, x: int, y: int) -> MapObject | None:
+        obj = self._by_pos.pop((x, y), None)
+        if obj is not None:
+            self.objects.remove(obj)
+            if (x, y) in self._under:
+                self.tiles[y][x] = self._under.pop((x, y))
+        return obj
 
     def checkpoints(self) -> list[MapObject]:
         return [o for o in self.objects if o.type == "checkpoint"]
