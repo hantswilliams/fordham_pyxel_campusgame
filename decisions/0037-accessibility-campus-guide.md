@@ -186,7 +186,7 @@ Even with an alternate version, the game page has to meet WCAG's four "non-inter
 
 ## Also decided at your request
 
-**Merge `bigger-text`.** The DotGothic16 text and bigger plaques (decision 0036) go into `main` as approved. The game's text is now a style choice, not a compliance problem, so smoother in-game text can be revisited later as part of Option B.
+**`bigger-text` is merged** (pull request #2). The DotGothic16 text and bigger plaques (decision 0036) are in `main`. The game's text is now a style choice, not a compliance problem, so smoother in-game text can be revisited later as part of Option B.
 
 ## My recommendation
 
