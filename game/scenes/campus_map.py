@@ -17,7 +17,7 @@ from game.config import SCREEN_H, SCREEN_W, Col
 from game.gfx.map_render import render_world
 from game.systems.input import Action
 from game.ui import font
-from game.ui.text import BIG_CHAR_W
+from game.ui.text import BIG_CHAR_W, GROW
 from game.world.directions import Direction
 from game.world.mapdata import MapData
 from game.world.minimap import DETAIL, OVERVIEW, Pin, build_pins, downsample, next_pin
@@ -25,8 +25,8 @@ from game.world.minimap import DETAIL, OVERVIEW, Pin, build_pins, downsample, ne
 from .base import Scene
 from .card import BuildingCardScene
 
-HEADER_H = 16
-FOOTER_H = 30
+HEADER_H = 16 + GROW
+FOOTER_H = 30 + 2 * GROW
 VIEW_Y = HEADER_H
 VIEW_H = SCREEN_H - HEADER_H - FOOTER_H
 SKIP_ROWS = 2  # top rows of the campus map are all off-campus; trimmed from the overview
@@ -162,9 +162,9 @@ class CampusMapScene(Scene):
         self._draw_player(blink)
         for gx, gy in self.goals:
             cx, cy = self._screen_xy(gx, gy)
-            pyxel.rect(cx - 4, cy - 16, 9, 14, Col.WHITE)
-            pyxel.rectb(cx - 4, cy - 16, 9, 14, Col.MAROON)
-            font.text(cx - 3, cy - 15, "!", Col.MAROON)
+            pyxel.rect(cx - 5, cy - 16 - GROW, 11, 14 + GROW, Col.WHITE)
+            pyxel.rectb(cx - 5, cy - 16 - GROW, 11, 14 + GROW, Col.MAROON)
+            font.text(cx - 4, cy - 15 - GROW, "!", Col.MAROON)
             pyxel.pset(cx, cy - 1, Col.MAROON)
         if self.selected is not None:
             self._draw_pin(self.pins[self.selected], selected=True, blink=blink)
@@ -194,9 +194,9 @@ class CampusMapScene(Scene):
         name = pin.name
         tw = font.width(name) + 8
         tx = min(max(cx - tw // 2, 2), SCREEN_W - tw - 2)
-        ty = max(cy - 30, VIEW_Y + 2)
-        pyxel.rect(tx, ty, tw, 15, Col.WHITE)
-        pyxel.rectb(tx, ty, tw, 15, Col.NAVY)
+        ty = max(cy - 30 - GROW, VIEW_Y + 2)
+        pyxel.rect(tx, ty, tw, 15 + GROW, Col.WHITE)
+        pyxel.rectb(tx, ty, tw, 15 + GROW, Col.NAVY)
         font.text(tx + 4, ty + 1, name, Col.NAVY)
 
     def _draw_player(self, blink: bool) -> None:
@@ -231,13 +231,13 @@ class CampusMapScene(Scene):
         rows = (("Place", "building"), ("Landmark", "landmark"), ("Gate/Ram", "transit"))
         w = max(w, 14 + max(font.width(r[0]) for r in rows) + 4)
         x = min(x, SCREEN_W - w - 2)
-        h = len(rows) * 12 + 4
+        h = len(rows) * (12 + GROW) + 4
         pyxel.rect(x, y, w, h, Col.WHITE)
         pyxel.rectb(x, y, w, h, Col.NAVY)
         for i, (label, kind) in enumerate(rows):
-            ry = y + 2 + i * 12
-            pyxel.rectb(x + 3, ry + 3, 7, 7, Col.NAVY)
-            pyxel.rect(x + 4, ry + 4, 5, 5, PIN_COLORS[kind])
+            ry = y + 2 + i * (12 + GROW)
+            pyxel.rectb(x + 3, ry + 3 + GROW // 2, 7, 7, Col.NAVY)
+            pyxel.rect(x + 4, ry + 4 + GROW // 2, 5, 5, PIN_COLORS[kind])
             font.text(x + 13, ry, label, Col.DARK_BLUE)
 
     def _draw_footer(self) -> None:
@@ -247,8 +247,8 @@ class CampusMapScene(Scene):
         max_chars = (SCREEN_W - 12) // BIG_CHAR_W
         if self.selected is None:
             font.text(6, y + 2, f"You are here: {self.area_name}"[:max_chars], Col.BLACK)
-            font.text(6, y + 15, "ARROWS: PICK A PLACE", Col.DARK_BLUE)
+            font.text(6, y + 15 + GROW, "ARROWS: PICK A PLACE", Col.DARK_BLUE)
         else:
             pin = self.pins[self.selected]
             font.text(6, y + 2, pin.name[:max_chars], Col.MAROON)
-            font.text(6, y + 15, "Z: DETAILS  ARROWS: NEXT", Col.DARK_BLUE)
+            font.text(6, y + 15 + GROW, "Z: DETAILS  ARROWS: NEXT", Col.DARK_BLUE)

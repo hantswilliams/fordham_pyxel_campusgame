@@ -11,7 +11,7 @@ from game.config import SCREEN_H, SCREEN_W, Col
 from game.gfx.building_art import card_image
 from game.systems.input import Action
 from game.ui import font
-from game.ui.text import BIG_CHAR_W, BIG_LINE_H, wrap
+from game.ui.text import BIG_CHAR_W, BIG_LINE_H, GROW, wrap
 from game.world.locations import Location
 
 from .base import Scene
@@ -20,9 +20,9 @@ CARD_X, CARD_Y = 6, 6
 CARD_W, CARD_H = SCREEN_W - 12, SCREEN_H - 12
 PAD = 8
 MAX_CHARS = (CARD_W - 2 * PAD) // BIG_CHAR_W
-HEADER_H = 18
+HEADER_H = 18 + GROW
 BODY_TOP = HEADER_H + 22
-FOOTER_H = 16
+FOOTER_H = 16 + GROW
 VISIBLE_LINES = (CARD_H - BODY_TOP - FOOTER_H) // BIG_LINE_H
 # with a picture, the kind tag sits on the picture and the body starts higher
 PIC_W, PIC_H = 228, 88  # card.png size; centred on a wider card
@@ -119,7 +119,7 @@ class BuildingCardScene(Scene):
             py = top + 1 - self.scroll * BIG_LINE_H
             px = x + (w - PIC_W) // 2
             self._draw_picture(px, py)
-            self._draw_tag(px + 3, py + PIC_H - 18)  # on the lawn, not the building
+            self._draw_tag(px + 3, py + PIC_H - 18 - GROW)  # on the lawn, not the building
             first = PIC_LINES
         for i, (s, col) in enumerate(self.lines):
             row = first + i - self.scroll
@@ -140,7 +140,7 @@ class BuildingCardScene(Scene):
     def _draw_tag(self, tx: int, ty: int) -> None:
         label = self.loc.kind_label
         tag_col = KIND_COLORS.get(self.loc.kind, Col.GRAY)
-        pyxel.rect(tx, ty, font.width(label) + 8, 15, tag_col)
+        pyxel.rect(tx, ty, font.width(label) + 8, 15 + GROW, tag_col)
         font.text(tx + 4, ty + 1, label, Col.WHITE)
 
     def _draw_picture(self, px: int, py: int) -> None:

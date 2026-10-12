@@ -6,7 +6,7 @@ import pyxel
 from game.config import SCREEN_H, SCREEN_W, Col
 
 from . import font
-from .text import BIG_CHAR_W, BIG_LINE_H
+from .text import BIG_CHAR_W, BIG_LINE_H, GROW
 
 MARGIN = 4
 PAD_X = 10
@@ -32,9 +32,9 @@ def draw_text_box(lines: list[str], revealed: int, complete: bool,
 
     if speaker:
         tw = font.width(speaker) + 12
-        pyxel.rect(x + 8, y - 13, tw, 15, Col.MAROON)
-        pyxel.rectb(x + 8, y - 13, tw, 15, Col.NAVY)
-        font.text(x + 14, y - 12, speaker, Col.WHITE)
+        pyxel.rect(x + 8, y - 13 - GROW, tw, 15 + GROW, Col.MAROON)
+        pyxel.rectb(x + 8, y - 13 - GROW, tw, 15 + GROW, Col.NAVY)
+        font.text(x + 14, y - 12 - GROW, speaker, Col.WHITE)
 
     remaining = revealed
     for i, line in enumerate(lines[:LINES]):

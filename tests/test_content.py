@@ -11,7 +11,7 @@ from game.scenes.card import MAX_CHARS, card_lines
 from game.world.directions import Direction
 from game.world.locations import load_locations
 from game.world.mapdata import load_map
-from game.gfx.building_overlay import door_groups, plaque_spot, plaque_width
+from game.gfx.building_overlay import door_groups, fits, plaque_spot
 from game.world.tiles import DOOR_TILES
 
 MAP_IDS = sorted(p.stem for p in config.MAPS_DIR.glob("*.txt"))
@@ -168,7 +168,8 @@ def test_every_building_has_a_name_plaque_that_fits():
         assert name == name.upper(), f"{loc}: plaque names are in capitals"
         for g in gs:
             _, _, room = plaque_spot(m, loc, g)
-            assert plaque_width(name) <= room - 2, f"{loc}: {name!r} is too wide for its wall"
+            # the plaque font (D-0036), or the small built-in one if the wall is narrow
+            assert fits(name, room) or fits(name, room, small=True), f"{loc}: {name!r} is too wide for its wall"
 
 
 def test_moved_entrances_say_where_the_real_one_is():

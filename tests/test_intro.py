@@ -66,10 +66,11 @@ def test_intro_content_loads_and_captions_fit():
 def test_controls_card_text_fits():
     from game.ui.text import BIG_CHAR_W
     data = load_intro(config.INTRO_FILE)
+    inner = config.SCREEN_W - 12 - 16                 # the card, less its margins
+    keys_w = max(len(k) for k, _ in data.controls_rows) * BIG_CHAR_W + 16
     for keys, action in data.controls_rows:
-        assert len(keys) * BIG_CHAR_W <= 88, keys
-        assert 100 + len(action) * BIG_CHAR_W <= 244, action
-    assert len(data.prompt) * BIG_CHAR_W <= 244
+        assert keys_w + len(action) * BIG_CHAR_W <= inner, action
+    assert len(data.prompt) * BIG_CHAR_W <= inner
 
 
 def test_intro_art_stays_above_the_caption_box():

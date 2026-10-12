@@ -3,6 +3,7 @@ import pyxel
 from game.config import SCREEN_H, SCREEN_W, Col
 from game.systems.input import Action
 from game.ui import font
+from game.ui.text import TEXT_H
 
 from .base import Scene
 from .intro import IntroScene
@@ -14,10 +15,10 @@ _title_cache: dict[str, pyxel.Image] = {}
 def _big_title(y: int, s: str) -> None:
     """Draw `s` at twice the reading font's size, centred, with a shadow."""
     if s not in _title_cache:
-        img = pyxel.Image(font.width(s) + 2, 14)
+        img = pyxel.Image(font.width(s) + 2, TEXT_H + 2)
         img.cls(Col.BLACK)
-        img.text(1, 0, s, Col.NAVY, font.font())
-        img.text(0, 0, s, Col.WHITE, font.font())
+        img.text(1, font.TEXT_DY, s, Col.NAVY, font.font())
+        img.text(0, font.TEXT_DY, s, Col.WHITE, font.font())
         _title_cache[s] = img
     img = _title_cache[s]
     # blt scales around the centre of the source rectangle
@@ -58,14 +59,14 @@ class TitleScene(Scene):
         pyxel.rectb(16, 16, SCREEN_W - 32, SCREEN_H - 32, Col.WHITE)
         pyxel.rectb(19, 19, SCREEN_W - 38, SCREEN_H - 38, Col.WHITE)
 
-        font.centered(dy + 40, "WELCOME TO", Col.PEACH)
+        font.centered(dy + 24, "WELCOME TO", Col.PEACH)
         # big title: the reading font drawn at 2x, with a navy shadow
-        _big_title(dy + 62, "FORDHAM")
-        _big_title(dy + 90, "CAMPUS QUEST")
+        _big_title(dy + 56, "FORDHAM")
+        _big_title(dy + 92, "CAMPUS QUEST")
 
         if self.can_continue:
             for i, label in enumerate(("CONTINUE", "NEW GAME")):
-                y = dy + 122 + i * 16
+                y = dy + 132 + i * 20
                 col = Col.YELLOW if i == self.cursor else Col.PEACH
                 font.centered(y, label, col)
                 if i == self.cursor and (pyxel.frame_count // 15) % 2 == 0:
@@ -73,6 +74,6 @@ class TitleScene(Scene):
                     x = (SCREEN_W - w) // 2 - 12
                     pyxel.tri(x, y + 2, x, y + 10, x + 5, y + 6, Col.YELLOW)
         elif (pyxel.frame_count // 15) % 2 == 0:
-            font.centered(dy + 128, "PRESS Z / ENTER TO START", Col.YELLOW)
+            font.centered(dy + 136, "PRESS Z / ENTER TO START", Col.YELLOW)
 
-        centered_text(dy + 160, "PROTOTYPE - PLACEHOLDER ART", Col.GRAY)
+        centered_text(dy + 176, "PROTOTYPE - PLACEHOLDER ART", Col.GRAY)

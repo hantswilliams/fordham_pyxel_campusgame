@@ -7,11 +7,12 @@ from game.config import SCREEN_H, SCREEN_W, Col
 from game.systems.id_check import CARD, CHOICES, IdCheck
 from game.systems.input import Action
 from game.ui import font
+from game.ui.text import GROW, TEXT_H
 
 from .base import Scene
 
 PANEL_X, PANEL_Y = 16, 14
-PANEL_W, PANEL_H = SCREEN_W - 32, 112
+PANEL_W, PANEL_H = SCREEN_W - 32, 112 + 4 * GROW + 8
 READER_X, READER_Y = PANEL_X + PANEL_W - 54, PANEL_Y + 30
 
 
@@ -80,22 +81,22 @@ class IdCheckScene(Scene):
         pyxel.rect(x, y, w, h, Col.WHITE)
         pyxel.rectb(x, y, w, h, Col.NAVY)
         pyxel.rectb(x + 1, y + 1, w - 2, h - 2, Col.NAVY)
-        pyxel.rect(x + 2, y + 2, w - 4, 16, Col.MAROON)
+        pyxel.rect(x + 2, y + 2, w - 4, 16 + GROW, Col.MAROON)
         font.text(x + 8, y + 4, "FORDHAM ID CHECK", Col.WHITE)
 
         _draw_reader(c.light_green)
 
         if c.state == "choose":
-            font.text(x + 8, y + 26, "How will you tap in?", Col.BLACK)
-            ly = y + 46
+            font.text(x + 8, y + 26 + GROW, "How will you tap in?", Col.BLACK)
+            ly = y + 46 + 2 * GROW
             for i, label in enumerate(CHOICES):
                 if i == c.choice:
                     pyxel.tri(x + 8, ly + 2, x + 8, ly + 10, x + 13, ly + 6, Col.MAROON)
                 lines = [label] if len(label) <= 16 else label.replace(" (", "\n(").split("\n")
                 for j, line in enumerate(lines):
-                    font.text(x + 18, ly + j * 12, line, Col.BLACK if i == c.choice else Col.GRAY)
-                ly += len(lines) * 12 + 8            # a gap between options, however many lines
-            pyxel.text(x + 8, y + h - 9, "UP/DOWN: CHOOSE   Z: TAP", Col.DARK_BLUE)
+                    font.text(x + 18, ly + j * (12 + GROW), line, Col.BLACK if i == c.choice else Col.GRAY)
+                ly += len(lines) * (12 + GROW) + 8   # a gap between options, however many lines
+            font.text(x + 8, y + h - TEXT_H - 4, "UP/DOWN: CHOOSE   Z: TAP", Col.DARK_BLUE)
         else:
             # slide the card/phone from the left to the reader
             start_x, end_x = x + 14, READER_X - 30
@@ -107,7 +108,8 @@ class IdCheckScene(Scene):
             if c.light_green:
                 font.text(READER_X - 6, READER_Y - 13, "BEEP!", Col.GREEN)
             if c.state == "granted":
-                pyxel.rect(x + 8, y + h - 24, 112, 16, Col.GREEN)
-                font.text(x + 14, y + h - 22, "ACCESS GRANTED", Col.WHITE)
+                gw = font.width("ACCESS GRANTED") + 12
+                pyxel.rect(x + 8, y + h - 24 - GROW, gw, 16 + GROW, Col.GREEN)
+                font.text(x + 14, y + h - 22 - GROW, "ACCESS GRANTED", Col.WHITE)
                 if (pyxel.frame_count // 8) % 2 == 0:
-                    pyxel.text(x + 128, y + h - 17, "Z: CONTINUE", Col.DARK_BLUE)
+                    font.text(x + 16 + gw, y + h - 22 - GROW, "Z: CONTINUE", Col.DARK_BLUE)

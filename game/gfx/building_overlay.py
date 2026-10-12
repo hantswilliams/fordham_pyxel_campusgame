@@ -20,12 +20,33 @@ from game.world.minimap import BUILDING_PARTS, ROOF_COLORS
 ROOFS = set(ROOF_COLORS)
 WALLS = set(BUILDING_PARTS)
 BUILDING_TILES = ROOFS | WALLS
-CHAR_W = 4      # Pyxel's built-in font: 4 px per character
-PLAQUE_H = 9
+# Plaque lettering (decisions/0036): PixelMplus 10, 5 px per character, so
+# names stay readable on the 384 x 288 screen
+PLAQUE_FONT = "PixelMplus10-Regular.ttf"
+CHAR_W = 5
+PLAQUE_H = 11
+
+_plaque_font = None
 
 
-def plaque_width(text: str) -> int:
-    return len(text) * CHAR_W + 5
+def plaque_font():
+    global _plaque_font
+    if _plaque_font is None:
+        import pyxel
+        from game import config
+        _plaque_font = pyxel.Font(str(config.ROOT / "assets" / "fonts" / PLAQUE_FONT), 10)
+    return _plaque_font
+
+
+SMALL_CHAR_W = 4  # Pyxel's built-in font, for a name too long for its wall
+
+
+def plaque_width(text: str, small: bool = False) -> int:
+    return len(text) * (SMALL_CHAR_W if small else CHAR_W) + 5
+
+
+def fits(text: str, room: int, small: bool = False) -> bool:
+    return plaque_width(text, small) <= room - 2
 
 
 def door_groups(m: MapData) -> dict[str, list[list[tuple[int, int]]]]:
@@ -76,12 +97,18 @@ def plaque_spot(m: MapData, loc: str, group: list[tuple[int, int]]) -> tuple[int
     return cx, y * TILE - PLAQUE_H + 1, (x1 - x0 + 3) * TILE
 
 
-def draw_plaque(target, cx: int, ty: int, text: str) -> None:
-    w = plaque_width(text)
+def draw_plaque(target, cx: int, ty: int, text: str, room: int | None = None) -> None:
+    """A stone name plaque centred at cx. If the name is too long for the
+    wall (`room`), it's lettered in Pyxel's smaller built-in font instead."""
+    small = room is not None and not fits(text, room)
+    w = plaque_width(text, small)
     x0 = cx - w // 2
     target.rect(x0, ty, w, PLAQUE_H, Col.STONE_HI)
     target.rectb(x0, ty, w, PLAQUE_H, Col.NAVY)
-    target.text(x0 + 3, ty + 2, text, Col.NAVY)
+    if small:
+        target.text(x0 + 3, ty + 3, text, Col.NAVY)
+    else:
+        target.text(x0 + 3, ty, text, Col.NAVY, plaque_font())
 
 
 def draw_overlay(target, m: MapData, locations: dict) -> None:
@@ -113,8 +140,8 @@ def draw_overlay(target, m: MapData, locations: dict) -> None:
                     target.line(px + 2, py + 1, px + TILE - 3, py + 1, Col.PINK)
             name = getattr(locations.get(loc), "short_name", "")
             if name:
-                cx, ty, _ = plaque_spot(m, loc, group)
-                draw_plaque(target, cx, ty, name)
+                cx, ty, room = plaque_spot(m, loc, group)
+                draw_plaque(target, cx, ty, name, room)
     # landmarks with no door (Moglia Stadium) can still carry a plaque, and
     # a sports field's gate gets one just inside it
     for b in m.buildings:
