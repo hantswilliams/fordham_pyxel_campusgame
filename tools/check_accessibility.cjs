@@ -57,9 +57,27 @@ function serve() {
       await page.goto(base + rel, { waitUntil: "load", timeout: 30000 });
     } catch (e) { /* the game page's runtime may be slow or offline; check what loaded */ }
     await page.addScriptTag({ content: AXE });
-    const result = await page.evaluate(async (tags) =>
-      await window.axe.run(document, { runOnly: { type: "tag", values: tags } }), TAGS);
-    const bad = result.violations;
+    let bad;
+    if (rel === "index.html") {
+      // The game page is the non-conforming version: the Campus Guide is its
+      // accessible alternative. Check what WCAG still asks of it and what we
+      // control: the page's title, language and viewport, and the bar with the
+      // guide link. Pyxel's runtime adds its own elements (canvas, prompt,
+      // touch gamepad) that we can't change; the keyboard hand-off is on the
+      // manual checklist.
+      bad = await page.evaluate(async (tags) => {
+        const page = await window.axe.run(document, { runOnly: { type: "rule",
+          values: ["document-title", "html-has-lang", "html-lang-valid", "meta-viewport"] } });
+        const bar = await window.axe.run({ include: [["#fcq-a11y"]] }, { runOnly: { type: "tag", values: tags } });
+        return page.violations.concat(bar.violations);
+      }, TAGS);
+      const hasBar = await page.evaluate(() => !!document.querySelector("#fcq-a11y a[href='guide/index.html']"));
+      if (!hasBar) bad.push({ id: "guide-link", impact: "serious", help: "the game page has no link to the Campus Guide", nodes: [] });
+    } else {
+      const result = await page.evaluate(async (tags) =>
+        await window.axe.run(document, { runOnly: { type: "tag", values: tags } }), TAGS);
+      bad = result.violations;
+    }
     if (rel.startsWith("guide/")) {
       await page.setViewportSize({ width: 320, height: 640 });
       const wide = await page.evaluate(() => document.documentElement.scrollWidth);
