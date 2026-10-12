@@ -75,5 +75,7 @@ def test_controls_card_text_fits():
 def test_intro_art_stays_above_the_caption_box():
     from game.gfx import intro_art
     from game.ui.textbox import box_top
-    assert intro_art.SCENE_BOTTOM == box_top()
+    # the art (scaled up on a bigger screen) reaches down to the caption box
+    assert intro_art.SCENE_BOTTOM * intro_art.ART_SCALE >= box_top()
+    assert (intro_art.SCENE_BOTTOM - 1) * intro_art.ART_SCALE < box_top()
     assert intro_art.ROAD_Y < intro_art.SCENE_BOTTOM - 20  # the road, and the Ram Van on it, show

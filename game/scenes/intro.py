@@ -5,7 +5,7 @@ import pyxel
 
 from game import config
 from game.config import SCREEN_H, SCREEN_W, Col
-from game.gfx.intro_art import SCENE_ART
+from game.gfx.intro_art import SCENE_ART, present
 from game.systems.input import Action
 from game.systems.intro_timeline import IntroData, IntroTimeline, load_intro
 from game.ui import font
@@ -36,7 +36,7 @@ class IntroScene(Scene):
 
     def draw(self) -> None:
         tl = self.timeline
-        SCENE_ART[tl.beat.scene](tl.scene_progress, tl.scene_frame, tl.scene_length)
+        present(SCENE_ART[tl.beat.scene], tl.scene_progress, tl.scene_frame, tl.scene_length)
         draw_text_box(wrap(tl.beat.caption, MAX_CHARS), tl.revealed_chars, tl.caption_complete)
         hint = "Z: NEXT  X: SKIP"
         hw = font.width(hint) + 8
@@ -57,7 +57,7 @@ class ControlsScene(Scene):
             self.app.scenes.replace(OverworldScene(self.app))
 
     def draw(self) -> None:
-        SCENE_ART["street"](1.0, pyxel.frame_count, 1)
+        present(SCENE_ART["street"], 1.0, pyxel.frame_count, 1)
         pyxel.dither(0.6)
         pyxel.rect(0, 0, SCREEN_W, SCREEN_H, Col.NAVY)
         pyxel.dither(1.0)

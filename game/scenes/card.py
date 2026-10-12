@@ -25,7 +25,7 @@ BODY_TOP = HEADER_H + 22
 FOOTER_H = 16
 VISIBLE_LINES = (CARD_H - BODY_TOP - FOOTER_H) // BIG_LINE_H
 # with a picture, the kind tag sits on the picture and the body starts higher
-PIC_W, PIC_H = CARD_W - 2 * PAD, 88  # card.png size: 228 x 88
+PIC_W, PIC_H = 228, 88  # card.png size; centred on a wider card
 PIC_BODY_TOP = HEADER_H + 4
 PIC_VISIBLE_LINES = (CARD_H - PIC_BODY_TOP - FOOTER_H) // BIG_LINE_H
 PIC_LINES = -(-(PIC_H + 4) // BIG_LINE_H)  # text lines the picture takes up
@@ -117,8 +117,9 @@ class BuildingCardScene(Scene):
         first = 0
         if self.picture:
             py = top + 1 - self.scroll * BIG_LINE_H
-            self._draw_picture(x + PAD, py)
-            self._draw_tag(x + PAD + 3, py + PIC_H - 18)  # on the lawn, not the building
+            px = x + (w - PIC_W) // 2
+            self._draw_picture(px, py)
+            self._draw_tag(px + 3, py + PIC_H - 18)  # on the lawn, not the building
             first = PIC_LINES
         for i, (s, col) in enumerate(self.lines):
             row = first + i - self.scroll

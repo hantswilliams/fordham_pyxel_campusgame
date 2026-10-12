@@ -5,10 +5,14 @@ The train is generic on purpose: no transit logos (D-0009).
 Each draw function takes `p` (0..1 progress through the scene), `f` (frames
 since the scene started) and `length` (scene length in frames)."""
 
+import math
+
 import pyxel
 
-from game.config import SCREEN_W, Col
+from game import config
+from game.config import Col
 from game.systems.intro_timeline import scroll_offset
+from game.ui.textbox import box_top
 
 from .placeholder_art import CHAR_IMAGE_BANK, character_uv
 from game.world.directions import Direction
@@ -17,7 +21,33 @@ PLAYER = 0
 CHAR_SCALE = 2           # people are drawn 2x in the intro (decisions/0019 Part 1)
 CHAR_SIZE = 16 * CHAR_SCALE
 TRAIN_SCALE = 3          # the train is a close-up, so people are 3x there
-SCENE_BOTTOM = 130       # the caption box covers everything below this (textbox.box_top)
+# The scenes are laid out for a 256-pixel-wide screen. On a bigger screen
+# (the hi-res-screen branch) they're drawn at that size and scaled up to fill
+# the width; see present().
+ART_W = 256
+SCREEN_W = ART_W
+ART_SCALE = config.SCREEN_W / ART_W
+# the caption box covers everything below this (textbox.box_top), in art pixels
+SCENE_BOTTOM = math.ceil(box_top() / ART_SCALE)
+
+_buffer: "pyxel.Image | None" = None
+
+
+def present(draw, *args) -> None:
+    """Draw an intro scene so it fills the screen width. At 256 px wide it's
+    drawn as is; on a bigger screen it's drawn at 256 px, copied off the
+    screen and scaled up (1.5x on a 384-wide screen)."""
+    global _buffer
+    draw(*args)
+    if ART_SCALE == 1:
+        return
+    if _buffer is None:
+        _buffer = pyxel.Image(ART_W, SCENE_BOTTOM)
+    _buffer.blt(0, 0, pyxel.screen, 0, 0, ART_W, SCENE_BOTTOM)
+    pyxel.cls(Col.NAVY)
+    # blt scales around the centre of the destination rectangle
+    pyxel.blt((config.SCREEN_W - ART_W) / 2, SCENE_BOTTOM * (ART_SCALE - 1) / 2,
+              _buffer, 0, 0, ART_W, SCENE_BOTTOM, scale=ART_SCALE)
 
 
 def _char(x: float, y: float, sprite: int, facing: Direction, frame: int = 0,
