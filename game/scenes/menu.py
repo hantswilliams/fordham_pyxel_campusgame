@@ -17,16 +17,16 @@ from game.config import SCREEN_H, SCREEN_W, Col
 from game.systems.input import Action
 from game.systems.progress import BADGES
 from game.ui import font
-from game.ui.text import BIG_CHAR_W, wrap
+from game.ui.text import BIG_CHAR_W, GROW, wrap
 
 from .base import Scene
 from .choice import ChoiceScene
 
 TABS = ["MISSIONS", "PASSPORT"]
-LINE_H = 13          # reading-font line spacing in the menu
-HEADER_H = 16
-FOOTER_Y = SCREEN_H - 15
-ROW_H = 15           # one mission per row in the log
+LINE_H = 13 + GROW   # reading-font line spacing in the menu
+HEADER_H = 16 + GROW
+FOOTER_Y = SCREEN_H - 15 - GROW
+ROW_H = 15 + GROW    # one mission per row in the log
 LIST_Y = HEADER_H + 3
 LIST_ROWS = 4        # rows shown at once; the list scrolls if there are more
 TEXT_CHARS = (SCREEN_W - 12) // BIG_CHAR_W   # 40 characters across the screen
@@ -175,7 +175,7 @@ class MenuScene(Scene):
         for i, name in enumerate(TABS):
             w = font.width(name) + 10
             if i == self.tab:
-                pyxel.rect(x - 4, 1, w, 15, Col.WHITE)
+                pyxel.rect(x - 4, 1, w, HEADER_H - 1, Col.WHITE)
                 font.text(x + 1, 2, name, Col.MAROON)
             else:
                 font.text(x + 1, 2, name, Col.PEACH)
@@ -226,7 +226,7 @@ class MenuScene(Scene):
             y = LIST_Y + row * ROW_H
             if i == self.cursor:
                 pyxel.rect(2, y - 1, SCREEN_W - 4, ROW_H, Col.LIGHT_BLUE)
-            self._draw_icon(6, y + 3, m)
+            self._draw_icon(6, y + 3 + GROW // 2, m)
             status, col = self._status(m)
             sx = SCREEN_W - 8 - font.width(status)
             room = (sx - 22 - 14) // BIG_CHAR_W
@@ -322,15 +322,15 @@ class MenuScene(Scene):
                 words = [w for w in m.reward.get("stamp_name", m.title).split()
                          if w.lower() not in ("and", "of", "the", "a")]
                 initials = "".join(w[0] for w in words[:2]).upper()
-                font.text(cx - font.width(initials) // 2, cy - 6, initials, Col.WHITE)
+                font.text(cx - font.width(initials) // 2, cy - 6 - GROW // 2, initials, Col.WHITE)
             else:
                 for a in range(0, 360, 30):
                     pyxel.pset(cx + round(16 * math.cos(math.radians(a))),
                                cy + round(16 * math.sin(math.radians(a))), Col.GRAY)
-                font.text(cx - 3, cy - 6, "?", Col.GRAY)
+                font.text(cx - 4, cy - 6 - GROW // 2, "?", Col.GRAY)
             name = m.reward.get("stamp_name", m.title)
             for j, line in enumerate(wrap(name, (cw - 2) // BIG_CHAR_W)[:2]):
-                font.text(cx - font.width(line) // 2, cy + 19 + j * 12, line, Col.BLACK if earned else Col.GRAY)
+                font.text(cx - font.width(line) // 2, cy + 19 + j * (12 + GROW), line, Col.BLACK if earned else Col.GRAY)
         # badges (decisions/0003): three to a row, a coloured disc then the name
         by = 120
         font.text(8, by, "BADGES", Col.MAROON)

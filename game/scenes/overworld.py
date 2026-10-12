@@ -12,7 +12,7 @@ from game.systems.bike import Bike
 from game.systems.missions import Reaction
 from game.systems.input import Action
 from game.ui import font
-from game.ui.text import BIG_CHAR_W
+from game.ui.text import BIG_CHAR_W, GROW
 from game.world.camera import follow
 from game.world.directions import Direction
 from game.world.mapdata import MapData, MapObject, load_map
@@ -378,9 +378,9 @@ class OverworldScene(Scene):
                 mark = self.book.npc_marker(obj.name)
                 if mark:
                     bx, by = obj.x * TILE + 3, obj.y * TILE - 17 - bob
-                    pyxel.rect(bx, by, 10, 14, Col.WHITE)
-                    pyxel.rectb(bx, by, 10, 14, Col.NAVY)
-                    font.text(bx + 2, by + 1, mark, Col.MAROON)
+                    pyxel.rect(bx, by - GROW, 12, 14 + GROW, Col.WHITE)
+                    pyxel.rectb(bx, by - GROW, 12, 14 + GROW, Col.NAVY)
+                    font.text(bx + 2, by + 1 - GROW, mark, Col.MAROON)
 
         pyxel.camera()
         self._draw_hud()
@@ -412,14 +412,14 @@ class OverworldScene(Scene):
     def _draw_hud(self) -> None:
         top = 4
         if self.banner_timer > 0:
-            top = 26
+            top = 26 + GROW
         tracker = self.book.tracker() if self._tracker_visible() else None
         if tracker:
             most = (SCREEN_W - 20) // BIG_CHAR_W
             text = tracker if len(tracker) <= most else tracker[:most - 1] + "."
             w = font.width(text) + 10
-            pyxel.rect(4, top, w, 15, Col.NAVY)
-            pyxel.rectb(4, top, w, 15, Col.PEACH)
+            pyxel.rect(4, top, w, 15 + GROW, Col.NAVY)
+            pyxel.rectb(4, top, w, 15 + GROW, Col.PEACH)
             font.text(9, top + 1, text, Col.WHITE)
         if self.complete_timer > 0:
             msg = "MISSION COMPLETE!"
@@ -427,23 +427,23 @@ class OverworldScene(Scene):
             x, y = (SCREEN_W - w) // 2, 40
             w = max(w, font.width(self.complete_title) + 20)
             x = (SCREEN_W - w) // 2
-            pyxel.rect(x, y, w, 32, Col.MAROON)
-            pyxel.rectb(x, y, w, 32, Col.YELLOW)
-            pyxel.rectb(x + 2, y + 2, w - 4, 28, Col.WHITE)
+            pyxel.rect(x, y, w, 32 + 2 * GROW, Col.MAROON)
+            pyxel.rectb(x, y, w, 32 + 2 * GROW, Col.YELLOW)
+            pyxel.rectb(x + 2, y + 2, w - 4, 28 + 2 * GROW, Col.WHITE)
             font.centered(y + 3, msg, Col.YELLOW)
-            font.centered(y + 16, self.complete_title, Col.WHITE)
+            font.centered(y + 16 + GROW, self.complete_title, Col.WHITE)
         if self.toast_timer > 0:
             w = font.width(self.toast) + 12
             y = SCREEN_H - 22
-            pyxel.rect(4, y, w, 16, Col.NAVY)
-            pyxel.rectb(4, y, w, 16, Col.WHITE)
-            font.text(10, y + 2, self.toast, Col.WHITE)
+            pyxel.rect(4, y - GROW, w, 16 + GROW, Col.NAVY)
+            pyxel.rectb(4, y - GROW, w, 16 + GROW, Col.WHITE)
+            font.text(10, y + 2 - GROW, self.toast, Col.WHITE)
         if self.banner_timer <= 0:
             return
         name = self.area_name
         w = font.width(name) + 16
         # slide in from the top, then hold
-        y = min(4, -18 + (BANNER_FRAMES - self.banner_timer) * 2)
-        pyxel.rect(4, y, w, 18, Col.MAROON)
-        pyxel.rectb(4, y, w, 18, Col.WHITE)
+        y = min(4, -18 - GROW + (BANNER_FRAMES - self.banner_timer) * 2)
+        pyxel.rect(4, y, w, 18 + GROW, Col.MAROON)
+        pyxel.rectb(4, y, w, 18 + GROW, Col.WHITE)
         font.text(12, y + 3, name, Col.WHITE)
