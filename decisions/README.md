@@ -59,5 +59,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0032](0032-detailed-campus-map.md) | A detailed campus map: the real map art shrunk to 4 px per tile with colour averaging, scrolling to the picked place, with a whole-campus overview in the corner | Option A (built at your request) | Yes | Built, for your review |
 | [0033](0033-off-campus-surroundings.md) | What's outside the fence: plain tan-grey (a painted neighbourhood was tried and taken out) | Plain tan-grey | Yes | Decided |
 | [0034](0034-web-build-for-testing.md) | A web build for quick testing: `tools/build_web.py` makes one HTML page (Pyodide, Pyxel 2.9.9), a GitHub Pages workflow, browser local-storage saves, TAB to be checked in a browser | A for all four parts | Yes | Built; browser check pending |
+| [0035](0035-bigger-screen-experiment.md) | A bigger screen (384×288, same art) on the `hi-res-screen` branch: see more campus, finer pixels; intro scaled 1.5×, cards centred | Try the branch, then A or B | Yes, on the branch | For you to try |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

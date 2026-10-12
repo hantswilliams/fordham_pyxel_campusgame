@@ -4,8 +4,8 @@ from pathlib import Path
 
 TITLE = "Fordham Campus Quest"
 
-SCREEN_W = 256
-SCREEN_H = 192
+SCREEN_W = 384
+SCREEN_H = 288
 FPS = 30
 
 TILE = 16  # one gameplay tile = 16x16 px = 2x2 Pyxel 8x8 tiles

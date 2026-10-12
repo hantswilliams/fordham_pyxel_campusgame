@@ -53,18 +53,19 @@ class TitleScene(Scene):
 
     def draw(self) -> None:
         pyxel.cls(Col.MAROON)
+        dy = (SCREEN_H - 192) // 2      # laid out for 192 px tall; centred on a taller screen
         # simple gothic-arch frame
         pyxel.rectb(16, 16, SCREEN_W - 32, SCREEN_H - 32, Col.WHITE)
         pyxel.rectb(19, 19, SCREEN_W - 38, SCREEN_H - 38, Col.WHITE)
 
-        font.centered(40, "WELCOME TO", Col.PEACH)
+        font.centered(dy + 40, "WELCOME TO", Col.PEACH)
         # big title: the reading font drawn at 2x, with a navy shadow
-        _big_title(62, "FORDHAM")
-        _big_title(90, "CAMPUS QUEST")
+        _big_title(dy + 62, "FORDHAM")
+        _big_title(dy + 90, "CAMPUS QUEST")
 
         if self.can_continue:
             for i, label in enumerate(("CONTINUE", "NEW GAME")):
-                y = 122 + i * 16
+                y = dy + 122 + i * 16
                 col = Col.YELLOW if i == self.cursor else Col.PEACH
                 font.centered(y, label, col)
                 if i == self.cursor and (pyxel.frame_count // 15) % 2 == 0:
@@ -72,6 +73,6 @@ class TitleScene(Scene):
                     x = (SCREEN_W - w) // 2 - 12
                     pyxel.tri(x, y + 2, x, y + 10, x + 5, y + 6, Col.YELLOW)
         elif (pyxel.frame_count // 15) % 2 == 0:
-            font.centered(128, "PRESS Z / ENTER TO START", Col.YELLOW)
+            font.centered(dy + 128, "PRESS Z / ENTER TO START", Col.YELLOW)
 
-        centered_text(160, "PROTOTYPE - PLACEHOLDER ART", Col.GRAY)
+        centered_text(dy + 160, "PROTOTYPE - PLACEHOLDER ART", Col.GRAY)
