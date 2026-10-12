@@ -60,6 +60,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0033](0033-off-campus-surroundings.md) | What's outside the fence: plain tan-grey (a painted neighbourhood was tried and taken out) | Plain tan-grey | Yes | Decided |
 | [0034](0034-web-build-for-testing.md) | A web build for quick testing: `tools/build_web.py` makes one HTML page (Pyodide, Pyxel 2.9.9), a GitHub Pages workflow, browser local-storage saves, TAB to be checked in a browser | A for all four parts | Yes | Built; browser check pending |
 | [0035](0035-bigger-screen-experiment.md) | A bigger screen (384×288, same art) on the `hi-res-screen` branch: see more campus, finer pixels; intro scaled 1.5×, cards centred | B: merge into main | Yes | Decided |
-| [0036](0036-text-size-for-bigger-screen.md) | Text size on the bigger screen: the reading font (keep, DotGothic16 at 15 px, or 1.5x) and bigger map plaques | B and B | Yes: Part 1 B on branch `bigger-text` | Awaiting review |
+| [0036](0036-text-size-for-bigger-screen.md) | Text size on the bigger screen: the reading font (keep, DotGothic16 at 15 px, or 1.5x) and bigger map plaques | B and B | Yes, on branch `bigger-text` | Decided; ready to merge |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

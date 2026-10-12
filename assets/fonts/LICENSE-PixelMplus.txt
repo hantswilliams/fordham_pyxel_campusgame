@@ -1,5 +1,5 @@
-PixelMplus12-Regular.ttf
-========================
+PixelMplus12-Regular.ttf, PixelMplus10-Regular.ttf
+==================================================
 
 PixelMplus by itouhiro, based on M+ BITMAP FONTS.
 Font metadata: "Copyright (C) 2013 M+ Font Project".

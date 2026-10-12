@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Decided 2026-10-11: B and B. Built on branch `bigger-text`, ready to merge |
 | **Raised** | 2026-10-11. After the move to 384 × 288 (decision 0035), you asked whether the text needs adjusting |
 | **Affects** | The reading font everywhere (dialogue, menus, cards, map, HUD) and the name plaques on buildings |
-| **Built provisionally?** | Option B of Part 1 is built on branch `bigger-text`. Part 2 is a mock-up only. `main` is unchanged |
+| **Built?** | Yes, both parts, on branch `bigger-text` |
 
 ## What's being decided
 
@@ -55,7 +55,7 @@ What changed on the branch:
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**: Option B (merge the `bigger-text` branch)
+- [x] **Approve**: Option B (merge the `bigger-text` branch)
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -77,7 +77,7 @@ What changed on the branch:
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: Option B
+- [x] **Approve**: Option B
 - [ ] **Not approve**: keep them as they are
 - [ ] **Other**: describe below
 
@@ -94,3 +94,14 @@ What changed on the branch:
 - **Part 2:** the 10 px font makes the plaques readable without turning them into signs.
 
 If you approve, I'll merge `bigger-text`, add the plaque change, and check every screenshot again.
+
+---
+
+## What was built (2026-10-11)
+
+- **Part 1 B:** DotGothic16 at 15 px, as described above.
+- **Part 2 B:**
+  - Building plaques are lettered in **PixelMplus 10** (`assets/fonts/PixelMplus10-Regular.ttf`, same licence as PixelMplus 12), and plaques are 11 px tall instead of 9.
+  - Two names are a few pixels too wide for their narrow walls, ALUMNI CT and MARTYRS CT (the west wing). They fall back to the small lettering automatically instead of being abbreviated (`draw_plaque(..., room)` in `game/gfx/building_overlay.py`).
+  - The plaque test now accepts either size.
+- All 254 tests pass, and every screenshot was re-checked.
