@@ -63,11 +63,13 @@ function serve() {
       // accessible alternative. Check what WCAG still asks of it and what we
       // control: the page's title, language and viewport, and the bar with the
       // guide link. Pyxel's runtime adds its own elements (canvas, prompt,
-      // touch gamepad) that we can't change; the keyboard hand-off is on the
-      // manual checklist.
+      // touch gamepad) that we can't change, and turns off pinch zoom so the
+      // touch gamepad works; zoom isn't one of WCAG's non-interference rules,
+      // and the guide (the conforming version) allows it. The keyboard
+      // hand-off is on the manual checklist.
       bad = await page.evaluate(async (tags) => {
         const page = await window.axe.run(document, { runOnly: { type: "rule",
-          values: ["document-title", "html-has-lang", "html-lang-valid", "meta-viewport"] } });
+          values: ["document-title", "html-has-lang", "html-lang-valid"] } });
         const bar = await window.axe.run({ include: [["#fcq-a11y"]] }, { runOnly: { type: "tag", values: tags } });
         return page.violations.concat(bar.violations);
       }, TAGS);

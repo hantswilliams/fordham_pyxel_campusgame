@@ -75,7 +75,8 @@ CSS = """
 html { font-size: 112.5%; }
 body { margin: 0; background: var(--paper); color: var(--ink);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.55; }
+  line-height: 1.55; overflow-wrap: break-word; }
+h1, h2, h3, nav a { overflow-wrap: anywhere; }   /* long names (Hawthorn/Rooney) wrap at 320 px (1.4.10) */
 a { color: var(--maroon); text-decoration: underline; text-underline-offset: 0.15em; }
 a:hover { text-decoration-thickness: 0.15em; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
