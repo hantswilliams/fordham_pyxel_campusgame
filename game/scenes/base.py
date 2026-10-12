@@ -5,6 +5,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from game.gfx import display
+
 if TYPE_CHECKING:
     from game.app import App
 
@@ -56,5 +58,7 @@ class SceneManager:
         start = len(self.stack) - 1
         while start > 0 and self.stack[start].overlay:
             start -= 1
-        for scene in self.stack[start:]:
+        for i, scene in enumerate(self.stack[start:]):
+            if i:
+                display.layer()     # an overlay covers the text beneath it too
             scene.draw()

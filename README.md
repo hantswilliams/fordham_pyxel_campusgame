@@ -61,7 +61,7 @@ uv run python tools/build_web.py   # web version for testing: build/web/index.ht
 | `content/intro.json` | The opening sequence: captions, how long each stays up, and the controls card. Edit the text here |
 | `content/locations.json` | Building cards: name, type, description, what's inside. Will feed the Campus Guide in M3 |
 | `assets/buildings/` | **Drawn buildings** (decision 0020): one folder per building with its map drawing, card picture, footprint and notes. See its README for how to add one |
-| `assets/fonts/` | The reading font (PixelMplus 12, free M+ license, decision 0018) |
+| `assets/fonts/` | Fonts, all free: M PLUS 1 Code (the reading font, decision 0038), DotGothic16 (the pixel reading font, decision 0036) and PixelMplus (map plaques) |
 | `research/` | The official Rose Hill campus map and notes taken from it |
 | `game/` | Engine code: `scenes/` (title, overworld, dialogue), `world/` (map, movement, camera), `systems/` (input, bike, missions, saved progress), `gfx/` (placeholder art) |
 | `tests/` | Unit tests plus content checks (`test_content.py`: every map loads, everything is reachable, every door has a building card) |

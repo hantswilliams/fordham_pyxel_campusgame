@@ -7,6 +7,8 @@ of the card; it scrolls away with the text."""
 
 import pyxel
 
+from game.gfx import display
+
 from game.config import SCREEN_H, SCREEN_W, Col
 from game.gfx.building_art import card_image
 from game.systems.input import Action
@@ -113,7 +115,7 @@ class BuildingCardScene(Scene):
         top = y + self.body_top
         if not self.picture:
             self._draw_tag(x + PAD, y + HEADER_H + 4)
-        pyxel.clip(x + 2, top, w - 4, self.visible_lines * BIG_LINE_H)
+        display.clip(x + 2, top, w - 4, self.visible_lines * BIG_LINE_H)
         first = 0
         if self.picture:
             py = top + 1 - self.scroll * BIG_LINE_H
@@ -125,7 +127,7 @@ class BuildingCardScene(Scene):
             row = first + i - self.scroll
             if 0 <= row < self.visible_lines:
                 font.text(x + PAD, top + row * BIG_LINE_H, s, col)
-        pyxel.clip()
+        display.clip()
 
         # footer: scroll arrows + close hint
         fy = y + h - FOOTER_H + 1

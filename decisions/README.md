@@ -62,5 +62,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0035](0035-bigger-screen-experiment.md) | A bigger screen (384×288, same art) on the `hi-res-screen` branch: see more campus, finer pixels; intro scaled 1.5×, cards centred | B: merge into main | Yes | Decided |
 | [0036](0036-text-size-for-bigger-screen.md) | Text size on the bigger screen: the reading font (keep, DotGothic16 at 15 px, or 1.5x) and bigger map plaques | B and B | Yes, on branch `bigger-text` | Decided; ready to merge |
 | [0037](0037-accessibility-campus-guide.md) | Accessibility (WCAG 2.2 AA): a generated, accessible Rose Hill Campus Guide as the conforming alternate version, game-page fixes (guide link first, Esc out of the game), and automated accessibility checks on every push | A, and parts 2-4 approved | Yes | Built; contact for the statement to be added |
+| [0038](0038-crisp-text.md) | Crisp text: the game below the accessibility bar (on `main`), and a 768×576 screen with the art doubled and text drawn at full detail in M PLUS 1 Code (branch `crisp-text`) | Approve all three parts | Yes | Built, for your review; browser check before merging |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

@@ -177,6 +177,8 @@
 
 A `tests/test_content.py` check validates the data: every NPC's dialogue exists, every quest references real locations, and every URL is well-formed. Content edits then can't break the game.
 
+**6e. Crisp text (decision 0038).** The real screen is `DISPLAY_SCALE` (2) times the layout: 768 × 576. Scenes still draw at 384 × 288 into the top-left corner; `game/gfx/display.py` doubles each layer onto a full-size image and draws that layer's reading-font text over it at full size (M PLUS 1 Code, 32 px, 16 px per character), so text gets four times the pixels while art and layout stay the same. `font.text` queues text with the camera offset and clip in force, so scenes use `display.camera` / `display.clip` instead of `pyxel.camera` / `pyxel.clip`. Each scene in the stack is a layer, so an overlay covers the text beneath it. In the browser the canvas is kept at 768 × 576 and scaled smoothly by CSS to fit below the accessibility bar.
+
 ---
 
 ## 4. Gameplay loop (Pokémon mechanics → onboarding)

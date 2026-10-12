@@ -129,6 +129,51 @@ A11Y = """<style>
 </script>"""
 
 
+# Crisp text (decisions/0038): the game's screen is DISPLAY_SCALE times its
+# layout, with the art already doubled. Pyxel would stretch it to the window
+# by any amount with hard pixel edges, which makes some strokes thicker than
+# others. Instead the canvas stays exactly the game's size, so Pyxel draws it
+# 1:1 (2:1 on a Retina screen), and the browser scales it smoothly to fit
+# below the bar. As the art is already doubled, it stays sharp.
+CRISP = """<style>
+  html:not(.fcq-fill) div#pyxel-screen canvas#canvas { width: %(w)dpx !important; height: %(h)dpx !important;
+    transform-origin: 0 0; image-rendering: auto; }
+</style>
+<script>
+  (function () {
+    var W = %(w)d, H = %(h)d;
+    function fitGame() {
+      var screen = document.querySelector("div#pyxel-screen");
+      var canvas = document.querySelector("canvas#canvas");
+      if (!screen || !canvas) return;
+      // if Pyxel ever sizes its drawing to the window rather than to the
+      // canvas, the picture would come out squashed: go back to Pyxel's own
+      // fill-the-window layout instead
+      if (canvas.width !== 300 && Math.abs(canvas.width / canvas.height - W / H) > 0.02) {
+        document.documentElement.classList.add("fcq-fill");
+        canvas.style.transform = "";
+        return;
+      }
+      var r = screen.getBoundingClientRect();
+      // on touch screens Pyxel keeps the bottom fifth for its gamepad
+      var h = document.querySelector("img#pyxel-gamepad-cross") ? r.height * 0.8 : r.height;
+      var k = Math.max(0.1, Math.min(r.width / W, h / H));
+      canvas.style.transform = "translate(" + (r.width - W * k) / 2 + "px," + (h - H * k) / 2 + "px) scale(" + k + ")";
+    }
+    window.addEventListener("resize", fitGame);
+    new MutationObserver(fitGame).observe(document.documentElement, { childList: true, subtree: true,
+      attributes: true, attributeFilter: ["width", "height"] });
+    if (window.ResizeObserver) new ResizeObserver(fitGame).observe(document.documentElement);
+  })();
+</script>"""
+
+def crisp_css() -> str:
+    sys.path.insert(0, str(ROOT))
+    from game import config
+    if config.DISPLAY_SCALE == 1:
+        return ""
+    return CRISP % {"w": config.SCREEN_W * config.DISPLAY_SCALE, "h": config.SCREEN_H * config.DISPLAY_SCALE}
+
 def run(*args: str) -> None:
     subprocess.run([sys.executable, "-m", "pyxel", *args], cwd=OUT, check=True,
                    stdout=subprocess.DEVNULL)
@@ -154,7 +199,7 @@ def main() -> None:
         sys.exit("build_web: couldn't find Pyxel's script tag in the HTML")
     html = html.replace("<!doctype html>", '<!doctype html>\n<html lang="en">\n<meta charset="utf-8">\n'
                         '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-                        "<title>Fordham Campus Quest</title>\n" + A11Y + LOADING, 1)
+                        "<title>Fordham Campus Quest</title>\n" + A11Y + LOADING + crisp_css(), 1)
     (OUT / "index.html").write_text(html)
     (OUT / f"{APP}.html").unlink()
     shutil.rmtree(stage)
