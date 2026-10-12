@@ -88,37 +88,83 @@ class Progress:
         )
 
 
-class SaveFile:
-    """Reads and writes Progress as JSON. `path=None` keeps everything in
-    memory (tests, screenshots), so they never touch a real save."""
+SAVE_KEY = "fordham_campus_quest_save"   # the browser local-storage key (decisions/0034)
 
-    def __init__(self, path: Path | None):
+
+def browser_storage():
+    """The browser's localStorage when the game runs in a web page (Pyodide,
+    decisions/0034); None on the desktop."""
+    import sys
+    if sys.platform != "emscripten":
+        return None
+    try:
+        from js import localStorage  # type: ignore[import-not-found]
+        return localStorage
+    except Exception:
+        return None
+
+
+class SaveFile:
+    """Reads and writes Progress as JSON: to a file on the desktop, or to the
+    browser's local storage in the web build (`storage`, anything with
+    getItem / setItem / removeItem). With neither (`path=None`), everything
+    stays in memory (tests, screenshots), so they never touch a real save."""
+
+    def __init__(self, path: Path | None, storage=None):
         self.path = path
+        self.storage = storage
+
+    def _read(self) -> str | None:
+        if self.storage is not None:
+            try:
+                return self.storage.getItem(SAVE_KEY)
+            except Exception:
+                return None
+        if self.path and self.path.exists():
+            try:
+                return self.path.read_text()
+            except OSError:
+                return None
+        return None
 
     def exists(self) -> bool:
-        return bool(self.path and self.path.exists())
+        return self._read() is not None
 
     def load(self) -> Progress:
-        if not self.exists():
+        text = self._read()
+        if text is None:
             return Progress()
         try:
-            return Progress.from_dict(json.loads(self.path.read_text()))
-        except (OSError, ValueError, TypeError, AttributeError):
+            return Progress.from_dict(json.loads(text))
+        except (ValueError, TypeError, AttributeError):
             return Progress()          # a damaged save starts fresh rather than crashing
 
     def save(self, progress: Progress) -> None:
+        text = json.dumps(progress.to_dict(), indent=1)
+        if self.storage is not None:
+            try:
+                self.storage.setItem(SAVE_KEY, text)
+            except Exception:
+                pass                   # e.g. storage full or blocked: never crash over a save
+            return
         if not self.path:
             return
         try:
             self.path.parent.mkdir(parents=True, exist_ok=True)
             tmp = self.path.with_suffix(".tmp")
-            tmp.write_text(json.dumps(progress.to_dict(), indent=1))
+            tmp.write_text(text)
             tmp.replace(self.path)
         except OSError:
             pass                       # never crash the game over a save
 
     def delete(self) -> None:
-        if self.exists():
+        if self.storage is not None:
+            try:
+                self.storage.removeItem(SAVE_KEY)
+            except Exception:
+                pass
+            return
+        if self.path and self.path.exists():
             try:
                 self.path.unlink()
             except OSError:

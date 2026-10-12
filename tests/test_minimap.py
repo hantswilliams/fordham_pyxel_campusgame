@@ -69,3 +69,20 @@ def test_downsample_averages_blocks_into_palette_colours():
     out = downsample(raw, 4, 2, 2, rgb)
     assert out == bytes([1, 3])          # red stays red; red+blue averages to purple
     assert 0 not in downsample(bytes([0, 0, 0, 0]), 2, 2, 2, rgb)  # never transparent black
+
+
+def test_campus_map_reads_pixels_without_ctypes():
+    """The web build (decisions/0034) may not let ctypes reach image memory;
+    the campus map then reads the pixels one by one and gets the same bytes."""
+    from game.scenes.campus_map import _pixels
+
+    class NoPointerImage:
+        width, height = 3, 2
+
+        def data_ptr(self):
+            raise RuntimeError("no direct memory access here")
+
+        def pget(self, x, y):
+            return x + 3 * y
+
+    assert _pixels(NoPointerImage()) == bytes([0, 1, 2, 3, 4, 5])

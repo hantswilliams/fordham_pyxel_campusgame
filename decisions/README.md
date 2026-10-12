@@ -58,6 +58,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0031](0031-optional-missions.md) | Optional missions: 1 one JSON file per mission from a template, 2 seven step types, 3 "!" NPCs + Mission Log, 4 Ram Passport stamps + badges, 5 twelve mission ideas to pick from, 6 the First Week Checklist as the main mission | A throughout; first batch: Lost and Found, Bike Courier, Game Day | Yes | Approved and built |
 | [0032](0032-detailed-campus-map.md) | A detailed campus map: the real map art shrunk to 4 px per tile with colour averaging, scrolling to the picked place, with a whole-campus overview in the corner | Option A (built at your request) | Yes | Built, for your review |
 | [0033](0033-off-campus-surroundings.md) | What's outside the fence: plain tan-grey (a painted neighbourhood was tried and taken out) | Plain tan-grey | Yes | Decided |
-| [0034](0034-web-build-for-testing.md) | A web build for quick testing: a build script that packs the game into one HTML file (Pyodide), a GitHub Pages test link, browser local-storage saves, and a fallback key if TAB misbehaves in a browser | A for all four parts | No | Awaiting review |
+| [0034](0034-web-build-for-testing.md) | A web build for quick testing: `tools/build_web.py` makes one HTML page (Pyodide, Pyxel 2.9.9), a GitHub Pages workflow, browser local-storage saves, TAB to be checked in a browser | A for all four parts | Yes | Built; browser check pending |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

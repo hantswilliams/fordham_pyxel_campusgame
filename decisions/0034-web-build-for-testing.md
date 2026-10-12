@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved 2026-10-11 (A for all four parts). Built 2026-10-11; browser check pending (see "Your browser check" below) |
 | **Raised** | 2026-10-11. You'd like the game to run as a static web page for quick testing, using Pyxel's web support (Pyodide) |
 | **Affects** | A new build script and output file, one change to how the game saves, and possibly one key. The desktop game is unchanged |
-| **Built provisionally?** | No. Nothing is built yet |
+| **Built?** | Yes: see "What was built" at the end |
 
 ## What's being decided
 
@@ -56,7 +56,7 @@ Pyxel hosts a launcher page that runs a game straight from a GitHub repo, with n
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**: Option A
+- [x] **Approve**: Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -94,7 +94,7 @@ Build locally and double-click `build/web/fordham_campus_quest.html`, or send th
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: Option A
+- [x] **Approve**: Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -138,13 +138,13 @@ Every visit starts a new game.
 
 ## Your decision (Part 3)
 
-- [ ] **Approve**: Option A
+- [x] **Approve**: Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
 **Your notes:**
 
->
+> 
 
 ---
 
@@ -164,7 +164,7 @@ TAB keeps working wherever it can. Q, which isn't used yet, becomes a second key
 
 ## Your decision (Part 4)
 
-- [ ] **Approve**: Option A
+- [x] **Approve**: Option A
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -193,3 +193,40 @@ I'll test the build in a headless browser here if this workspace can reach Pyxel
 4. Test TAB, with Q as a fallback.
 
 It's about half a day of work. Nothing in the desktop game changes except the save gaining a browser branch.
+
+---
+
+## What was built (2026-10-11)
+
+**Part 1: build script**
+- `tools/build_web.py` copies `main.py`, `game/`, `assets/` and `content/` into a staging folder. It leaves out the drawing scripts in `assets/buildings/_style`.
+- It runs `pyxel package` and `pyxel app2html`, pins the page to Pyxel **2.9.9**, and writes `build/web/index.html`.
+- The page is **1.4 MB**, because the package is compressed and then base64-encoded. It also writes `build/web/fordham_campus_quest.pyxapp`, which `pyxel play` can run on a desktop.
+
+**Part 2: GitHub Pages**
+- `.github/workflows/web.yml` builds the page and publishes it on every push to `main`, or by hand from the Actions tab.
+- **One-time setup:** in the repo's Settings, open Pages and set Source to "GitHub Actions". The link will then be https://hantswilliams.github.io/fordham_pyxel_campusgame/.
+- Your local `main` is 9 commits ahead of GitHub. The first build runs once you push.
+
+**Part 3: saves**
+- In a web page (`sys.platform == "emscripten"`), `SaveFile` uses the browser's `localStorage` under the key `fordham_campus_quest_save`. On the desktop it still uses `save.json`.
+- New tests use a stand-in for local storage. They cover a save, a reload, a damaged save and a delete, and check that the desktop never uses local storage.
+
+**Campus map safety net**
+- The map's fast pixel copy (`ctypes`) now has a pure-Python fallback that gives the same picture. A test checks the fallback reads the same pixels.
+- If the browser lacks `ctypes`, the map still opens; the first opening is just slower.
+
+**Part 4: TAB.** Not changed yet. It's on the checklist below; if TAB misbehaves, Q gets added as a second menu key.
+
+## Your browser check
+
+This workspace can't reach the CDN that serves Pyxel's web runtime (`cdn.jsdelivr.net`), even through your computer's link, so the build couldn't be run in a browser here. The build itself, the package contents and the save code are tested. Please try this on your Mac:
+
+1. `uv run python tools/build_web.py`
+2. `cd build/web && python3 -m http.server 8000`, then open http://localhost:8000 in Chrome or Safari.
+3. **Loads:** the title screen appears after a few seconds, and the dialogue text is in the clear reading font.
+4. **Keys:** walk with the arrows, talk with Z, skip with X.
+5. **TAB:** does the Mission Log open, and do the arrows still move you afterwards? If focus jumps away from the game, tell me and I'll add Q.
+6. **M:** the campus map opens. Note roughly how long it takes the first time.
+7. **Saving:** play a minute, reload the page, and CONTINUE should put you back where you were.
+8. **Phone (optional):** after you push and turn on Pages, open the link on a phone. The on-screen gamepad appears; check it's playable.

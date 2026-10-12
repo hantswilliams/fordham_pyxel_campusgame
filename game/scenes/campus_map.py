@@ -40,8 +40,23 @@ _cache: dict[str, tuple[pyxel.Image, pyxel.Image]] = {}
 
 def _to_image(data: bytes, w: int, h: int) -> pyxel.Image:
     img = pyxel.Image(w, h)
-    ctypes.memmove(img.data_ptr(), data, w * h)
+    try:
+        ctypes.memmove(img.data_ptr(), data, w * h)
+    except Exception:                    # no direct memory access (e.g. some web builds)
+        for y in range(h):
+            row = y * w
+            for x in range(w):
+                img.pset(x, y, data[row + x])
     return img
+
+
+def _pixels(img: pyxel.Image) -> bytes:
+    """Every pixel's colour index, row by row."""
+    w, h = img.width, img.height
+    try:
+        return ctypes.string_at(img.data_ptr(), w * h)
+    except Exception:                    # the slow way, if ctypes can't reach the image (D-0034)
+        return bytes(img.pget(x, y) for y in range(h) for x in range(w))
 
 
 def map_images(m: MapData, locations) -> tuple[pyxel.Image, pyxel.Image]:
@@ -51,7 +66,7 @@ def map_images(m: MapData, locations) -> tuple[pyxel.Image, pyxel.Image]:
     if m.id not in _cache:
         full = render_world(m, locations)
         w, h = full.width, full.height
-        raw = ctypes.string_at(full.data_ptr(), w * h)
+        raw = _pixels(full)
         rgb = [((c >> 16) & 255, (c >> 8) & 255, c & 255) for c in config.palette()]
         k = config.TILE // DETAIL
         detail = downsample(raw, w, h, k, rgb)

@@ -49,3 +49,41 @@ def test_continue_puts_you_back_where_you_were(tmp_path):
     # ...and stays up when pinned in the TAB menu
     app.progress.show_tracker = True
     assert world._tracker_visible()
+
+
+class FakeLocalStorage:
+    """Stands in for the browser's localStorage (decisions/0034)."""
+
+    def __init__(self):
+        self.items = {}
+
+    def getItem(self, key):
+        return self.items.get(key)          # like JS: null (None) when missing
+
+    def setItem(self, key, value):
+        self.items[key] = str(value)
+
+    def removeItem(self, key):
+        self.items.pop(key, None)
+
+
+def test_web_build_saves_in_browser_local_storage():
+    from game.systems.progress import SAVE_KEY, Progress, SaveFile
+    store = FakeLocalStorage()
+    save = SaveFile(None, store)
+    assert not save.exists() and save.load().to_dict() == Progress().to_dict()
+    p = Progress(has_bike=True, position=(20, 63), stamps=["lost_and_found"])
+    save.save(p)
+    assert SAVE_KEY in store.items
+    again = SaveFile(None, store)                 # a reload: a new SaveFile, same storage
+    assert again.exists()
+    assert again.load().to_dict() == p.to_dict()
+    store.items[SAVE_KEY] = "{not json"          # a damaged save starts fresh
+    assert again.load().to_dict() == Progress().to_dict()
+    again.delete()
+    assert not again.exists()
+
+
+def test_desktop_does_not_use_browser_storage():
+    from game.systems.progress import browser_storage
+    assert browser_storage() is None

@@ -9,7 +9,7 @@ from game.scenes.title import TitleScene
 from game.systems.bike import Bike
 from game.systems.input import PyxelInput
 from game.systems.missions import MissionBook, load_missions
-from game.systems.progress import SaveFile
+from game.systems.progress import SaveFile, browser_storage
 from game.world.buildings import load_buildings
 from game.world.locations import load_locations
 
@@ -32,9 +32,12 @@ class App:
                 self.buildings[b.location] = b
         # what the game remembers between sessions (decisions/0031). Headless
         # runs (tests, screenshots) keep it in memory unless given a path.
+        # In a web page it goes in the browser's local storage (decisions/0034).
+        storage = browser_storage() if save_path == "default" and not headless else None
         if save_path == "default":
-            save_path = None if headless else Path(pyxel.user_data_dir(*config.SAVE_DIR)) / "save.json"
-        self.save_file = SaveFile(save_path)
+            save_path = None if headless or storage is not None else \
+                Path(pyxel.user_data_dir(*config.SAVE_DIR)) / "save.json"
+        self.save_file = SaveFile(save_path, storage)
         self.progress = self.save_file.load()
         self.bike = Bike(self.progress)
         self.missions = MissionBook(

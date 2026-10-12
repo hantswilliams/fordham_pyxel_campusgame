@@ -16,7 +16,15 @@ uv run pytest                    # run tests (also validates map content)
 uv run python tools/capture.py   # headless run, saves screenshots to build/screenshots/
 uv run python tools/render_map.py  # whole map as one picture: build/map_rose_hill.png
 uv run python tools/building_gallery.py  # review page for drawn buildings: build/building_gallery.html
+uv run python tools/build_web.py   # web version for testing: build/web/index.html (decision 0034)
 ```
+
+**In a browser (decision 0034):**
+- `tools/build_web.py` packs the game into one HTML page that runs with Pyodide, using Pyxel's web runtime pinned to 2.9.9.
+- Open `build/web/index.html`, or run `cd build/web && python -m http.server 8000` and visit http://localhost:8000.
+- The first load needs internet and takes a few seconds.
+- In the browser the game saves to that browser's local storage, so CONTINUE works after a reload, but only in that browser on that device.
+- Every push to `main` rebuilds the page and publishes it to GitHub Pages (`.github/workflows/web.yml`). Turn that on once: in the repo's Settings, open Pages and set Source to "GitHub Actions".
 
 **Controls:**
 - Arrows or WASD move.
