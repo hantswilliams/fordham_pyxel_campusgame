@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | Built on branch `hi-res-screen`, for you to try. `main` is unchanged |
+| **Status** | Decided 2026-10-11: B, merge 384 × 288 into main |
 | **Raised** | 2026-10-11. You asked for a branch with a slightly higher resolution, to see how it looks |
 | **Affects** | Screen size, plus the few screens that were laid out for the old size (title, intro, building cards) |
 | **Built provisionally?** | Yes, on the branch only. To undo, switch back to `main` |
@@ -55,9 +55,9 @@ Side by side, at the same window size: `build/hi_res_compare.png` (sent in chat)
 ## Your decision
 
 - [ ] **A**: keep 256 × 192
-- [ ] **B**: merge 384 × 288 into main
+- [x] **B**: merge 384 × 288 into main
 - [ ] **Other**: e.g. try 320 × 240
 
 **Your notes:**
 
->
+> I like it. Push it, open a PR and merge.
