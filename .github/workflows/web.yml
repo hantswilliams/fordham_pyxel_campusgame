@@ -1,5 +1,7 @@
-# Build the web version and publish it to GitHub Pages on every push to main
-# (decisions/0034). One-time setup: repo Settings -> Pages -> Source: "GitHub Actions".
+# Build the web version and the accessible Rose Hill Campus Guide, check them,
+# and publish them to GitHub Pages on every push to main (decisions/0034, 0037).
+# A failing test or accessibility check stops the publish.
+# One-time setup: repo Settings -> Pages -> Source: "GitHub Actions".
 name: Web build
 
 on:
@@ -24,10 +26,21 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install Pyxel (the version the page loads)
-        run: pip install pyxel==2.9.9
-      - name: Build the page
+      - name: Install Pyxel (the version the page loads) and the test tools
+        run: pip install pyxel==2.9.9 pytest pillow
+      - name: Run the tests
+        run: python -m pytest -q
+      - name: Build the game page and the Campus Guide
         run: python tools/build_web.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install the accessibility checker
+        run: |
+          npm install --no-save --no-audit --no-fund axe-core@4.13.0 playwright@1.56.0
+          npx playwright install --with-deps chromium
+      - name: Check accessibility (WCAG 2.2 AA rules, axe-core)
+        run: node tools/check_accessibility.cjs build/web
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build/web

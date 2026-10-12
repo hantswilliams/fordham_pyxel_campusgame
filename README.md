@@ -26,6 +26,18 @@ uv run python tools/build_web.py   # web version for testing: build/web/index.ht
 - In the browser the game saves to that browser's local storage, so CONTINUE works after a reload, but only in that browser on that device.
 - Every push to `main` rebuilds the page and publishes it to GitHub Pages (`.github/workflows/web.yml`). Turn that on once: in the repo's Settings, open Pages and set Source to "GitHub Actions".
 
+**Accessibility (decision 0037):**
+- The game's accessible version is the **Rose Hill Campus Guide**, built from the same content by `tools/build_guide.py` (`tools/build_web.py` runs it too). It goes into `build/web/guide/` and is published at `/guide/`. It covers:
+  - every place, with directions from both entrances worked out from the map
+  - the missions as checklists
+  - the Ram Passport
+  - the story and how to play
+- The game page puts a link to the guide first.
+- The game only takes the keyboard once you click it or press "Play with the keyboard". **Esc** hands it back to the page.
+- Every push runs the tests and `node tools/check_accessibility.cjs build/web` (axe-core, WCAG 2.2 AA rules). A failure stops the publish.
+- Before a release, also run the manual checklist in `docs/accessibility-checklist.md`.
+- The accessibility statement's contact lives in `content/guide.json`.
+
 **Controls:**
 - Arrows or WASD move.
 - **Z**, Space or Enter talks to people and reads signs.

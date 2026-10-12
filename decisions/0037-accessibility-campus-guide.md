@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | Awaiting review |
+| **Status** | Approved 2026-10-11 (all four parts). Built 2026-10-11 |
 | **Raised** | 2026-10-11. You need the tool to be accessible (ADA, WCAG 2.2 AA) for Fordham and other universities, ideally kept up to date by a script |
 | **Affects** | A new generated website (the Campus Guide), the web build's page wrapper, the GitHub Pages workflow, and one keyboard behaviour in the game |
-| **Built provisionally?** | No |
+| **Built?** | Yes: see "What was built" at the end |
 
 ## What's being decided
 
@@ -61,7 +61,7 @@ Draw all text as real web text over the game, add screen-reader announcements, t
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**: Option A now (in-game options can come later)
+- [x] **Approve**: Option A now (in-game options can come later)
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -120,7 +120,7 @@ Draw all text as real web text over the game, add screen-reader announcements, t
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: build the guide with these contents
+- [x] **Approve**: build the guide with these contents
 - [ ] **Other**: add or remove sections below
 
 **Your notes:**
@@ -144,7 +144,7 @@ Even with an alternate version, the game page has to meet WCAG's four "non-inter
 
 ## Your decision (Part 3)
 
-- [ ] **Approve**
+- [x] **Approve**
 - [ ] **Other**: describe below
 
 **Your notes:**
@@ -175,7 +175,7 @@ Even with an alternate version, the game page has to meet WCAG's four "non-inter
 
 ## Your decision (Part 4)
 
-- [ ] **Approve**
+- [x] **Approve**
 - [ ] **Other**: describe below
 
 **Your notes:**
@@ -200,3 +200,49 @@ Even with an alternate version, the game page has to meet WCAG's four "non-inter
 - [Title II of the ADA: What does it mean for us? (UC Berkeley)](https://dap.berkeley.edu/ada-title-ii-updates/title-ii-ada-what-does-it-mean-us)
 - [Accessibility at Fordham](https://www.fordham.edu/resources/accessibility-at-fordham)
 - [WCAG 2.2, conformance requirements: conforming alternate versions and non-interference (W3C)](https://www.w3.org/TR/WCAG22/#conformance-reqs)
+
+---
+
+## What was built (2026-10-11)
+
+**The Rose Hill Campus Guide** (`tools/build_guide.py`, 59 pages, in `build/web/guide/`):
+- **Home:** what the guide is, the game link, and the campus areas with their places.
+- **Places:** one page per place (53), with:
+  - its type, area, card picture with a text description, blurb, "In real life" note and what's here
+  - the missions it's in
+  - **directions from the Webster Avenue gate and from the Main Entrance**
+- **Getting around:** gates and transport, and 8 main walking routes.
+- **Missions:**
+  - every mission's steps as checkboxes that remember your ticks in the browser
+  - hints, with game-key instructions removed
+  - what you'll learn, and the quiz questions with answers behind a "show"
+  - no timers
+- **Ram Passport, About the game** (the intro and how to play) and **Accessibility statement**.
+
+**Walking directions** (`game/world/routes.py`). A fewest-turns path search on the same grid the player walks, so directions follow walkways in long straight runs. Staircase walkways read as one diagonal leg. Each leg names the area you enter and up to two places you pass on your left or right. Example:
+- "Take one step east, then head north for 36 steps, passing Campbell Hall on your left and Conley & Salice Halls on your left, into Queen's Court & Alumni Court."
+- "…McShane Campus Center is on your left."
+
+**The game page** (`tools/build_web.py`):
+- `lang`, charset and viewport are set.
+- A bar at the top links to the guide first.
+- "Play with the keyboard" gives the game the keyboard; so does clicking the game.
+- **Esc** hands the keyboard back and moves focus to the guide link. Tested with a stand-in for Pyxel's runtime: Tab, arrows, Esc and Tab again all behave.
+- Pyxel's "click to start" picture and the canvas get text labels.
+- In the browser, Pyxel's Esc-to-quit is off.
+
+**Checks:**
+- **axe-core 4.13.0** (WCAG 2.0, 2.1 and 2.2 A/AA rules) plus a 320 px reflow check: **60 pages checked, 0 problems**.
+- `tests/test_guide.py` (11 tests), covering:
+  - a page for every place
+  - lang, title, one main heading, skip link and landmarks on every page
+  - headings that never skip a level
+  - alt text on every picture
+  - every mission step present
+  - directions to every place from both entrances
+  - every direction walking only on walkable ground
+  - colour contrast of at least 4.5:1 for text and 3:1 for focus and borders
+- The GitHub workflow runs the tests and the axe check before publishing; either failing stops the publish.
+- **Manual checklist:** `docs/accessibility-checklist.md` (keyboard, VoiceOver, zoom, content), about 20 minutes per release.
+
+**Needs from you:** an accessibility contact for the statement. Add a name and email to `content/guide.json`. Until then the statement says the contact details are to be added.

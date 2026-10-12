@@ -154,6 +154,17 @@
 **6b. Outside the fence (decision 0033).** Off-campus cells (`#`) are blocked and drawn plain tan-grey (`Col.STONE`), on the map and in the campus map view.
 
 **6c. Web build (decision 0034).** `tools/build_web.py` packs `main.py`, `game/`, `assets/` and `content/` into a Pyxel app and one HTML page (`build/web/index.html`) that runs in the browser with Pyodide, pinned to Pyxel 2.9.9. GitHub Actions (`.github/workflows/web.yml`) publishes it to Pages on every push to `main`. In the browser, `SaveFile` writes to `localStorage` (`browser_storage()` in `game/systems/progress.py`) instead of `save.json`. The campus map's `ctypes` pixel copy has a pure-Python fallback in case the browser lacks it.
+
+**6d. Accessibility (decision 0037).** The game is a canvas, so its WCAG 2.2 AA route is a **conforming alternate version**: the Rose Hill Campus Guide.
+- `tools/build_guide.py` generates it as plain HTML pages from the game's own content: `locations.json`, the map, the missions, `intro.json`, the card pictures, and `content/guide.json` for the contact.
+- Walking directions come from `game/world/routes.py`. It runs a fewest-turns path search on the walkable grid, merges staircases into diagonals, and names areas and places passed on the left or right.
+- `tools/build_web.py` adds to the game page:
+  - a guide link before the game
+  - a keyboard gate: the game only gets keys after a click or "Play with the keyboard", and Esc returns focus to the page, so there's no keyboard trap
+  - text alternatives for Pyxel's prompt and canvas
+- In the browser, `App` turns off Pyxel's Esc-to-quit.
+- `tests/test_guide.py` checks the guide's completeness, routes, headings, alt text and contrast.
+- `tools/check_accessibility.cjs` runs axe-core (WCAG 2.0, 2.1 and 2.2 A/AA tags) and a 320 px reflow check in CI.
 - The photo pass (decisions 0023–0025) then drew the athletics fields and buildings, every residence hall and eight academic buildings from photos found online, using the shared kit in `assets/buildings/_style/kit.py`.
 - Only Faculty Memorial Hall, the parking garage and the small landmarks (statues, the Victory Bell, the observatory and the cemetery) still use tiles.
 - A place can span several drawn buildings, such as Martyrs' Court's two blocks. The overlay matches each plaque to its block, and the card uses the block that has a picture.

@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 import pyxel
@@ -17,8 +18,11 @@ from game.world.locations import load_locations
 class App:
     def __init__(self, input_source=None, headless: bool = False,
                  start_scene=None, save_path="default"):
+        # in a web page Esc belongs to the page (decisions/0037): it moves the
+        # keyboard out of the game, so it mustn't quit
+        quit_key = pyxel.KEY_NONE if sys.platform == "emscripten" else pyxel.KEY_ESCAPE
         pyxel.init(config.SCREEN_W, config.SCREEN_H, title=config.TITLE,
-                   fps=config.FPS, headless=headless)
+                   fps=config.FPS, quit_key=quit_key, headless=headless)
         config.apply_palette(pyxel.colors)
         build_all()
 

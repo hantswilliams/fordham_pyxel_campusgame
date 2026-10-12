@@ -1,6 +1,6 @@
 """Build the web version of the game for quick testing (decisions/0034).
 
-    uv run python tools/build_web.py        # writes build/web/index.html
+    uv run python tools/build_web.py        # writes build/web/index.html and build/web/guide/
 
 Packs only what the game needs (main.py, game/, assets/, content/) into a
 Pyxel app, then turns it into one HTML file that runs in the browser with
@@ -47,6 +47,65 @@ LOADING = """<style>
   }).observe(document.documentElement, { childList: true, subtree: true });
 </script>"""
 
+# Accessibility (decisions/0037): the game page meets WCAG's non-interference
+# rules and points to the accessible Rose Hill Campus Guide before the game.
+# - a bar at the top with the guide link: the first thing a keyboard or
+#   screen-reader user reaches
+# - no keyboard trap: the game only gets the keyboard after you click it (or
+#   press "Play with the keyboard"); Esc hands the keyboard back to the page
+#   and moves focus to the guide link
+# - Pyxel's "click to start" picture gets a text alternative
+A11Y = """<style>
+  #fcq-a11y { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; flex-wrap: wrap;
+    gap: 4px 16px; align-items: center; padding: 6px 12px; background: #202124; color: #ffffff;
+    font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #fcq-a11y a { color: #ffffff; font-weight: 600; text-underline-offset: 3px; }
+  #fcq-a11y button { font: inherit; color: #ffffff; background: #860038; border: 2px solid #ffffff;
+    padding: 4px 10px; min-height: 32px; cursor: pointer; }
+  #fcq-a11y :focus-visible { outline: 3px solid #ffd447; outline-offset: 2px; }
+</style>
+<div id="fcq-a11y" role="region" aria-label="Accessibility">
+  <a id="fcq-guide" href="guide/index.html">Accessible version: Rose Hill Campus Guide</a>
+  <span id="fcq-keys">Esc leaves the game.</span>
+  <button type="button" id="fcq-play">Play with the keyboard</button>
+</div>
+<script>
+  (function () {
+    var gameHasKeys = false;
+    function stop(e) { if (!gameHasKeys) e.stopImmediatePropagation(); }
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && gameHasKeys) {
+        gameHasKeys = false;
+        e.preventDefault(); e.stopImmediatePropagation();
+        document.getElementById("fcq-guide").focus();
+        return;
+      }
+      stop(e);
+    }, true);
+    window.addEventListener("keyup", stop, true);
+    window.addEventListener("keypress", stop, true);
+    function play() { gameHasKeys = true; if (document.activeElement) document.activeElement.blur(); }
+    document.addEventListener("pointerdown", function (e) {
+      if (!e.target.closest || !e.target.closest("#fcq-a11y")) play();
+    }, true);
+    document.getElementById("fcq-play").addEventListener("click", function () {
+      play();
+      var prompt = document.querySelector("img#pyxel-prompt");
+      if (prompt) prompt.click();
+    });
+    new MutationObserver(function () {
+      var prompt = document.querySelector("img#pyxel-prompt");
+      if (prompt && !prompt.alt) prompt.alt = "Click or tap here to start the game";
+      document.querySelectorAll("canvas").forEach(function (c) {
+        if (!c.getAttribute("aria-label")) {
+          c.setAttribute("role", "img");
+          c.setAttribute("aria-label", "Fordham Campus Quest game screen. The Rose Hill Campus Guide link above has the same content in accessible form.");
+        }
+      });
+    }).observe(document.documentElement, { childList: true, subtree: true });
+  })();
+</script>"""
+
 
 def run(*args: str) -> None:
     subprocess.run([sys.executable, "-m", "pyxel", *args], cwd=OUT, check=True,
@@ -71,12 +130,19 @@ def main() -> None:
                       f"gh/kitao/pyxel@{PYXEL_VERSION}/wasm/pyxel.js", html)
     if n != 1:
         sys.exit("build_web: couldn't find Pyxel's script tag in the HTML")
-    html = html.replace("<!doctype html>", "<!doctype html>\n<title>Fordham Campus Quest</title>\n" + LOADING, 1)
+    html = html.replace("<!doctype html>", '<!doctype html>\n<html lang="en">\n<meta charset="utf-8">\n'
+                        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+                        "<title>Fordham Campus Quest</title>\n" + A11Y + LOADING, 1)
     (OUT / "index.html").write_text(html)
     (OUT / f"{APP}.html").unlink()
     shutil.rmtree(stage)
     size = (OUT / "index.html").stat().st_size / 1e6
     print(f"wrote {OUT / 'index.html'} ({size:.1f} MB, Pyxel {PYXEL_VERSION})")
+    # the accessible Campus Guide, from the same content (decisions/0037)
+    sys.path.insert(0, str(ROOT / "tools"))
+    import build_guide
+    g = build_guide.build(OUT / "guide")
+    print(f"wrote {OUT / 'guide'} ({len(g.pages)} pages)")
 
 
 if __name__ == "__main__":
