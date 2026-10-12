@@ -55,7 +55,13 @@ LOADING = """<style>
 #   press "Play with the keyboard"); Esc hands the keyboard back to the page
 #   and moves focus to the guide link
 # - Pyxel's "click to start" picture gets a text alternative
+#
+# The bar gets its own strip at the top: Pyxel's screen (which fills the
+# window) starts below it, so the bar never covers the top of the game. The
+# bar's height is measured, since it wraps onto more lines on a narrow window.
 A11Y = """<style>
+  :root { --fcq-bar-h: 46px; }
+  html div#pyxel-screen { top: var(--fcq-bar-h); height: calc(100% - var(--fcq-bar-h)); }
   #fcq-a11y { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; flex-wrap: wrap;
     gap: 4px 16px; align-items: center; padding: 6px 12px; background: #202124; color: #ffffff;
     font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
@@ -71,6 +77,22 @@ A11Y = """<style>
 </div>
 <script>
   (function () {
+    // keep the game screen below the bar, however many lines the bar takes
+    var bar = document.getElementById("fcq-a11y");
+    function fitBar() {
+      var h = Math.ceil(bar.getBoundingClientRect().height) + "px";
+      if (document.documentElement.style.getPropertyValue("--fcq-bar-h") === h) return false;
+      document.documentElement.style.setProperty("--fcq-bar-h", h);
+      return true;
+    }
+    fitBar();
+    // runs before Pyxel's own resize handling, so it sees the new size
+    window.addEventListener("resize", fitBar, true);
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () {
+        if (fitBar()) window.dispatchEvent(new Event("resize"));   // let Pyxel resize too
+      }).observe(bar);
+    }
     var gameHasKeys = false;
     function stop(e) { if (!gameHasKeys) e.stopImmediatePropagation(); }
     window.addEventListener("keydown", function (e) {
