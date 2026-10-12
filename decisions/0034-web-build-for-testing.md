@@ -230,3 +230,5 @@ This workspace can't reach the CDN that serves Pyxel's web runtime (`cdn.jsdeliv
 6. **M:** the campus map opens. Note roughly how long it takes the first time.
 7. **Saving:** play a minute, reload the page, and CONTINUE should put you back where you were.
 8. **Phone (optional):** after you push and turn on Pages, open the link on a phone. The on-screen gamepad appears; check it's playable.
+
+**Follow-up: no Pyxel logo while loading.** Pyxel's web loader shows its own logo while Pyodide downloads, and it has no option to turn that off. `build_web.py` now hides the logo with CSS and shows a plain "FORDHAM CAMPUS QUEST · Loading…" line instead. A small script removes that line as soon as Pyxel's "click to start" prompt, or an error, appears.
