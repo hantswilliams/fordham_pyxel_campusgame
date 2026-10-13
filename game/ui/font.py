@@ -29,6 +29,8 @@ TEXT_DY = -4
 CRISP_PATH = config.ROOT / "assets" / "fonts" / "MPLUS1Code-Medium.ttf"
 CRISP_SIZE = 32
 CRISP_DY = -8            # capitals start where DotGothic16's did; descenders stay in the line
+# words on signs, buses and plaques (decisions/0039): the bold cut reads better small
+SIGN_PATH = config.ROOT / "assets" / "fonts" / "MPLUS1Code-Bold.ttf"
 
 _font: pyxel.Font | None = None
 _crisp: dict[int, pyxel.Font] = {}
@@ -56,6 +58,39 @@ def text(x: float, y: float, s: str, col: int, size: int = 1) -> None:
                           CRISP_DY * size):
         return
     pyxel.text(x, y + TEXT_DY, s, col, font())
+
+
+_cap_top: dict[int, int] = {}
+
+
+def _sign_font(px: int) -> tuple[pyxel.Font, int]:
+    """The crisp font at `px`, and how far below the drawing point its
+    capitals start (measured once)."""
+    if px not in _crisp_px:
+        f = pyxel.Font(str(SIGN_PATH), px)
+        img = pyxel.Image(px, px * 2)
+        img.cls(0)
+        img.text(0, 0, "H", 7, f)
+        rows = [y for y in range(img.height) if any(img.pget(x, y) == 7 for x in range(px))]
+        _crisp_px[px] = (f, rows[0] if rows else 0)
+    return _crisp_px[px]
+
+
+_crisp_px: dict[int, tuple[pyxel.Font, int]] = {}
+
+
+def sign(x: float, y: float, s: str, col: int, cell: float, bg: int) -> bool:
+    """Words painted on something in the world (a sign, a bus, a plaque),
+    on the crisp screen only (decisions/0039). Each character takes `cell`
+    layout pixels and the capitals start at y. `bg` is the sign's colour:
+    the words only show where it does, so things in front cover them.
+    Returns False when the screen isn't crisp, for the caller to letter it
+    in pixels instead."""
+    if not display.active:
+        return False
+    cell_px = round(cell * display.scale)
+    f, top = _sign_font(cell_px * 2)       # M PLUS 1 Code is half an em wide
+    return display.queue_text(x, y, s, col, f, cell_px, -top, bg)
 
 
 def width(s: str) -> int:

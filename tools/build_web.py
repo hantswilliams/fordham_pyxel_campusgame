@@ -55,6 +55,8 @@ LOADING = """<style>
 #   press "Play with the keyboard"); Esc hands the keyboard back to the page
 #   and moves focus to the guide link
 # - Pyxel's "click to start" picture gets a text alternative
+# - the guide opens in a new tab, so the game keeps its place; the link
+#   says so, as WCAG advises (decisions/0039)
 #
 # The bar gets its own strip at the top: Pyxel's screen (which fills the
 # window) starts below it, so the bar never covers the top of the game. The
@@ -66,12 +68,13 @@ A11Y = """<style>
     gap: 4px 16px; align-items: center; padding: 6px 12px; background: #202124; color: #ffffff;
     font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   #fcq-a11y a { color: #ffffff; font-weight: 600; text-underline-offset: 3px; }
+  #fcq-a11y .fcq-note { font-weight: 400; }
   #fcq-a11y button { font: inherit; color: #ffffff; background: #860038; border: 2px solid #ffffff;
     padding: 4px 10px; min-height: 32px; cursor: pointer; }
   #fcq-a11y :focus-visible { outline: 3px solid #ffd447; outline-offset: 2px; }
 </style>
 <div id="fcq-a11y" role="region" aria-label="Accessibility">
-  <a id="fcq-guide" href="guide/index.html">Accessible version: Rose Hill Campus Guide</a>
+  <a id="fcq-guide" href="guide/index.html" target="_blank" rel="noopener">Accessible version: Rose Hill Campus Guide <span class="fcq-note">(opens in a new tab)</span></a>
   <span id="fcq-keys">Esc leaves the game.</span>
   <button type="button" id="fcq-play">Play with the keyboard</button>
 </div>

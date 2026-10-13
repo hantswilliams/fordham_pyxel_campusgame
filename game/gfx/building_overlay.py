@@ -25,6 +25,10 @@ BUILDING_TILES = ROOFS | WALLS
 PLAQUE_FONT = "PixelMplus10-Regular.ttf"
 CHAR_W = 5
 PLAQUE_H = 11
+# on the crisp screen (decisions/0039) plaques are taller and their names as
+# big as the wall allows: 7 layout pixels a letter, down to 4 for a long name
+CRISP_PLAQUE_H = 14
+CRISP_CELLS = (7, 6, 5, 4)
 
 _plaque_font = None
 
@@ -97,9 +101,23 @@ def plaque_spot(m: MapData, loc: str, group: list[tuple[int, int]]) -> tuple[int
     return cx, y * TILE - PLAQUE_H + 1, (x1 - x0 + 3) * TILE
 
 
-def draw_plaque(target, cx: int, ty: int, text: str, room: int | None = None) -> None:
+def draw_plaque(target, cx: int, ty: int, text: str, room: int | None = None,
+                labels: list | None = None) -> None:
     """A stone name plaque centred at cx. If the name is too long for the
-    wall (`room`), it's lettered in Pyxel's smaller built-in font instead."""
+    wall (`room`), it's lettered in Pyxel's smaller built-in font instead.
+    With `labels`, only the plaque is drawn and its lettering is added to
+    the list as (x, cap top y, text, character width), for the crisp screen
+    to letter at full detail each frame (decisions/0039)."""
+    if labels is not None:
+        cell = next((c for c in CRISP_CELLS if room is None or len(text) * c + 5 <= room - 2),
+                    CRISP_CELLS[-1])
+        w = len(text) * cell + 5
+        x0, top = cx - w // 2, ty - (CRISP_PLAQUE_H - PLAQUE_H) // 2
+        target.rect(x0, top, w, CRISP_PLAQUE_H, Col.STONE_HI)
+        target.rectb(x0, top, w, CRISP_PLAQUE_H, Col.NAVY)
+        cap = cell * 1.46                        # the font's capitals, for a cell this wide
+        labels.append((x0 + 3, top + (CRISP_PLAQUE_H - cap) / 2, text, cell))
+        return
     small = room is not None and not fits(text, room)
     w = plaque_width(text, small)
     x0 = cx - w // 2
@@ -111,7 +129,7 @@ def draw_plaque(target, cx: int, ty: int, text: str, room: int | None = None) ->
         target.text(x0 + 3, ty, text, Col.NAVY, plaque_font())
 
 
-def draw_overlay(target, m: MapData, locations: dict) -> None:
+def draw_overlay(target, m: MapData, locations: dict, labels: list | None = None) -> None:
     """Draw outlines, eaves, mats and plaques into `target` (a pyxel.Image
     the size of the map, or the screen with the camera set)."""
     cells = tile_building_cells(m)
@@ -141,7 +159,7 @@ def draw_overlay(target, m: MapData, locations: dict) -> None:
             name = getattr(locations.get(loc), "short_name", "")
             if name:
                 cx, ty, room = plaque_spot(m, loc, group)
-                draw_plaque(target, cx, ty, name, room)
+                draw_plaque(target, cx, ty, name, room, labels)
     # landmarks with no door (Moglia Stadium) can still carry a plaque, and
     # a sports field's gate gets one just inside it
     for b in m.buildings:
@@ -150,9 +168,9 @@ def draw_overlay(target, m: MapData, locations: dict) -> None:
             continue
         ox, oy = b.origin
         if b.nameplate:
-            draw_plaque(target, ox * TILE + b.nameplate[0], oy * TILE + b.nameplate[1], name)
+            draw_plaque(target, ox * TILE + b.nameplate[0], oy * TILE + b.nameplate[1], name, labels=labels)
         elif b.gate is not None:
-            draw_plaque(target, *gate_plaque_spot(b, name), name)
+            draw_plaque(target, *gate_plaque_spot(b, name), name, labels=labels)
     for b in m.buildings:                        # a mat outside each field's gate
         if b.gate is None:
             continue

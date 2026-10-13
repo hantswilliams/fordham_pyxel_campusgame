@@ -10,6 +10,7 @@ import math
 import pyxel
 
 from game.gfx import display
+from game.ui import font
 
 from game import config
 from game.config import Col
@@ -40,13 +41,21 @@ def present(draw, *args) -> None:
     drawn as is; on a bigger screen it's drawn at 256 px, copied off the
     screen and scaled up (1.5x on a 384-wide screen)."""
     global _buffer
+    if _buffer is None and ART_SCALE != 1:
+        _buffer = pyxel.Image(ART_W, SCENE_BOTTOM)
+    if ART_SCALE != 1:
+        display.art_source(_buffer, ART_SCALE)   # signs are masked against this picture
     draw(*args)
     if ART_SCALE == 1:
         return
-    if _buffer is None:
-        _buffer = pyxel.Image(ART_W, SCENE_BOTTOM)
     _buffer.blt(0, 0, pyxel.screen, 0, 0, ART_W, SCENE_BOTTOM)
+    display.art_source()
     pyxel.cls(Col.NAVY)
+    # crisp screen (decisions/0039): scaled 3x in one step, so every pixel
+    # is the same size; the words on its signs are drawn over it, crisp
+    if display.queue_image(_buffer, ART_W, SCENE_BOTTOM, 0, 0, ART_SCALE):
+        display.clear(0, 0, config.SCREEN_W, SCENE_BOTTOM * ART_SCALE)
+        return
     # blt scales around the centre of the destination rectangle
     pyxel.blt((config.SCREEN_W - ART_W) / 2, SCENE_BOTTOM * (ART_SCALE - 1) / 2,
               _buffer, 0, 0, ART_W, SCENE_BOTTOM, scale=ART_SCALE)
@@ -66,8 +75,16 @@ def _walk_frame(f: int) -> int:
     return 1 + (f // 6) % 2
 
 
-def _centered(y: int, s: str, col: int, cx: int = SCREEN_W // 2) -> None:
-    pyxel.text(cx - len(s) * 2, y, s, col)
+def _label(x: float, y: float, s: str, col: int, bg: int) -> None:
+    """Words on a sign of colour `bg`, laid out in Pyxel's 4-pixel font. On
+    the crisp screen they're drawn in the reading font at full detail
+    (decisions/0039)."""
+    if not font.sign(x * ART_SCALE, y * ART_SCALE, s, col, cell=4 * ART_SCALE, bg=bg):
+        pyxel.text(x, y, s, col)
+
+
+def _centered(y: int, s: str, col: int, bg: int, cx: int = SCREEN_W // 2) -> None:
+    _label(cx - len(s) * 2, y, s, col, bg)
 
 
 # --- 1. on the train ---------------------------------------------------------
@@ -108,7 +125,7 @@ def draw_train(p: float, f: int, length: int) -> None:
     # LED next-stop sign
     pyxel.rect(6, 3, 116, 12, Col.NAVY)   # left, clear of the "Z: NEXT X: SKIP" hint
     if (f // 20) % 4 != 3:
-        _centered(6, "NEXT STOP: FORDHAM", Col.ORANGE, cx=64)
+        _centered(6, "NEXT STOP: FORDHAM", Col.ORANGE, Col.NAVY, cx=64)
     off = scroll_offset(p, length, speed=5.0)
     for wx in (8, 132):
         _window(wx, 30 + bob, 116, 34, off)
@@ -126,8 +143,10 @@ def draw_train(p: float, f: int, length: int) -> None:
         pyxel.rect(sx, 90 + bob, 58, 10, Col.DARK_BLUE)      # cushion, over the legs
         pyxel.line(sx, 90 + bob, sx + 57, 90 + bob, Col.LIGHT_BLUE)
         pyxel.rect(sx + 48, 100 + bob, 5, 10, Col.NAVY)       # leg
-    if not moving:
-        _centered(40, "FORDHAM", Col.WHITE, cx=190)
+    if not moving:                                     # the platform sign, through the window
+        pyxel.rect(171, 37, 38, 11, Col.DARK_BLUE)
+        pyxel.rectb(171, 37, 38, 11, Col.WHITE)
+        _centered(40, "FORDHAM", Col.WHITE, Col.DARK_BLUE, cx=190)
 
 
 # --- 2. Fordham station -------------------------------------------------------
@@ -148,7 +167,7 @@ def draw_station(p: float, f: int, length: int) -> None:
     pyxel.line(200, 18, 200, 26, Col.NAVY)
     pyxel.rect(154, 26, 58, 13, Col.DARK_BLUE)
     pyxel.rectb(154, 26, 58, 13, Col.WHITE)
-    _centered(30, "FORDHAM", Col.WHITE, cx=183)
+    _centered(30, "FORDHAM", Col.WHITE, Col.DARK_BLUE, cx=183)
     # the train, stopped at the platform (doors sized for 2x people)
     pyxel.rect(-4, 28, 130, 70, Col.WHITE)
     pyxel.rect(-4, 30, 130, 2, Col.GRAY)
@@ -171,7 +190,7 @@ def draw_station(p: float, f: int, length: int) -> None:
     for sy in range(70, 104, 6):
         pyxel.line(226, sy, 255, sy, Col.NAVY)
     pyxel.rect(228, 52, 24, 9, Col.DARK_BLUE)
-    pyxel.text(232, 54, "EXIT", Col.WHITE)
+    _label(232, 54, "EXIT", Col.WHITE, Col.DARK_BLUE)
     # people (feet on the platform at y = 104)
     _char(160, 72, 4, Direction.LEFT)
     if 0.12 < p <= 0.26:
@@ -216,7 +235,7 @@ def _ram_van(x: float) -> None:
     pyxel.rect(x + 22, top + 8, 6, 34, Col.NAVY)                   # door
     pyxel.line(x + 25, top + 8, x + 25, top + 41, Col.DARK_BLUE)
     pyxel.rect(x, top + 28, 116, 3, Col.WHITE)                     # stripe
-    pyxel.text(x + 50, top + 32, "RAM VAN", Col.WHITE)
+    _label(x + 50, top + 32, "RAM VAN", Col.WHITE, Col.MAROON)
     pyxel.rect(x, bottom - 6, 4, 3, Col.YELLOW)                    # headlight
     for wx in (x + 20, x + 92):                                    # wheels
         pyxel.circ(wx, bottom, 7, Col.NAVY)
@@ -252,11 +271,12 @@ def draw_street(p: float, f: int, length: int) -> None:
     for fx in range(96, SCREEN_W, 4):
         if not (GATE_X - 1 < fx < GATE_X + GATE_W):  # keep the pedestrian gate open
             pyxel.line(fx, 52, fx, SIDEWALK_Y, Col.NAVY)
-    # maroon Fordham sign on the fence
-    pyxel.rect(100, 60, 44, 18, Col.MAROON)
-    pyxel.rectb(100, 60, 44, 18, Col.WHITE)
-    _centered(63, "FORDHAM", Col.WHITE, cx=122)
-    _centered(71, "ROSE HILL", Col.PEACH, cx=122)
+    # maroon Fordham sign on the fence, high enough that the Ram Van
+    # passing in front doesn't hide it (decisions/0039)
+    pyxel.rect(100, 50, 44, 21, Col.MAROON)
+    pyxel.rectb(100, 50, 44, 21, Col.WHITE)
+    _centered(53, "FORDHAM", Col.WHITE, Col.MAROON, cx=122)
+    _centered(62, "ROSE HILL", Col.PEACH, Col.MAROON, cx=122)
     # stone pillars: pedestrian gate between the first two, vehicle gate after
     for px in (GATE_X - 11, GATE_X + GATE_W, 244):
         _pillar(px)
