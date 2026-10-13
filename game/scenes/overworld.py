@@ -117,7 +117,9 @@ class OverworldScene(Scene):
         # outlines, eaves, door mats and name plaques (decisions/0021),
         # drawn once into a map-sized image and copied each frame
         self.overlay = pyxel.Image(self.map.width * TILE, self.map.height * TILE)
-        draw_overlay(self.overlay, self.map, app.locations)
+        # on the crisp screen the plaques' names are lettered each frame (decisions/0039)
+        self.plaque_labels: list | None = [] if display.active else None
+        draw_overlay(self.overlay, self.map, app.locations, self.plaque_labels)
         self._update_camera()
 
     # --- update ------------------------------------------------------------
@@ -359,6 +361,9 @@ class OverworldScene(Scene):
         for b in self.map.buildings:
             draw_on_map(b)
         pyxel.blt(cx, cy, self.overlay, cx, cy, SCREEN_W, SCREEN_H, Col.BLACK)
+        for lx, ly, name, cell in self.plaque_labels or ():
+            if cx - 200 < lx < cx + SCREEN_W and cy - 16 < ly < cy + SCREEN_H:
+                font.sign(lx, ly, name, Col.NAVY, cell, bg=Col.STONE_HI)
 
         # Characters, back to front so lower ones overlap upper ones.
         drawables: list[tuple[int, int, int, Direction, int]] = []
