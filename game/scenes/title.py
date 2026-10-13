@@ -1,5 +1,6 @@
 import pyxel
 
+from game.gfx import display
 from game.config import SCREEN_H, SCREEN_W, Col
 from game.systems.input import Action
 from game.ui import font
@@ -14,6 +15,11 @@ _title_cache: dict[str, pyxel.Image] = {}
 
 def _big_title(y: int, s: str) -> None:
     """Draw `s` at twice the reading font's size, centred, with a shadow."""
+    if display.active:                  # crisp text (decisions/0038): drawn at full size
+        x = (SCREEN_W - font.width(s) * 2) / 2
+        font.text(x + 1, y + 1, s, Col.NAVY, size=2)
+        font.text(x, y, s, Col.WHITE, size=2)
+        return
     if s not in _title_cache:
         img = pyxel.Image(font.width(s) + 2, TEXT_H + 2)
         img.cls(Col.BLACK)

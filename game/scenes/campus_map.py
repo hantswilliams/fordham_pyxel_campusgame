@@ -12,6 +12,8 @@ import ctypes
 
 import pyxel
 
+from game.gfx import display
+
 from game import config
 from game.config import SCREEN_H, SCREEN_W, Col
 from game.gfx.map_render import render_world
@@ -155,7 +157,7 @@ class CampusMapScene(Scene):
         pyxel.blt(0, VIEW_Y, self.image, round(self.cam_x), round(self.cam_y), SCREEN_W, VIEW_H)
 
         blink = (pyxel.frame_count // 8) % 2 == 0
-        pyxel.clip(0, VIEW_Y, SCREEN_W, VIEW_H)
+        display.clip(0, VIEW_Y, SCREEN_W, VIEW_H)
         for i, pin in enumerate(self.pins):
             if i != self.selected:
                 self._draw_pin(pin, selected=False, blink=blink)
@@ -168,7 +170,7 @@ class CampusMapScene(Scene):
             pyxel.pset(cx, cy - 1, Col.MAROON)
         if self.selected is not None:
             self._draw_pin(self.pins[self.selected], selected=True, blink=blink)
-        pyxel.clip()
+        display.clip()
 
         self._draw_overview(blink)
         self._draw_header()
@@ -214,7 +216,7 @@ class CampusMapScene(Scene):
         pyxel.rect(x0 - 2, y0 - 2, w + 4, h + 4, Col.NAVY)
         pyxel.blt(x0, y0, ov, 0, skip, w, h)
         pyxel.rectb(x0 - 1, y0 - 1, w + 2, h + 2, Col.WHITE)
-        pyxel.clip(x0, y0, w, h)
+        display.clip(x0, y0, w, h)
         pyxel.rectb(x0 + round(self.cam_x / OVERVIEW), y0 + round(self.cam_y / OVERVIEW) - skip,
                     SCREEN_W // OVERVIEW, VIEW_H // OVERVIEW, Col.YELLOW)
         for gx, gy in self.goals:
@@ -223,7 +225,7 @@ class CampusMapScene(Scene):
         px, py = self.player_xy
         pyxel.rect(x0 + px * DETAIL // OVERVIEW - 1, y0 + py * DETAIL // OVERVIEW - skip - 1, 3, 3,
                    Col.MAROON if blink else Col.WHITE)
-        pyxel.clip()
+        display.clip()
         self._draw_key(x0 - 2, y0 + h + 2, w + 4)
 
     def _draw_key(self, x: int, y: int, w: int) -> None:

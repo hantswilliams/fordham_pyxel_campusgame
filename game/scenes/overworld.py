@@ -2,6 +2,8 @@
 
 import pyxel
 
+from game.gfx import display
+
 from game import config
 from game.config import SCREEN_H, SCREEN_W, TILE, Col
 from game.gfx.building_art import draw_on_map
@@ -350,7 +352,7 @@ class OverworldScene(Scene):
     def draw(self) -> None:
         pyxel.cls(Col.GREEN)
         cx, cy = self.cam
-        pyxel.camera(cx, cy)
+        display.camera(cx, cy)
         pyxel.bltm(cx, cy, TILEMAP_INDEX, cx, cy, SCREEN_W, SCREEN_H)
         # drawn buildings go over their footprint tiles (decisions/0020).
         # Characters can't stand on a footprint, so they're always drawn after.
@@ -382,7 +384,7 @@ class OverworldScene(Scene):
                     pyxel.rectb(bx, by - GROW, 12, 14 + GROW, Col.NAVY)
                     font.text(bx + 2, by + 1 - GROW, mark, Col.MAROON)
 
-        pyxel.camera()
+        display.camera()
         self._draw_hud()
 
     def _tracker_key(self):

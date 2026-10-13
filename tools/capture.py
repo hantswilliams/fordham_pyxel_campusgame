@@ -236,7 +236,7 @@ def main() -> None:
         app.draw()
         if frame in shot_at:
             path = OUT / f"{shot_at[frame]}.png"
-            pyxel.screen.save(str(path), 3)
+            pyxel.screen.save(str(path), max(1, 3 // config.DISPLAY_SCALE))
             print("saved", path.relative_to(ROOT))
 
 

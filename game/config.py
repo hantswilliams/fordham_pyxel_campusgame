@@ -6,6 +6,10 @@ TITLE = "Fordham Campus Quest"
 
 SCREEN_W = 384
 SCREEN_H = 288
+# Crisp text (decisions/0038): the real screen is this many times bigger.
+# The game is laid out and drawn at SCREEN_W x SCREEN_H and doubled; only
+# the reading-font text uses the extra pixels (game/gfx/display.py).
+DISPLAY_SCALE = 2
 FPS = 30
 
 TILE = 16  # one gameplay tile = 16x16 px = 2x2 Pyxel 8x8 tiles

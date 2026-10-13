@@ -9,6 +9,8 @@ import math
 
 import pyxel
 
+from game.gfx import display
+
 from game import config
 from game.config import Col
 from game.systems.intro_timeline import scroll_offset
@@ -72,7 +74,7 @@ def _centered(y: int, s: str, col: int, cx: int = SCREEN_W // 2) -> None:
 
 def _window(wx: int, wy: int, ww: int, wh: int, off: float) -> None:
     pyxel.rect(wx, wy, ww, wh, Col.LIGHT_BLUE)
-    pyxel.clip(wx, wy, ww, wh)
+    display.clip(wx, wy, ww, wh)
     # far skyline (slow)
     base = int(off * 0.5)
     first = base // 22
@@ -90,7 +92,7 @@ def _window(wx: int, wy: int, ww: int, wh: int, off: float) -> None:
         px = wx + k * 40 - base2
         pyxel.line(px, wy + 6, px, wy + wh, Col.NAVY)
         pyxel.line(px - 3, wy + 8, px + 3, wy + 8, Col.NAVY)
-    pyxel.clip()
+    display.clip()
     pyxel.rectb(wx - 1, wy - 1, ww + 2, wh + 2, Col.NAVY)
     pyxel.rectb(wx - 2, wy - 2, ww + 4, wh + 4, Col.WHITE)
 
