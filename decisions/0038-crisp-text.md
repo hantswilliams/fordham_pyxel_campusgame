@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | For your review. Built 2026-10-12: Part 1 on `main`, Part 2 on branch `crisp-text` |
+| **Status** | Approved 2026-10-13 (all three parts). Browser check passed. Part 1 on `main`; Part 2 merged from branch `crisp-text` |
 | **Raised** | 2026-10-12. Text in the browser looks too pixelated and hard to read, some strokes look thicker and darker than others, and the new accessibility bar hides the top of the game |
 | **Affects** | The web page wrapper, the game's screen size, and the reading font everywhere (dialogue, menus, cards, map, HUD, title) |
 | **Built?** | Yes, both parts |
@@ -33,7 +33,7 @@ The bar now has its own strip at the top, and the game fills the space below it,
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**: keep it on `main`
+- [x] **Approve**: keep it on `main`
 - [ ] **Not approve**: say why
 - [ ] **Other**: describe below
 
@@ -89,7 +89,7 @@ Scale the 384 × 288 picture by exactly 2× or 3× with hard edges.
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: A, merge `crisp-text` once it passes the browser check
+- [x] **Approve**: A, merge `crisp-text` once it passes the browser check
 - [ ] **Not approve**: say which option you'd prefer, or why
 - [ ] **Other**: describe below
 
@@ -118,7 +118,7 @@ Today's pixel font drawn with twice the pixels. It's even, but it still looks do
 
 ## Your decision (Part 3)
 
-- [ ] **Approve**: A, M PLUS 1 Code
+- [x] **Approve**: A, M PLUS 1 Code
 - [ ] **Not approve**: say which font you'd prefer
 - [ ] **Other**: describe below
 
@@ -130,6 +130,8 @@ Today's pixel font drawn with twice the pixels. It's even, but it still looks do
 
 ## Before merging `crisp-text`
 
+**Done 2026-10-13:** you checked it in your browser and it looks good.
+
 I can't run Pyxel's web runtime here, so this needs your browser. About 5 minutes:
 
 1. `git checkout crisp-text`
@@ -137,9 +139,9 @@ I can't run Pyxel's web runtime here, so this needs your browser. About 5 minute
 3. `python3 -m http.server -d build/web 8000`, then open http://localhost:8000
 
 Check:
-- [ ] Text looks smooth and even, and the art still looks sharp.
-- [ ] The game sits below the bar and fills the space without being squashed.
-- [ ] Walking and opening the TAB menu feel as smooth as on `main`. If it stutters, tell me; there are ways to make the doubling cheaper.
+- [x] Text looks smooth and even, and the art still looks sharp.
+- [x] The game sits below the bar and fills the space without being squashed.
+- [x] Walking and opening the TAB menu feel as smooth as on `main`. If it stutters, tell me; there are ways to make the doubling cheaper.
 - [ ] Optional: the same on a phone.
 
 `uv run python main.py` shows the desktop version.
