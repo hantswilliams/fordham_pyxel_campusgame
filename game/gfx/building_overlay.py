@@ -25,10 +25,6 @@ BUILDING_TILES = ROOFS | WALLS
 PLAQUE_FONT = "PixelMplus10-Regular.ttf"
 CHAR_W = 5
 PLAQUE_H = 11
-# on the crisp screen (decisions/0039) plaques are taller and their names as
-# big as the wall allows: 7 layout pixels a letter, down to 4 for a long name
-CRISP_PLAQUE_H = 14
-CRISP_CELLS = (7, 6, 5, 4)
 
 _plaque_font = None
 
@@ -108,22 +104,16 @@ def draw_plaque(target, cx: int, ty: int, text: str, room: int | None = None,
     With `labels`, only the plaque is drawn and its lettering is added to
     the list as (x, cap top y, text, character width), for the crisp screen
     to letter at full detail each frame (decisions/0039)."""
-    if labels is not None:
-        cell = next((c for c in CRISP_CELLS if room is None or len(text) * c + 5 <= room - 2),
-                    CRISP_CELLS[-1])
-        w = len(text) * cell + 5
-        x0, top = cx - w // 2, ty - (CRISP_PLAQUE_H - PLAQUE_H) // 2
-        target.rect(x0, top, w, CRISP_PLAQUE_H, Col.STONE_HI)
-        target.rectb(x0, top, w, CRISP_PLAQUE_H, Col.NAVY)
-        cap = cell * 1.46                        # the font's capitals, for a cell this wide
-        labels.append((x0 + 3, top + (CRISP_PLAQUE_H - cap) / 2, text, cell))
-        return
     small = room is not None and not fits(text, room)
     w = plaque_width(text, small)
     x0 = cx - w // 2
     target.rect(x0, ty, w, PLAQUE_H, Col.STONE_HI)
     target.rectb(x0, ty, w, PLAQUE_H, Col.NAVY)
-    if small:
+    if labels is not None:
+        cell = SMALL_CHAR_W if small else CHAR_W
+        cap = cell * 1.46                        # M PLUS 1 Code's capitals, for a cell this wide
+        labels.append((x0 + 3, ty + (PLAQUE_H - cap) / 2, text, cell))
+    elif small:
         target.text(x0 + 3, ty + 3, text, Col.NAVY)
     else:
         target.text(x0 + 3, ty, text, Col.NAVY, plaque_font())

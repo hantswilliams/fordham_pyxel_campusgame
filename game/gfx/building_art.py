@@ -25,8 +25,15 @@ def _load(path) -> "pyxel.Image | None":
     return _cache[key]
 
 
+_maps: dict = {}
+
+
 def map_image(b: BuildingAsset) -> "pyxel.Image | None":
-    return _load(b.map_png)
+    # drawn every frame: look the file up once per building, not every
+    # frame (checking that map.png exists cost about 0.7 ms a frame)
+    if b.folder not in _maps:
+        _maps[b.folder] = _load(b.map_png)
+    return _maps[b.folder]
 
 
 def card_image(b: BuildingAsset) -> "pyxel.Image | None":

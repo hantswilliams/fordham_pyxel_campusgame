@@ -125,3 +125,10 @@ def test_staircase_walks_read_as_one_diagonal():
 def test_a_single_first_step_is_folded_into_the_next():
     route = Route("A", "B", [(0, 0)] * 6, [Leg("east", 1, [(1, 0)]), Leg("north", 4, [(1, -4)])], "on your left")
     assert sentences(route)[0] == "Take one step east, then head north for 4 steps."
+
+
+def test_game_page_opens_the_guide_in_a_new_tab_and_says_so():
+    import build_web
+    link = re.search(r'<a id="fcq-guide"[^>]*>.*?</a>', build_web.A11Y, re.S).group(0)
+    assert 'target="_blank"' in link and 'rel="noopener"' in link
+    assert "opens in a new tab" in link

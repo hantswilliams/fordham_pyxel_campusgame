@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | For your review. A working prototype of everything below is on branch `crisp-signs`; the pictures come from it |
+| **Status** | Decided 2026-10-13: Part 1 approved, Part 2 A, Part 3 A. Built on branch `crisp-signs` |
 | **Raised** | 2026-10-13. The guide link replaces the game in the same tab. Words in the intro art (the train's next-stop sign, the station signs, the Ram Van, the Fordham sign) and the building names in the game are hard to read |
 | **Affects** | The web page's accessibility bar, the intro scenes, and the name plaques on buildings |
-| **Built?** | As a prototype, for these pictures. Final build after your decisions |
+| **Built?** | Yes, on branch `crisp-signs` |
 
 ## What's being decided
 
@@ -30,7 +30,7 @@ The link opens the Campus Guide in a new tab, so the game stays where it was. Th
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**
+- [x] **Approve**
 - [ ] **Not approve**: say why
 - [ ] **Other**: describe below
 
@@ -70,7 +70,7 @@ Redraw each sign's words in a bolder pixel font at whole-number sizes.
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: A
+- [x] **Approve**: A
 - [ ] **Not approve**: say which option you'd prefer
 - [ ] **Other**: describe below
 
@@ -99,7 +99,7 @@ Both options letter the plaques at full detail in M PLUS 1 Code Bold, redrawn ea
 
 ## Your decision (Part 3)
 
-- [ ] **Approve**: B
+- [x] **Approve**: A
 - [ ] **Not approve**: say which option you'd prefer
 - [ ] **Other**: describe below
 
@@ -130,3 +130,18 @@ Both options letter the plaques at full detail in M PLUS 1 Code Bold, redrawn ea
   - the platform sign is added through the train window
 - **`game/gfx/building_overlay.py` and `game/scenes/overworld.py`:** plaques are drawn without words, and their names are lettered each frame (option B).
 - **Tests:** all 266 pass. Tests for the new parts come with the final build.
+
+## What was built (2026-10-13)
+
+As decided: the guide opens in a new tab, intro signs are lettered crisp (A), and building plaques are crisp at today's size (A).
+
+- **Plaques (Part 3 A):** same 11-pixel plaques, with names lettered in M PLUS 1 Code Bold at 5 pixels a letter (4 for names too long for their wall), centred on the plaque. The bigger-plaque prototype (B) was taken out.
+- **Speed:** the overworld takes about 4.8 ms a frame, against 4.3 ms before this change. Building pictures were also being looked up on disk every frame (about 0.7 ms); they're now looked up once, which pays for most of the plaques' cost.
+- **Tests:** 267 pass, with new checks that:
+  - signs are covered by what's drawn over them
+  - the intro art is scaled 3× in one step, every art pixel exactly 3 × 3
+  - every plaque name is lettered at full detail
+  - the guide link opens in a new tab and says so
+- **Accessibility check:** 60 pages, 0 problems.
+- **Not done:** the ID card's "FORDHAM" / "TAP ID" and the title screen's prototype note still use the tiny pixel font. Say if you'd like them crisp too.
+

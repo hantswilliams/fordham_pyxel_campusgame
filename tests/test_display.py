@@ -94,6 +94,51 @@ def check_crisp_font_fits_the_layout():
     assert rows and rows[0] >= 200 - 2 and rows[-1] < 200 + BIG_LINE_H * 2, (rows[0], rows[-1])
 
 
+class Sign(Scene):
+    """A maroon sign with words on it, half covered by a box drawn later."""
+    def draw(self):
+        pyxel.cls(Col.WHITE)
+        pyxel.rect(100, 100, 100, 20, Col.MAROON)
+        font.sign(104, 104, "FORDHAM ROSE", Col.WHITE, cell=6, bg=Col.MAROON)
+        pyxel.rect(150, 90, 60, 40, Col.YELLOW)            # over the right half
+
+
+def check_signs_are_covered_by_what_is_drawn_over_them():
+    make(Sign)
+    assert Col.WHITE in colours(208, 208, 80, 24)            # the uncovered words show
+    assert colours(300, 200, 100, 40) == {Col.YELLOW}        # the covered half doesn't
+
+
+class Intro(Scene):
+    def draw(self):
+        from game.gfx import intro_art
+
+        def art():
+            pyxel.cls(Col.LIGHT_BLUE)
+            pyxel.pset(10, 10, Col.MAROON)
+            pyxel.pset(11, 10, Col.NAVY)
+        intro_art.present(art)
+
+
+def check_intro_art_is_scaled_three_times_in_one_step():
+    make(Intro)
+    assert colours(30, 30, 3, 3) == {Col.MAROON}              # every art pixel is 3 x 3
+    assert colours(33, 30, 3, 3) == {Col.NAVY}
+    assert pyxel.pget(29, 30) == Col.LIGHT_BLUE and pyxel.pget(36, 30) == Col.LIGHT_BLUE
+
+
+def check_plaque_names_are_lettered_at_full_detail():
+    from game.gfx.building_overlay import CHAR_W, SMALL_CHAR_W, draw_overlay
+    from game.world.locations import load_locations
+    from game.world.mapdata import load_map
+    m = load_map(config.START_MAP, config.MAPS_DIR)
+    labels = []
+    draw_overlay(pyxel.Image(m.width * 16, m.height * 16), m,
+                 load_locations(config.LOCATIONS_FILE), labels)
+    assert len(labels) > 30
+    assert {cell for *_, cell in labels} <= {CHAR_W, SMALL_CHAR_W}
+
+
 def test_crisp_display():
     root = Path(__file__).resolve().parent.parent
     run = subprocess.run([sys.executable, "-m", "tests.test_display"], cwd=root,
