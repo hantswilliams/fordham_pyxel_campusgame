@@ -110,6 +110,11 @@ A11Y = """<style>
   /* sideways, the game uses the full height and X / Y do what SELECT / START
      do, so the small menu button (which would sit over the game) is hidden */
   html.fcq-touch.fcq-landscape img#pyxel-gamepad-menu { display: none; }
+  /* the canvas: upright, exactly the game's shape across the top (so Pyxel
+     draws it edge to edge); sideways, the full height, with the controls in
+     the space either side of the game */
+  html.fcq-touch:not(.fcq-landscape) div#pyxel-screen canvas#canvas { height: min(80%, 75vw) !important; }
+  html.fcq-touch.fcq-landscape div#pyxel-screen canvas#canvas { height: 100% !important; }
   #fcq-pad-help div { position: fixed; z-index: 16; pointer-events: none; color: #ffffff;
     font: 600 12px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; text-align: center; }
   #fcq-walk { padding: 3px 8px; background: rgba(32, 33, 36, 0.85); border-radius: 10px; }
@@ -236,6 +241,17 @@ CRISP = """<style>
       var screen = document.querySelector("div#pyxel-screen");
       var canvas = document.querySelector("canvas#canvas");
       if (!screen || !canvas) return;
+      // On an iPhone the fixed-size canvas showed only the middle of the game,
+      // zoomed in (decisions/0043). On phones and tablets, let Pyxel fill the
+      // canvas itself, as its own touch layout does, and only set the
+      // canvas's size (CSS in A11Y). ?fit=fixed brings the fixed size back,
+      // to compare on a phone.
+      if (document.documentElement.classList.contains("fcq-touch") && !/fit=fixed/.test(location.search)) {
+        document.documentElement.classList.add("fcq-fill");
+        canvas.style.transform = "";
+        placePadHelp();
+        return;
+      }
       // if Pyxel ever sizes its drawing to the window rather than to the
       // canvas, the picture would come out squashed: go back to Pyxel's own
       // fill-the-window layout instead
@@ -256,6 +272,20 @@ CRISP = """<style>
       canvas.style.transform = "translate(" + (r.width - W * k) / 2 + "px," + top + "px) scale(" + k + ")";
       placePadHelp();
     }
+    // ?debug shows the sizes that matter for fitting the game, for phone testing
+    function debugSizes() {
+      if (!/debug/.test(location.search)) return;
+      var c = document.querySelector("canvas#canvas"), d = document.getElementById("fcq-debug");
+      if (!c) return;
+      if (!d) { d = document.createElement("div"); d.id = "fcq-debug";
+        d.style.cssText = "position:fixed;left:4px;bottom:4px;z-index:30;font:11px monospace;color:#fff;background:#000a;padding:2px 4px;pointer-events:none";
+        document.body.appendChild(d); }
+      var r = c.getBoundingClientRect();
+      d.textContent = "window " + innerWidth + "x" + innerHeight + " dpr " + devicePixelRatio +
+        " | canvas css " + Math.round(r.width) + "x" + Math.round(r.height) + " backing " + c.width + "x" + c.height +
+        " | " + document.documentElement.className;
+    }
+    setInterval(debugSizes, 1000);
     // labels for the on-screen gamepad, just above the d-pad and the buttons
     function placePadHelp() {
       var help = document.getElementById("fcq-pad-help");

@@ -63,7 +63,16 @@ const overlap = (a, b) => a && b && a.width && b.width &&
       const rect = (sel) => { const e = document.querySelector(sel);
         if (!e || getComputedStyle(e).display === "none") return null;
         const r = e.getBoundingClientRect(); if (!r.width) return null; return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height }; };
-      return { bar: rect("#fcq-a11y"), game: rect("canvas#canvas"), cross: rect("img#pyxel-gamepad-cross"),
+      // the game picture: on touch screens Pyxel draws it as big as fits in the
+      // canvas, centred (the canvas fills the space); elsewhere it is the canvas
+      const c = rect("canvas#canvas");
+      let game = c;
+      if (c && document.documentElement.classList.contains("fcq-fill")) {
+        const k = Math.min(c.width / 4, c.height / 3), w = 4 * k, h = 3 * k;
+        const left = c.left + (c.width - w) / 2, top = c.top + (c.height - h) / 2;
+        game = { left, top, right: left + w, bottom: top + h, width: w, height: h };
+      }
+      return { bar: rect("#fcq-a11y"), game, cross: rect("img#pyxel-gamepad-cross"),
         buttons: rect("img#pyxel-gamepad-button"), menu: rect("img#pyxel-gamepad-menu"),
         walk: rect("#fcq-walk"), labels: rect("#fcq-buttons"), help: rect("#fcq-help"),
         status: document.getElementById("fcq-keys").textContent,
@@ -71,7 +80,10 @@ const overlap = (a, b) => a && b && a.width && b.width &&
     });
     const bad = [];
     if (m.scrollW > m.innerW + 1) bad.push(`page is ${m.scrollW}px wide`);
-    if (!m.game || m.game.top < m.bar.bottom - 1 || m.game.bottom > m.innerH + 1) bad.push("game doesn't fit below the bar");
+    if (!m.game || m.game.top < m.bar.bottom - 1 || m.game.bottom > m.innerH + 1 ||
+        m.game.left < -1 || m.game.right > m.innerW + 1) bad.push("game doesn't fit on screen below the bar");
+    if (d.touch && m.game && m.game.width < Math.min(m.innerW, (m.innerH - m.bar.height) * 4 / 3) * 0.6)
+      bad.push(`game is only ${Math.round(m.game.width)}px wide`);
     if (m.status !== "Playing") bad.push(`status says "${m.status}"`);
     if (d.touch) {
       if (m.bar.height > 44) bad.push(`bar is ${Math.round(m.bar.height)}px tall (more than one line)`);
