@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | For your review (not built yet) |
+| **Status** | Decided 2026-10-14: 1A, 2, 3, 4A and 5 approved. Built on branch `mobile` |
 | **Raised** | 2026-10-14. On a touch screen some things need a partial redesign for phones |
 | **Affects** | The on-screen controls, the button names the game shows, the web page's layout on phones, and testing |
-| **Built?** | Not yet. I'll build it on a new branch `mobile` after your decisions |
+| **Built?** | Yes, on branch `mobile`. Needs checking on real phones (Part 5) |
 
 **Picture:** `decisions/images/0043/phone_layouts_mockup.png` is a mockup of the proposed portrait and landscape layouts. It's drawn by hand around a real game screenshot, not a screenshot from a phone.
 
@@ -74,7 +74,7 @@ Tap a spot on the map and you walk there; tap a person or a sign to talk to it. 
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**: A now (C can come later)
+- [x] **Approve**: A now (C can come later)
 - [ ] **Not approve**: say which option you'd prefer
 - [ ] **Other**: describe below
 
@@ -108,7 +108,7 @@ The HOW TO PLAY card lists the touch buttons on a phone ("D-pad: Walk", "A: Talk
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: names follow the device
+- [x] **Approve**: names follow the device
 - [ ] **Not approve**: show both everywhere
 - [ ] **Other**: describe below
 
@@ -145,7 +145,7 @@ The keyboard hints and "Play with the keyboard" button are hidden on touch scree
 
 ## Your decision (Part 3)
 
-- [ ] **Approve**
+- [x] **Approve**
 - [ ] **Other**: describe below, for example portrait only
 
 **Your notes:**
@@ -172,7 +172,7 @@ The screen would show about two-thirds as many tiles, so everything is 1.5× big
 
 ## Your decision (Part 4)
 
-- [ ] **Approve**: A, and revisit after testing on real phones
+- [x] **Approve**: A, and revisit after testing on real phones
 - [ ] **Not approve**: B
 - [ ] **Other**: describe below
 
@@ -208,7 +208,7 @@ I'd only pick one of these if testing shows the need.
 
 ## Your decision (Part 5)
 
-- [ ] **Approve**
+- [x] **Approve**
 - [ ] **Other**: describe below
 
 **Your notes:**
@@ -228,3 +228,60 @@ Approve **1A, 2, 3, 4A and 5**. The game is already close to playable on a phone
 Tap-to-walk (1C) and a phone view (4B) can follow as their own decisions once we've watched people play on real phones.
 
 **What I need from you after the build:** 10 minutes with your phone on the test site, plus an Android phone if you can borrow one.
+
+## What was built (2026-10-14, branch `mobile`)
+
+**Pictures:**
+- `decisions/images/0043/phone_layouts_built.png`: the built page at iPhone size, upright and sideways. It's taken in a desktop browser pretending to be a phone, with a stand-in for Pyxel's runtime, so the gamepad shows as plain circles where Pyxel draws its own pictures.
+- `decisions/images/0043/touch_button_names.png`: the game on a touch screen: HOW TO PLAY, the map footer, the Missions menu.
+
+**Part 1, controls (A):**
+- Y opens the map and X opens Missions. SELECT and START still work.
+- The labels sit just above the controls rather than beside each button:
+  - "D-pad: Walk" over the d-pad
+  - a small diamond over the buttons, matching their layout: Y Map at the top, X Missions on the left, B Back·Bike on the right, A Talk / OK at the bottom
+- **Changed from the plan:** sideways, the small SELECT/START button is hidden, because with the game at full height it would sit on top of the text box. X and Y do the same jobs.
+
+**Part 2, button names:**
+- `game/systems/controls.py` names the buttons for the device: A, B, X, Y and D-PAD on a touch screen; Z, X, M, TAB and ARROWS on a keyboard.
+- Content files use `{confirm}`, `{back}`, `{map}`, `{menu}` and `{move}`. That covers HOW TO PLAY and its "Press A, then walk through the gate!", and the Bike Courier hint.
+- Also changed: the dialogue, card, map and menu footers, the ID check, and the bike lines.
+- The Campus Guide still uses the keyboard names and drops "Press …" sentences, as before.
+
+**Part 3, the page on a phone:**
+- **Top bar:** one line on touch screens: "Accessible guide ↗" and a ● Playing / ● Paused dot. Screen readers still hear "(opens in a new tab)". The keyboard hints and "Play with the keyboard" only show on computers.
+- **Layout:** upright, the game sits at the top with the controls below. Sideways, it uses the full height with the controls either side.
+- **Browser fixes:**
+  - no double-tap or pinch zoom on the game
+  - no pull-to-refresh
+  - no long-press menus
+  - the bar and controls stay clear of notches and rounded corners
+  - the layout follows the screen as the address bar shows and hides
+- **Wording:** "Tap here to keep playing" when paused.
+
+**Part 4:** no change to text sizes.
+
+**Part 5, speed and testing:**
+- **Frame rate:** `?perf` in the address shows Pyxel's frame-rate counter.
+- **Automatic phone check:** the new `tools/check_phone.cjs` runs in the GitHub workflow after the accessibility check. It opens the page at iPhone and Android sizes, upright and sideways, and at a computer size, with a stand-in for Pyxel's runtime (`tools/pyxel_standin.js`) that makes the same page elements. On the phone sizes it checks that:
+  - the bar is one line
+  - the game fits below it
+  - neither the controls nor their labels cover the game
+  - nothing scrolls sideways
+  - the keyboard hints are hidden
+
+  On the computer it checks that the gamepad labels are hidden. All 5 sizes pass.
+- **Manual checklist:** a phone section in `docs/accessibility-checklist.md`, about 10 minutes.
+
+**Also fixed (a bug from decision 0039):** a sign in the intro scenes could show through a box drawn over it. "ROSE HILL" from the Fordham sign peeked through the HOW TO PLAY card. Intro signs are now covered by anything the scene draws over them, and a new check in `tests/test_display.py` makes sure.
+
+**Tests:** 283 pass. The new `tests/test_controls.py` checks:
+- keyboard and touch names
+- HOW TO PLAY on each device
+- that no `{…}` is left unfilled in the content
+- that the X and Y buttons are bound
+
+The accessibility check passes: 60 pages, 0 problems.
+
+**Next:** try it on your phone (the checklist in `docs/accessibility-checklist.md`), with `?perf` on, and tell me what feels off.
+

@@ -11,6 +11,7 @@ from game.gfx import display
 
 from game.config import SCREEN_H, SCREEN_W, Col
 from game.gfx.building_art import card_image
+from game.systems import controls
 from game.systems.input import Action
 from game.ui import font
 from game.ui.text import BIG_CHAR_W, BIG_LINE_H, GROW, wrap
@@ -136,7 +137,7 @@ class BuildingCardScene(Scene):
             pyxel.tri(x + PAD, fy + 9, x + PAD + 8, fy + 9, x + PAD + 4, fy + 4, Col.MAROON)
         if self.scroll < self.max_scroll:
             pyxel.tri(x + PAD + 12, fy + 4, x + PAD + 20, fy + 4, x + PAD + 16, fy + 9, Col.MAROON)
-        footer = "Z: CLOSE"
+        footer = controls.fmt("{confirm}: CLOSE")
         font.text(x + w - PAD - font.width(footer), fy, footer, Col.DARK_BLUE)
 
     def _draw_tag(self, tx: int, ty: int) -> None:

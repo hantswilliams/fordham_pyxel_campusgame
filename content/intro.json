@@ -11,13 +11,13 @@
   "controls": {
     "title": "HOW TO PLAY",
     "rows": [
-      ["ARROWS/WASD", "Move"],
-      ["Z/SPACE/ENTER", "Talk, read, open a card"],
-      ["X", "Back, skip, bike on/off"],
-      ["M", "Campus map"],
-      ["TAB", "Missions, Ram Passport"]
+      ["{move_all}", "Move"],
+      ["{confirm_all}", "Talk, read, open a card"],
+      ["{back}", "Back, skip, bike on/off"],
+      ["{map}", "Campus map"],
+      ["{menu}", "Missions, Ram Passport"]
     ],
     "tip": "Gray = road, tan = walkway. Cross at the crosswalks.",
-    "prompt": "Press Z, then walk through the gate!"
+    "prompt": "Press {confirm}, then walk through the gate!"
   }
 }

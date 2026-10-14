@@ -10,6 +10,8 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from game.systems import controls
+
 SCENES = {"train", "station", "street"}
 CHARS_PER_FRAME = 2
 
@@ -51,7 +53,7 @@ def parse_intro(d: dict) -> IntroData:
 
 
 def load_intro(path: Path) -> IntroData:
-    return parse_intro(json.loads(path.read_text(encoding="utf-8")))
+    return parse_intro(json.loads(controls.fmt(path.read_text(encoding="utf-8"))))
 
 
 class IntroTimeline:

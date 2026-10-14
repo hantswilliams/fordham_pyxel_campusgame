@@ -17,6 +17,7 @@ from game.gfx import display
 from game import config
 from game.config import SCREEN_H, SCREEN_W, Col
 from game.gfx.map_render import render_world
+from game.systems import controls
 from game.systems.input import Action
 from game.ui import font
 from game.ui.text import BIG_CHAR_W, GROW
@@ -179,7 +180,8 @@ class CampusMapScene(Scene):
     def _draw_header(self) -> None:
         pyxel.rect(0, 0, SCREEN_W, HEADER_H, Col.MAROON)
         font.text(6, 2, "ROSE HILL CAMPUS MAP", Col.WHITE)
-        font.text(SCREEN_W - 6 - font.width("M: CLOSE"), 2, "M: CLOSE", Col.PEACH)
+        close = controls.fmt("{map}: CLOSE")
+        font.text(SCREEN_W - 6 - font.width(close), 2, close, Col.PEACH)
 
     def _draw_pin(self, pin: Pin, selected: bool, blink: bool) -> None:
         cx, cy = self._screen_xy(pin.x, pin.y)
@@ -249,8 +251,8 @@ class CampusMapScene(Scene):
         max_chars = (SCREEN_W - 12) // BIG_CHAR_W
         if self.selected is None:
             font.text(6, y + 2, f"You are here: {self.area_name}"[:max_chars], Col.BLACK)
-            font.text(6, y + 15 + GROW, "ARROWS: PICK A PLACE", Col.DARK_BLUE)
+            font.text(6, y + 15 + GROW, controls.fmt("{move}: PICK A PLACE"), Col.DARK_BLUE)
         else:
             pin = self.pins[self.selected]
             font.text(6, y + 2, pin.name[:max_chars], Col.MAROON)
-            font.text(6, y + 15 + GROW, "Z: DETAILS  ARROWS: NEXT", Col.DARK_BLUE)
+            font.text(6, y + 15 + GROW, controls.fmt("{confirm}: DETAILS  {move}: NEXT"), Col.DARK_BLUE)

@@ -6,6 +6,7 @@ import pyxel
 from game import config
 from game.config import SCREEN_H, SCREEN_W, Col
 from game.gfx.intro_art import SCENE_ART, present
+from game.systems import controls
 from game.systems.input import Action
 from game.systems.intro_timeline import IntroData, IntroTimeline, load_intro
 from game.ui import font
@@ -38,7 +39,7 @@ class IntroScene(Scene):
         tl = self.timeline
         present(SCENE_ART[tl.beat.scene], tl.scene_progress, tl.scene_frame, tl.scene_length)
         draw_text_box(wrap(tl.beat.caption, MAX_CHARS), tl.revealed_chars, tl.caption_complete)
-        hint = "Z: NEXT  X: SKIP"
+        hint = controls.fmt("{confirm}: NEXT  {back}: SKIP")
         hw = font.width(hint) + 8
         pyxel.rect(SCREEN_W - hw - 2, 2, hw, 15 + GROW, Col.NAVY)
         font.text(SCREEN_W - hw + 2, 3, hint, Col.WHITE)

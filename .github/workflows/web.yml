@@ -41,6 +41,8 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Check accessibility (WCAG 2.2 AA rules, axe-core)
         run: node tools/check_accessibility.cjs build/web
+      - name: Check the page at phone sizes (decisions/0043)
+        run: node tools/check_phone.cjs build/web
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build/web

@@ -25,8 +25,10 @@ BINDINGS: dict[Action, list[int]] = {
     Action.CONFIRM: [pyxel.KEY_Z, pyxel.KEY_SPACE, pyxel.KEY_RETURN,
                      pyxel.GAMEPAD1_BUTTON_A],
     Action.CANCEL: [pyxel.KEY_X, pyxel.KEY_BACKSPACE, pyxel.GAMEPAD1_BUTTON_B],
-    Action.MENU: [pyxel.KEY_TAB, pyxel.GAMEPAD1_BUTTON_START],
-    Action.MAP: [pyxel.KEY_M, pyxel.GAMEPAD1_BUTTON_BACK],
+    # the touch gamepad's big left (X) and top (Y) buttons open Missions and
+    # the map; START and SELECT still work too (decisions/0043)
+    Action.MENU: [pyxel.KEY_TAB, pyxel.GAMEPAD1_BUTTON_START, pyxel.GAMEPAD1_BUTTON_X],
+    Action.MAP: [pyxel.KEY_M, pyxel.GAMEPAD1_BUTTON_BACK, pyxel.GAMEPAD1_BUTTON_Y],
 }
 
 

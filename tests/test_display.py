@@ -127,6 +127,24 @@ def check_intro_art_is_scaled_three_times_in_one_step():
     assert pyxel.pget(29, 30) == Col.LIGHT_BLUE and pyxel.pget(36, 30) == Col.LIGHT_BLUE
 
 
+class IntroSignUnderACard(Scene):
+    """An intro sign, with a card drawn over the scene afterwards."""
+    def draw(self):
+        from game.gfx import intro_art
+
+        def art():
+            pyxel.cls(Col.LIGHT_BLUE)
+            pyxel.rect(20, 20, 60, 12, Col.MAROON)
+            intro_art._label(22, 23, "FORDHAM", Col.WHITE, Col.MAROON)
+        intro_art.present(art)
+        pyxel.rect(0, 0, 200, 80, Col.YELLOW)                 # the card, over the sign
+
+
+def check_a_card_over_the_intro_covers_its_signs():
+    make(IntroSignUnderACard)
+    assert colours(60, 60, 180, 40) == {Col.YELLOW}
+
+
 def check_plaque_names_are_lettered_at_full_detail():
     from game.gfx.building_overlay import CHAR_W, SMALL_CHAR_W, draw_overlay
     from game.world.locations import load_locations

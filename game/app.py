@@ -16,6 +16,17 @@ from game.world.buildings import load_buildings
 from game.world.locations import load_locations
 
 
+def _asked_for_perf() -> bool:
+    """In a web page, ?perf in the address shows Pyxel's frame-rate counter."""
+    if sys.platform != "emscripten":
+        return False
+    try:
+        import js
+        return "perf" in str(js.window.location.search)
+    except Exception:
+        return False
+
+
 class App:
     def __init__(self, input_source=None, headless: bool = False,
                  start_scene=None, save_path="default", display_scale=None):
@@ -28,6 +39,8 @@ class App:
                    fps=config.FPS, quit_key=quit_key, headless=headless)
         config.apply_palette(pyxel.colors)
         display.setup(s)
+        if _asked_for_perf():            # add ?perf to the page address (decisions/0043)
+            pyxel.perf_monitor(True)
         build_all()
 
         self.input = input_source or PyxelInput()

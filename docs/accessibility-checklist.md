@@ -31,3 +31,17 @@ They catch roughly a third of WCAG issues. Do this by hand before each release, 
 - [ ] The accessibility statement has a contact (`content/guide.json`).
 
 Record the date, who checked, and anything found in the release notes or a new decision doc.
+
+## Phones (decisions/0043), about 10 minutes
+
+On an iPhone (Safari) and an Android phone (Chrome), on the published site:
+
+- [ ] The top bar is one line: "Accessible guide ↗" and a "Playing" / "Paused" dot.
+- [ ] The d-pad walks, A talks, B goes back (and hops on and off the bike), Y opens the map, X opens Missions. Labels sit above the controls.
+- [ ] The game's own text says A / B / X / Y / D-PAD, not Z / X / M / TAB (HOW TO PLAY, card and map footers, the bike lines).
+- [ ] Upright: the game sits at the top with the controls below. Sideways: the game fills the height with the controls either side.
+- [ ] Double-tapping or pinching the game doesn't zoom, and dragging down doesn't reload the page.
+- [ ] Tap "Accessible guide", come back: "Tap here to keep playing" shows, and tapping resumes.
+- [ ] Reload: CONTINUE puts you back where you were.
+- [ ] Add `?perf` to the address: the frame counter stays near 30 while walking and with the menu open.
+

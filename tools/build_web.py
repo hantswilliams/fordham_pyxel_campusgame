@@ -85,17 +85,58 @@ A11Y = """<style>
   #fcq-resume .fcq-enter, #fcq-resume:focus .fcq-click { display: none; }
   #fcq-resume:focus .fcq-enter { display: inline; }
   #fcq-resume:focus-visible span { outline: 4px solid #ffd447; outline-offset: 3px; }
+  #fcq-a11y .fcq-short, #fcq-a11y .fcq-arrow, #fcq-resume .fcq-tap, #fcq-pad-help { display: none; }
+  #fcq-keys::before { content: "\u25cf  "; color: #8fd18f; }
+  #fcq-a11y.fcq-paused #fcq-keys::before { color: #ffd447; }
+
+  /* Phones and tablets (decisions/0043): a one-line bar, labels for Pyxel's
+     on-screen gamepad, and no zooming, pull-to-refresh or long-press menus
+     on the game. */
+  #fcq-a11y { padding-top: max(6px, env(safe-area-inset-top));
+    padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+  html.fcq-touch #fcq-a11y { flex-wrap: nowrap; white-space: nowrap; gap: 12px; font-size: 14px; }
+  html.fcq-touch #fcq-a11y .fcq-long, html.fcq-touch #fcq-help, html.fcq-touch #fcq-play { display: none; }
+  html.fcq-touch #fcq-a11y .fcq-short, html.fcq-touch #fcq-a11y .fcq-arrow { display: inline; }
+  html.fcq-touch #fcq-a11y .fcq-note { position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; }
+  html.fcq-touch #fcq-keys { margin-left: auto; }
+  html.fcq-touch #fcq-resume .fcq-click, html.fcq-touch #fcq-resume:focus .fcq-enter { display: none; }
+  html.fcq-touch #fcq-resume .fcq-tap { display: inline; }
+  html.fcq-touch, html.fcq-touch body { overscroll-behavior: none; touch-action: manipulation; }
+  html.fcq-touch div#pyxel-screen { touch-action: none; -webkit-user-select: none; user-select: none;
+    -webkit-touch-callout: none; }
+  html.fcq-touch img#pyxel-gamepad-cross { left: max(1%, env(safe-area-inset-left)) !important; }
+  html.fcq-touch img#pyxel-gamepad-button { right: max(1%, env(safe-area-inset-right)) !important; }
+  /* sideways, the game uses the full height and X / Y do what SELECT / START
+     do, so the small menu button (which would sit over the game) is hidden */
+  html.fcq-touch.fcq-landscape img#pyxel-gamepad-menu { display: none; }
+  #fcq-pad-help div { position: fixed; z-index: 16; pointer-events: none; color: #ffffff;
+    font: 600 12px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; text-align: center; }
+  #fcq-walk { padding: 3px 8px; background: rgba(32, 33, 36, 0.85); border-radius: 10px; }
+  #fcq-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  #fcq-buttons span { padding: 2px 4px; background: rgba(32, 33, 36, 0.85); border-radius: 8px; }
+  #fcq-buttons b { color: #ffd447; }
 </style>
 <div id="fcq-a11y" role="region" aria-label="Accessibility">
-  <a id="fcq-guide" href="guide/index.html" target="_blank" rel="noopener">Accessible version: Rose Hill Campus Guide <span class="fcq-note">(opens in a new tab)</span></a>
+  <a id="fcq-guide" href="guide/index.html" target="_blank" rel="noopener"><span class="fcq-long">Accessible version: Rose Hill Campus Guide</span><span class="fcq-short">Accessible guide</span> <span class="fcq-note">(opens in a new tab)</span><span class="fcq-arrow" aria-hidden="true">&#8599;</span></a>
   <span id="fcq-help">Tab: missions &middot; M: map &middot; Esc: leave the game</span>
   <span id="fcq-keys" aria-live="polite"></span>
   <button type="button" id="fcq-play">Play with the keyboard</button>
 </div>
 <button type="button" id="fcq-resume" hidden><span><strong>Game paused</strong>
-  <em class="fcq-click">Click here to keep playing</em><em class="fcq-enter">Press Enter or click to keep playing</em></span></button>
+  <em class="fcq-click">Click here to keep playing</em><em class="fcq-enter">Press Enter or click to keep playing</em><em class="fcq-tap">Tap here to keep playing</em></span></button>
+<div id="fcq-pad-help" aria-hidden="true">
+  <div id="fcq-walk">D-pad: Walk</div>
+  <div id="fcq-buttons"><span></span><span><b>Y</b> Map</span><span></span><span><b>X</b> Missions</span><span></span><span><b>B</b> Back&middot;Bike</span><span></span><span><b>A</b> Talk / OK</span><span></span></div>
+</div>
 <script>
   (function () {
+    // phones and tablets (decisions/0043): the same test Pyxel uses to show
+    // its on-screen gamepad
+    var touch = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    var root = document.documentElement;
+    function orient() { root.classList.toggle("fcq-landscape", window.innerWidth > window.innerHeight); }
+    if (touch) { root.classList.add("fcq-touch"); orient(); window.addEventListener("resize", orient, true); }
     // keep the game screen below the bar, however many lines the bar takes
     var bar = document.getElementById("fcq-a11y");
     function fitBar() {
@@ -123,8 +164,8 @@ A11Y = """<style>
       var paused = started && !gameHasKeys;
       resume.hidden = !paused;
       bar.classList.toggle("fcq-paused", paused);
-      keys.textContent = !started ? "" :
-        gameHasKeys ? "Playing" : "Game paused: click the game to keep playing.";
+      keys.textContent = !started ? "" : gameHasKeys ? "Playing" :
+        touch ? "Paused: tap the game" : "Game paused: click the game to keep playing.";
     }
     function play() {
       gameHasKeys = started = true;
@@ -204,12 +245,36 @@ CRISP = """<style>
         return;
       }
       var r = screen.getBoundingClientRect();
-      // on touch screens Pyxel keeps the bottom fifth for its gamepad
-      var h = document.querySelector("img#pyxel-gamepad-cross") ? r.height * 0.8 : r.height;
+      // with the on-screen gamepad (decisions/0043): upright, the game sits at
+      // the top and the controls go below; sideways, it uses the full height
+      // and the controls sit either side
+      var pad = !!document.querySelector("img#pyxel-gamepad-cross");
+      var wide = r.width > r.height;
+      var h = pad && !wide ? r.height * 0.8 : r.height;
       var k = Math.max(0.1, Math.min(r.width / W, h / H));
-      canvas.style.transform = "translate(" + (r.width - W * k) / 2 + "px," + (h - H * k) / 2 + "px) scale(" + k + ")";
+      var top = pad && !wide ? 0 : (h - H * k) / 2;
+      canvas.style.transform = "translate(" + (r.width - W * k) / 2 + "px," + top + "px) scale(" + k + ")";
+      placePadHelp();
     }
-    window.addEventListener("resize", fitGame);
+    // labels for the on-screen gamepad, just above the d-pad and the buttons
+    function placePadHelp() {
+      var help = document.getElementById("fcq-pad-help");
+      var cross = document.querySelector("img#pyxel-gamepad-cross");
+      var btns = document.querySelector("img#pyxel-gamepad-button");
+      if (!help || !cross || !btns) return;
+      help.style.display = "block";
+      [["fcq-walk", cross], ["fcq-buttons", btns]].forEach(function (pair) {
+        var box = document.getElementById(pair[0]), r = pair[1].getBoundingClientRect();
+        if (!r.width) return;
+        box.style.width = pair[0] === "fcq-buttons" ? Math.max(r.width, 180) + "px" : "auto";
+        var w = box.getBoundingClientRect().width;
+        box.style.left = Math.max(4, Math.min(window.innerWidth - w - 4, r.left + (r.width - w) / 2)) + "px";
+        box.style.top = Math.max(0, r.top - box.getBoundingClientRect().height - 6) + "px";
+      });
+    }
+    window.addEventListener("resize", function () { fitGame(); setTimeout(fitGame, 250); });
+    // Pyxel sizes its gamepad pictures after they load: keep the labels with them
+    if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) setInterval(placePadHelp, 500);
     new MutationObserver(fitGame).observe(document.documentElement, { childList: true, subtree: true,
       attributes: true, attributeFilter: ["width", "height"] });
     if (window.ResizeObserver) new ResizeObserver(fitGame).observe(document.documentElement);
@@ -247,7 +312,7 @@ def main() -> None:
     if n != 1:
         sys.exit("build_web: couldn't find Pyxel's script tag in the HTML")
     html = html.replace("<!doctype html>", '<!doctype html>\n<html lang="en">\n<meta charset="utf-8">\n'
-                        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+                        '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
                         "<title>Fordham Campus Quest</title>\n" + A11Y + LOADING + crisp_css(), 1)
     (OUT / "index.html").write_text(html)
     (OUT / f"{APP}.html").unlink()

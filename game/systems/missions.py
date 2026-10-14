@@ -22,6 +22,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
 
+from game.systems import controls
+
 from .progress import BADGES, MissionState, Progress
 
 STEP_TYPES = {"talk", "go_to", "read", "find", "answer", "ride", "collect"}
@@ -86,7 +88,7 @@ def load_missions(folder: Path) -> list[Mission]:
         if path.name.startswith("_"):
             continue
         try:
-            d = json.loads(path.read_text())
+            d = json.loads(controls.fmt(path.read_text()))   # button names (decisions/0043)
         except ValueError as e:
             raise MissionError(f"{path.name}: not valid JSON ({e})") from e
         m = _mission_from_dict(d, path.name)
