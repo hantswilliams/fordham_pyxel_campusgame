@@ -65,5 +65,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0038](0038-crisp-text.md) | Crisp text: the game below the accessibility bar (on `main`), and a 768×576 screen with the art doubled and text drawn at full detail in M PLUS 1 Code (branch `crisp-text`) | A for all three parts | Yes | Decided; browser check passed |
 | [0039](0039-guide-tab-and-sign-lettering.md) | The guide link opens in a new tab; signs in the intro and building plaques lettered in the crisp font (bigger plaques), intro art scaled 3x in one step | 1 approved, A, A | Yes, on `crisp-signs` | Decided; built |
 | [0040](0040-keys-in-bar-wandering-people-bike-rack.md) | Tab and M in the top bar; six students who walk about near their spot; the bike rack moved west of Walsh Library and redrawn | Approve all three (A for Part 2) | Yes, on `campus-life` | Built, for your review |
+| [0041](0041-mission-items.md) | Mission items easier to find: the lost ID on the road, the package at McShane's front door, a "!" over each | Approve | Yes, on `mission-items` | Built, for your review |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

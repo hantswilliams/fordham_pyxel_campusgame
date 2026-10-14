@@ -22,9 +22,9 @@
   "teaches": ["McShane Campus Center", "O'Hare Hall on the east side", "Getting round fast on the bike"],
   "steps": [
     {"do": "talk", "npc": "Mail Room Staffer",
-     "say": ["Great! The package is on the walkway just here. Grab it and the clock starts."]},
-    {"do": "find", "item": "package", "name": "package", "at": [42, 28], "tile": "item_package",
-     "hint": "It's on the walkway beside the Mail Room Staffer, west of McShane.",
+     "say": ["Great! The package is waiting at McShane's front door, just east of here. Grab it and the clock starts."]},
+    {"do": "find", "item": "package", "name": "package", "at": [48, 27], "tile": "item_package",
+     "hint": "It's at McShane's front door, just east of the Mail Room Staffer.",
      "say": ["You picked up the package. Ride to O'Hare Hall, quick!"]},
     {"do": "ride", "location": "ohare_hall", "seconds": 15, "restart_from": 1,
      "label": "Deliver the package to O'Hare Hall",

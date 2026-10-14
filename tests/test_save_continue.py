@@ -25,7 +25,7 @@ def test_continue_puts_you_back_where_you_were(tmp_path):
     assert app.bike.have
     names = {o.name for o in world.map.objects if o.type == "npc"}
     assert {"Worried Student", "Mail Room Staffer", "Athletics Staffer"} <= names
-    item = world.map.object_at(47, 33)
+    item = world.map.object_at(47, 31)
     assert item is not None and item.type == "item"   # the lost ID is waiting
     assert "Lost and Found" in app.missions.tracker()
 
