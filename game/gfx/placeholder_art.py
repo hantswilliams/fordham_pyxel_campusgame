@@ -149,6 +149,16 @@ def _bike_rack(img, x, y):
 def _item_card(img, x, y):
     """A dropped Fordham ID card on the walkway, with a sparkle (decisions/0031)."""
     _path(img, x, y)
+    _card(img, x, y)
+
+
+def _item_card_road(img, x, y):
+    """The dropped ID card lying on a road, where it stands out (decisions/0041)."""
+    _road(img, x, y)
+    _card(img, x, y)
+
+
+def _card(img, x, y):
     img.rect(x + 4, y + 7, 9, 6, Col.WHITE)
     img.rectb(x + 4, y + 7, 9, 6, Col.NAVY)
     img.rect(x + 5, y + 8, 7, 2, Col.MAROON)
@@ -483,7 +493,7 @@ def _car(img, x, y):
 
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
-    "door": _door, "window": _window, "tree": _tree, "tree_purple": _tree_purple, "bike_rack": _bike_rack, "item_card": _item_card, "item_package": _item_package, "flowers": _flowers,
+    "door": _door, "window": _window, "tree": _tree, "tree_purple": _tree_purple, "bike_rack": _bike_rack, "item_card": _item_card, "item_card_road": _item_card_road, "item_package": _item_package, "flowers": _flowers,
     "hedge": _hedge, "water": _water, "bench": _bench, "sign": _sign,
     "banner": _banner, "lamp": _lamp,
     "roof_res": _roof_colored(Col.ORANGE, Col.BROWN, Col.PEACH),

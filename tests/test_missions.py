@@ -65,7 +65,7 @@ def test_lost_and_found_from_offer_to_stamp():
     offer = book.talk("Worried Student")
     assert offer[0].offer and offer[0].offer.id == "lost_and_found"
     book.accept("lost_and_found")
-    assert book.items() == [(47, 33, "item_card", "lost_id")]
+    assert book.items() == [(47, 31, "item_card_road", "lost_id")]
     assert "lost ID" in book.tracker()
     book.pickup("lost_id")
     assert book.items() == []

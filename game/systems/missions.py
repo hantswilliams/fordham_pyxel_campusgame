@@ -26,7 +26,7 @@ from .progress import BADGES, MissionState, Progress
 
 STEP_TYPES = {"talk", "go_to", "read", "find", "answer", "ride", "collect"}
 FPS = 30
-ITEM_TILES = {"item_card", "item_package"}
+ITEM_TILES = {"item_card", "item_card_road", "item_package"}
 UNLOCKS = {"maroon_bike"}
 
 

@@ -395,6 +395,11 @@ class OverworldScene(Scene):
                     pyxel.rect(bx, by - GROW, 12, 14 + GROW, Col.WHITE)
                     pyxel.rectb(bx, by - GROW, 12, 14 + GROW, Col.NAVY)
                     font.text(bx + 2, by + 1 - GROW, mark, Col.MAROON)
+            elif obj.type == "item":                 # a mission item to pick up (decisions/0041)
+                bx, by = obj.x * TILE + 3, obj.y * TILE - 15 - bob
+                pyxel.rect(bx, by - GROW, 12, 14 + GROW, Col.WHITE)
+                pyxel.rectb(bx, by - GROW, 12, 14 + GROW, Col.NAVY)
+                font.text(bx + 2, by + 1 - GROW, "!", Col.MAROON)
 
         display.camera()
         self._draw_hud()

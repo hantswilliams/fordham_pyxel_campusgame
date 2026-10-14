@@ -19,9 +19,9 @@
     {"do": "talk", "npc": "Worried Student",
      "say": ["Thank you! I came out of McShane and walked towards Edwards Parade.",
              "If you find it, take it to Public Safety in Thebaud Hall. They'll make sure it gets back to me."]},
-    {"do": "find", "item": "lost_id", "name": "lost ID", "at": [47, 33], "tile": "item_card",
-     "hint": "Look on the walkways between McShane and Edwards Parade.",
-     "say": ["You found a Fordham ID card on the walkway!"]},
+    {"do": "find", "item": "lost_id", "name": "lost ID", "at": [47, 31], "tile": "item_card_road",
+     "hint": "Look along the road between McShane and Edwards Parade. Watch for the \"!\".",
+     "say": ["You found a Fordham ID card lying in the road!"]},
     {"do": "go_to", "location": "thebaud_hall", "label": "Take the ID to Public Safety (Thebaud Hall)",
      "hint": "Thebaud Hall is on the south side, by Rose Hill Manor Drive.",
      "say": ["You hand the ID in at Public Safety. They'll get it back to its owner."]}
