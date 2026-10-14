@@ -72,12 +72,26 @@ A11Y = """<style>
   #fcq-a11y button { font: inherit; color: #ffffff; background: #860038; border: 2px solid #ffffff;
     padding: 4px 10px; min-height: 32px; cursor: pointer; }
   #fcq-a11y :focus-visible { outline: 3px solid #ffd447; outline-offset: 2px; }
+  #fcq-a11y.fcq-paused #fcq-keys { color: #ffd447; font-weight: 600; }
+  #fcq-resume { position: fixed; left: 0; right: 0; bottom: 0; top: var(--fcq-bar-h); z-index: 15;
+    display: flex; align-items: center; justify-content: center; border: 0; padding: 16px;
+    background: rgba(32, 33, 36, 0.6); cursor: pointer; font: 18px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #fcq-resume[hidden] { display: none; }
+  #fcq-resume span { display: flex; flex-direction: column; gap: 4px; padding: 16px 24px; max-width: 28em;
+    color: #ffffff; background: #860038; border: 3px solid #ffffff; text-align: center; }
+  #fcq-resume strong { font-size: 24px; }
+  #fcq-resume em { font-style: normal; }
+  #fcq-resume .fcq-enter, #fcq-resume:focus .fcq-click { display: none; }
+  #fcq-resume:focus .fcq-enter { display: inline; }
+  #fcq-resume:focus-visible span { outline: 4px solid #ffd447; outline-offset: 3px; }
 </style>
 <div id="fcq-a11y" role="region" aria-label="Accessibility">
   <a id="fcq-guide" href="guide/index.html" target="_blank" rel="noopener">Accessible version: Rose Hill Campus Guide <span class="fcq-note">(opens in a new tab)</span></a>
-  <span id="fcq-keys">Esc leaves the game.</span>
+  <span id="fcq-keys" aria-live="polite">Esc leaves the game.</span>
   <button type="button" id="fcq-play">Play with the keyboard</button>
 </div>
+<button type="button" id="fcq-resume" hidden><span><strong>Game paused</strong>
+  <em class="fcq-click">Click here to keep playing</em><em class="fcq-enter">Press Enter or click to keep playing</em></span></button>
 <script>
   (function () {
     // keep the game screen below the bar, however many lines the bar takes
@@ -96,11 +110,30 @@ A11Y = """<style>
         if (fitBar()) window.dispatchEvent(new Event("resize"));   // let Pyxel resize too
       }).observe(bar);
     }
-    var gameHasKeys = false;
+    // Who has the keyboard: the game, or the page (decisions/0039). Once the
+    // game has started, whenever the page has it the game shows "Game
+    // paused" and the bar says how to get back, so it's never a mystery why
+    // the keys do nothing (after Esc, or after opening the guide's tab).
+    var gameHasKeys = false, started = false;
+    var keys = document.getElementById("fcq-keys");
+    var resume = document.getElementById("fcq-resume");
+    function show() {
+      var paused = started && !gameHasKeys;
+      resume.hidden = !paused;
+      bar.classList.toggle("fcq-paused", paused);
+      keys.textContent = !started ? "Esc leaves the game." :
+        gameHasKeys ? "Playing. Esc leaves the game." : "Game paused: click the game to keep playing.";
+    }
+    function play() {
+      gameHasKeys = started = true;
+      if (document.activeElement) document.activeElement.blur();
+      show();
+    }
+    function pause() { gameHasKeys = false; show(); }
     function stop(e) { if (!gameHasKeys) e.stopImmediatePropagation(); }
     window.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && gameHasKeys) {
-        gameHasKeys = false;
+        pause();
         e.preventDefault(); e.stopImmediatePropagation();
         document.getElementById("fcq-guide").focus();
         return;
@@ -109,10 +142,21 @@ A11Y = """<style>
     }, true);
     window.addEventListener("keyup", stop, true);
     window.addEventListener("keypress", stop, true);
-    function play() { gameHasKeys = true; if (document.activeElement) document.activeElement.blur(); }
     document.addEventListener("pointerdown", function (e) {
-      if (!e.target.closest || !e.target.closest("#fcq-a11y")) play();
+      var inBar = e.target.closest && e.target.closest("#fcq-a11y");
+      if (!inBar) play();
+      else if (!e.target.closest("#fcq-play")) pause();   // e.g. opening the guide
     }, true);
+    resume.addEventListener("click", play);
+    // coming back to this tab with the game paused: put focus on "Game
+    // paused", so Enter carries on playing instead of reopening the guide
+    function backToTab() {
+      if (document.visibilityState !== "visible" || !started || gameHasKeys) return;
+      var el = document.activeElement;
+      if (!el || el === document.body || el.id === "fcq-guide") resume.focus();
+    }
+    document.addEventListener("visibilitychange", backToTab);
+    window.addEventListener("focus", backToTab);
     document.getElementById("fcq-play").addEventListener("click", function () {
       play();
       var prompt = document.querySelector("img#pyxel-prompt");
