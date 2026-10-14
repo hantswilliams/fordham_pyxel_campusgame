@@ -410,7 +410,7 @@
   "main_entrance": {
     "name": "Main Entrance",
     "kind": "transit",
-    "blurb": "The main vehicle entrance on Southern Boulevard, across from the New York Botanical Garden. Xavier Way leads from here to Matteo Ricci Circle."
+    "blurb": "The main vehicle entrance on Southern Boulevard, across from the New York Botanical Garden. Xavier Way leads from here to Matteo Ricci Circle. A Public Safety officer is on duty at the gate, and there's a guard booth in Matteo Ricci Circle. Walking in? Tap your Fordham ID at the card reader."
   },
   "webster_gate": {
     "name": "Third / Webster Avenue Gate",
@@ -421,11 +421,11 @@
   "bathgate_gate": {
     "name": "Pedestrian Entrance (Bathgate Ave)",
     "kind": "transit",
-    "blurb": "Pedestrian entrance at the south end of Rose Hill Manor Drive, by Thebaud Hall and Finlay Hall."
+    "blurb": "Pedestrian entrance at the south end of Rose Hill Manor Drive, by Thebaud Hall and Finlay Hall. A Public Safety officer is on duty here. Tap your Fordham ID at the card reader as you come in."
   },
   "clavius_gate": {
     "name": "Pedestrian Entrance (Clavius Way)",
     "kind": "transit",
-    "blurb": "Pedestrian entrance at the east end of Clavius Way, near Tierney Hall."
+    "blurb": "Pedestrian entrance at the east end of Clavius Way, near Tierney Hall. A Public Safety officer is on duty here. Tap your Fordham ID at the card reader as you come in."
   }
 }

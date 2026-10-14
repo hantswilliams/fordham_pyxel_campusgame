@@ -843,6 +843,101 @@
       "type": "sign",
       "tile": "sign",
       "location": "walsh_library"
+    },
+    {
+      "at": [
+        79,
+        23
+      ],
+      "type": "npc",
+      "name": "Public Safety Officer",
+      "sprite": 5,
+      "facing": "right",
+      "lines": [
+        "This is the Main Entrance on Southern Boulevard. Cars, the Ram Van and visitors come in here.",
+        "Walking in? Tap your Fordham ID at the reader. Visitors check in with us.",
+        "Public Safety is here around the clock. Our office is in Thebaud Hall if you ever need us."
+      ]
+    },
+    {
+      "at": [
+        79,
+        21
+      ],
+      "type": "sign",
+      "tile": "card_reader",
+      "lines": [
+        "You tap your Fordham ID on the card reader.",
+        "Beep! The light turns green."
+      ]
+    },
+    {
+      "at": [
+        42,
+        65
+      ],
+      "type": "npc",
+      "name": "Public Safety Officer",
+      "sprite": 5,
+      "facing": "left",
+      "lines": [
+        "This is the Bathgate Avenue gate, at the south end of campus by Thebaud and Finlay Halls.",
+        "Tap your Fordham ID at the reader whenever you come in.",
+        "Lost something, or need help? Public Safety is in Thebaud Hall, right up the road."
+      ]
+    },
+    {
+      "at": [
+        39,
+        65
+      ],
+      "type": "sign",
+      "tile": "card_reader",
+      "lines": [
+        "You tap your Fordham ID on the card reader.",
+        "Beep! The light turns green."
+      ]
+    },
+    {
+      "at": [
+        81,
+        59
+      ],
+      "type": "npc",
+      "name": "Public Safety Officer",
+      "sprite": 5,
+      "facing": "left",
+      "lines": [
+        "This is the Clavius Way gate, on the east side by Tierney Hall.",
+        "Tap your Fordham ID at the reader on your way in.",
+        "Save Public Safety's number in your phone today. You'll be glad you have it."
+      ]
+    },
+    {
+      "at": [
+        78,
+        59
+      ],
+      "type": "sign",
+      "tile": "card_reader",
+      "lines": [
+        "You tap your Fordham ID on the card reader.",
+        "Beep! The light turns green."
+      ]
+    },
+    {
+      "at": [
+        76,
+        42
+      ],
+      "type": "npc",
+      "name": "Public Safety Officer",
+      "sprite": 5,
+      "facing": "down",
+      "lines": [
+        "Driving in? Show your parking permit or check in here.",
+        "Parking is in the lot by Southern Boulevard."
+      ]
     }
   ]
 }

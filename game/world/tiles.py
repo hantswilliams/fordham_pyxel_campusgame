@@ -68,6 +68,7 @@ TILES: dict[str, TileDef] = {
         TileDef("item_card", 45, True),    # a mission item: a dropped ID card, sparkling (decisions/0031)
         TileDef("item_package", 46, True), # a mission item: a package (decisions/0031)
         TileDef("item_card_road", 47, True),  # the dropped ID card, lying on a road (decisions/0041)
+        TileDef("card_reader", 48, True),  # ID card reader at a gate (decisions/0042)
     ]
 }
 

@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | For your review (not built yet) |
+| **Status** | Decided 2026-10-14: Parts 1 to 4 approved (A, A). Built on branch `gate-guards` |
 | **Raised** | 2026-10-14. Only the Webster Avenue gate has a guard. Every gate should have a Public Safety officer and a card reader, like the real campus. The other gates can stay open |
 | **Affects** | The three entrances other than Webster Avenue, the gate booth in Matteo Ricci Circle, and the gates' cards in the game and the Campus Guide |
-| **Built?** | Not yet. I'll build it after your decisions, on a new branch `gate-guards` |
+| **Built?** | Yes, on branch `gate-guards` |
 
 ## What's there today
 
@@ -53,7 +53,7 @@ The last lines point to Public Safety in Thebaud Hall, which ties in with the Lo
 
 ## Your decision (Part 1)
 
-- [ ] **Approve**
+- [x] **Approve**
 - [ ] **Not approve**: say why
 - [ ] **Other**: changes to the lines, or where they stand
 
@@ -89,7 +89,7 @@ Each of the three gates gets a **card reader**: a short dark post with a reader 
 
 ## Your decision (Part 2)
 
-- [ ] **Approve**: A
+- [x] **Approve**: A
 - [ ] **Not approve**: say which option you'd prefer
 - [ ] **Other**: describe below
 
@@ -113,7 +113,7 @@ The officer at the gate is enough.
 
 ## Your decision (Part 3)
 
-- [ ] **Approve**: A
+- [x] **Approve**: A
 - [ ] **Not approve**: B, leave it empty
 - [ ] **Other**: describe below
 
@@ -129,7 +129,7 @@ The three gates' descriptions in `content/locations.json` will say that a Public
 
 ## Your decision (Part 4)
 
-- [ ] **Approve**
+- [x] **Approve**
 - [ ] **Other**: describe below
 
 **Your notes:**
@@ -169,3 +169,37 @@ Adding them means changing the fence, and placing them right needs someone who k
 ## Sources
 - [Walsh gate to remain open 24/7 (The Fordham Ram, 2014)](https://thefordhamram.com/news/walsh-gate-to-remain-open-247)
 - [Walsh gate is now open 24 hours (The Fordham Ram)](https://thefordhamram.com/news/walsh-gate-is-now-open-24-hours)
+
+## What was built (2026-10-14)
+
+**Pictures** (in `decisions/images/0042/`):
+- `gates.png`: each gate and the booth, today and now
+- `bathgate_closeup.png`: the Bathgate gate up close, with the officer beside the gatepost and the card reader beside the sign
+
+**Officers.** A "Public Safety Officer" in Bert's uniform at each place, with the lines above. None of them wander.
+
+| Where | Officer stands | Card reader |
+|---|---|---|
+| Main Entrance | (79, 23), on the walkway beside the gatepost | (79, 21), on the lawn beside the gatepost |
+| Bathgate Avenue | (42, 65), beside the east gatepost, facing the opening | (39, 65), beside the west gatepost, under the gate's sign |
+| Clavius Way | (81, 59), beside the east gatepost | (78, 59), beside the west gatepost |
+| Matteo Ricci Circle booth | (76, 42), next to the booth | none |
+
+**Card readers.** A new `card_reader` tile: a dark post on a small paved square, with a reader that has a maroon Fordham band, a card slot and a green light. Face it and press Z: "You tap your Fordham ID on the card reader." / "Beep! The light turns green." The gates stay open, and Webster Avenue is unchanged.
+
+**Gate descriptions** (`content/locations.json`):
+- Each open gate's card now says a Public Safety officer is on duty and you tap your Fordham ID at the card reader.
+- The Main Entrance card also mentions the booth in Matteo Ricci Circle.
+- The Campus Guide pages for the three gates picked this up automatically.
+
+**Tests:** 278 pass. The new `tests/test_gates.py` checks that:
+- every open gate has an officer (who doesn't wander) and a card reader within 3 tiles of its opening
+- Webster keeps Bert and its ID check
+- the booth has an officer
+- you can still walk to every open gate's opening
+- each gate's card mentions the officer and the reader
+
+The accessibility check passes: 60 pages, 0 problems.
+
+**Still to confirm with Fordham:** the questions above, especially the booth's parking-permit line and the gates' hours.
+
