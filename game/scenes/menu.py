@@ -14,6 +14,7 @@ import math
 import pyxel
 
 from game.config import SCREEN_H, SCREEN_W, Col
+from game.systems import controls
 from game.systems.input import Action
 from game.systems.progress import BADGES
 from game.ui import font
@@ -180,7 +181,8 @@ class MenuScene(Scene):
             else:
                 font.text(x + 1, 2, name, Col.PEACH)
             x += w + 6
-        font.text(SCREEN_W - 6 - font.width("TAB: CLOSE"), 2, "TAB: CLOSE", Col.WHITE)
+        close = f"{controls.key('menu')}: CLOSE"
+        font.text(SCREEN_W - 6 - font.width(close), 2, close, Col.WHITE)
         if self.tab == 0:
             self._draw_missions()
         else:
@@ -245,7 +247,7 @@ class MenuScene(Scene):
         pyxel.line(6, sep, SCREEN_W - 7, sep, Col.GRAY)
         self._draw_preview(listed[self.cursor], sep + 3)
         tr = "PINNED" if self.progress.show_tracker else "AUTO"
-        self._footer(f"Z: OPEN  M: BAR {tr}  LEFT/RIGHT: TAB")
+        self._footer(controls.fmt(f"{{confirm}}: OPEN  {{map}}: BAR {tr}  LEFT/RIGHT: TAB"))
 
     def _draw_preview(self, m, y: int) -> None:
         """What to do next for the selected mission; the full page has the rest."""
@@ -300,9 +302,9 @@ class MenuScene(Scene):
             pyxel.tri(cx - 3, yb, cx + 3, yb, cx, yb + 4, Col.MAROON)
         if st.status == "active":
             act = "TRACK/DROP" if m.optional else "TRACK"
-            self._footer(f"Z: {act}  UP/DOWN: SCROLL  X: BACK")
+            self._footer(controls.fmt(f"{{confirm}}: {act}  UP/DOWN: SCROLL  {{back}}: BACK"))
         else:
-            self._footer("UP/DOWN: SCROLL  X: BACK")
+            self._footer(controls.fmt("UP/DOWN: SCROLL  {back}: BACK"))
 
     def _draw_passport(self) -> None:
         font.text(8, HEADER_H + 3, "RAM PASSPORT", Col.MAROON)

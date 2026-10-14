@@ -28,7 +28,7 @@
      "say": ["You picked up the package. Ride to O'Hare Hall, quick!"]},
     {"do": "ride", "location": "ohare_hall", "seconds": 15, "restart_from": 1,
      "label": "Deliver the package to O'Hare Hall",
-     "hint": "O'Hare is on the east side: east along Constitution Row, then south. Press X to hop on your bike.",
+     "hint": "O'Hare is on the east side: east along Constitution Row, then south. Press {back} to hop on your bike.",
      "fail_say": ["Out of time! The package went back to McShane. Pick it up and try again."],
      "say": ["Delivered with time to spare!"]}
   ],

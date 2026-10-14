@@ -5,6 +5,7 @@ import pyxel
 
 from game.config import SCREEN_H, SCREEN_W, Col
 from game.systems.id_check import CARD, CHOICES, IdCheck
+from game.systems import controls
 from game.systems.input import Action
 from game.ui import font
 from game.ui.text import GROW, TEXT_H
@@ -96,7 +97,7 @@ class IdCheckScene(Scene):
                 for j, line in enumerate(lines):
                     font.text(x + 18, ly + j * (12 + GROW), line, Col.BLACK if i == c.choice else Col.GRAY)
                 ly += len(lines) * (12 + GROW) + 8   # a gap between options, however many lines
-            font.text(x + 8, y + h - TEXT_H - 4, "UP/DOWN: CHOOSE   Z: TAP", Col.DARK_BLUE)
+            font.text(x + 8, y + h - TEXT_H - 4, f"UP/DOWN: CHOOSE   {controls.key('confirm')}: TAP", Col.DARK_BLUE)
         else:
             # slide the card/phone from the left to the reader
             start_x, end_x = x + 14, READER_X - 30
@@ -112,4 +113,4 @@ class IdCheckScene(Scene):
                 pyxel.rect(x + 8, y + h - 24 - GROW, gw, 16 + GROW, Col.GREEN)
                 font.text(x + 14, y + h - 22 - GROW, "ACCESS GRANTED", Col.WHITE)
                 if (pyxel.frame_count // 8) % 2 == 0:
-                    font.text(x + 16 + gw, y + h - 22 - GROW, "Z: CONTINUE", Col.DARK_BLUE)
+                    font.text(x + 16 + gw, y + h - 22 - GROW, f"{controls.key('confirm')}: CONTINUE", Col.DARK_BLUE)

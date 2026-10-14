@@ -3,14 +3,15 @@ Library, then hop on and off anywhere with X to cross campus twice as fast,
 Pokemon-style. Pure logic, no Pyxel."""
 
 from game import config
+from game.systems import controls
 
 from .progress import Progress
 
-TAKE_LINES = [
+TAKE_LINES = [controls.fmt(s) for s in (
     "A bike rack outside Walsh Library. You borrow a bike!",
-    "Press X to hop on or off. Riding is twice as fast as walking.",
+    "Press {back} to hop on or off. Riding is twice as fast as walking.",
     "Bring it back to any bike rack when you're done.",
-]
+)]
 RETURN_LINES = ["You park the bike back in the rack."]
 NO_BIKE_LINES = ["A bike rack outside Walsh Library. Bikes are free to borrow."]
 

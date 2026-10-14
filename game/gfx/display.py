@@ -183,6 +183,15 @@ def _masked_text(px: int, py: int, s: str, col: int, font, cell: int, bg: int, a
             _scratch.text(px - sx * k + i * cell, py - sy * k, c, col, font)
     # blt scales around the centre of the destination rectangle
     _scratch.blt(sw * (k - 1) / 2, sh * (k - 1) / 2, src, sx, sy, sw, sh, bg, scale=k)
+    if art is not None:
+        # an intro sign: whatever the layer drew over the scene (a caption
+        # box, the HOW TO PLAY card) covers it too
+        lx, ly = math.floor(sx * k / scale), math.floor(sy * k / scale)
+        lw = math.ceil((sx * k + tw) / scale) - lx
+        lh = math.ceil((sy * k + th) / scale) - ly
+        ox, oy = lx * scale - sx * k, ly * scale - sy * k
+        _scratch.blt(ox + lw * (scale - 1) / 2, oy + lh * (scale - 1) / 2, _layer, lx, ly, lw, lh,
+                     _key, scale=scale)
     _final.blt(sx * k, sy * k, _scratch, 0, 0, tw, th, _key)
 
 
