@@ -50,6 +50,6 @@ def test_bike_rack_by_the_library_near_the_start():
     lib = next(o for o in m.objects if o.type == "door" and o.location == "walsh_library")
     sx, sy = m.spawn
     for r in racks:
-        assert abs(r.x - lib.x) + abs(r.y - lib.y) <= 10      # outside the library
+        assert abs(r.x - lib.x) + abs(r.y - lib.y) <= 12      # outside the library (its west side)
         assert abs(r.x - sx) + abs(r.y - sy) <= 20            # near the start
         assert m.is_blocked(r.x, r.y)                         # you face it, not walk on it

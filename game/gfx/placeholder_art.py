@@ -119,16 +119,31 @@ def _tree_purple(img, x, y):
 
 
 def _bike_rack(img, x, y):
-    """A bike rack on the lawn with two maroon bikes in it (decisions/0030)."""
+    """A bike rack on the lawn (decisions/0030, redrawn in 0040): a metal
+    hoop on a concrete pad with a maroon bike parked against it, seen from
+    the side. Two side by side make a rack of two bikes."""
     _grass(img, x, y)
-    img.rect(x + 1, y + 12, 14, 2, Col.STONE)              # its concrete pad
-    for bx in (3, 9):
-        img.circb(x + bx + 1, y + 10, 2, Col.NAVY)          # back wheel
-        img.circb(x + bx + 1, y + 4, 2, Col.NAVY)           # front wheel
-        img.line(x + bx + 1, y + 4, x + bx + 1, y + 10, Col.MAROON)   # frame
-        img.line(x + bx - 1, y + 3, x + bx + 3, y + 3, Col.GRAY)       # handlebars
-    for rx in (2, 8, 14):                                   # the rack's hoops
-        img.line(x + rx, y + 6, x + rx, y + 12, Col.GRAY)
+    img.rect(x, y + 14, 16, 2, Col.STONE)                   # concrete pad
+    # the hoop behind the bike: an upside-down U of light metal tube
+    img.rect(x + 1, y + 3, 14, 2, Col.WHITE)
+    img.rect(x + 1, y + 3, 2, 11, Col.WHITE)
+    img.rect(x + 13, y + 3, 2, 11, Col.WHITE)
+    img.line(x + 1, y + 5, x + 14, y + 5, Col.STONE_SH)    # its shadow side
+    img.line(x + 2, y + 5, x + 2, y + 13, Col.STONE_SH)
+    img.line(x + 14, y + 5, x + 14, y + 13, Col.STONE_SH)
+    # the bike, side on, parked against it: wheels, maroon frame, seat, bars
+    for wx in (4, 12):
+        img.circ(x + wx, y + 11, 3, Col.NAVY)               # tyre
+        img.circ(x + wx, y + 11, 2, Col.LIME)               # the lawn through the spokes
+        img.pset(x + wx, y + 11, Col.NAVY)                  # hub
+        img.line(x + wx - 1, y + 11, x + wx + 1, y + 11, Col.GRAY)
+    frame = ((4, 11, 8, 11), (4, 11, 6, 7), (6, 7, 8, 11), (6, 7, 11, 7),
+             (8, 11, 11, 7), (11, 7, 12, 11))
+    for x0, y0, x1, y1 in frame:
+        img.line(x + x0, y + y0, x + x1, y + y1, Col.MAROON)
+    img.line(x + 5, y + 6, x + 7, y + 6, Col.NAVY)         # seat
+    img.line(x + 11, y + 6, x + 11, y + 5, Col.NAVY)       # handlebars
+    img.line(x + 10, y + 5, x + 12, y + 5, Col.NAVY)
 
 
 def _item_card(img, x, y):
