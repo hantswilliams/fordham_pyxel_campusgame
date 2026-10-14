@@ -9,7 +9,8 @@ They catch roughly a third of WCAG issues. Do this by hand before each release, 
 ## 1. Keyboard only (no mouse)
 - [ ] On the game page, the first Tab goes to "Accessible version: Rose Hill Campus Guide".
 - [ ] Tab reaches "Play with the keyboard"; Enter starts the game and the arrow keys move you.
-- [ ] Esc leaves the game: focus goes to the guide link, and Tab moves through the page again.
+- [ ] Esc leaves the game: focus goes to the guide link, and Tab moves through the page again. "Game paused" shows over the game and the bar says how to get back.
+- [ ] Open the guide (it opens in a new tab), then come back to the game's tab: "Game paused" has focus, and Enter carries on playing without opening the guide again.
 - [ ] In the guide, the first Tab shows "Skip to main content", and Enter jumps to the page heading.
 - [ ] Every link, checkbox and button can be reached and used, in a sensible order, with focus always visible.
 - [ ] On Missions, ticking a box with Space works, survives a reload, and "Clear all my ticks" clears them.

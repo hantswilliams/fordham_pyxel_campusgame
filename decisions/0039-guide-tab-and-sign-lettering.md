@@ -145,3 +145,14 @@ As decided: the guide opens in a new tab, intro signs are lettered crisp (A), an
 - **Accessibility check:** 60 pages, 0 problems.
 - **Not done:** the ID card's "FORDHAM" / "TAP ID" and the title screen's prototype note still use the tiny pixel font. Say if you'd like them crisp too.
 
+## Follow-up (2026-10-13): the keyboard after visiting the guide
+
+**What went wrong:** after opening the guide in its new tab and coming back, Enter didn't reach the game. The guide link still had focus, so Enter opened the guide again, and you had to click the game to get the keys back.
+
+**Fixed:**
+- **A visible paused state.** Whenever the game has started but the page has the keyboard (after Esc, or after clicking the guide link), the game shows **"Game paused"** with "Click here to keep playing". The bar's message turns yellow and reads "Game paused: click the game to keep playing." Screen readers announce the change.
+- **Coming back to the tab:** "Game paused" takes focus and reads "Press Enter or click to keep playing", so Enter carries on playing instead of reopening the guide.
+- **Clicking a link in the bar** now hands the keyboard to the page, so keys no longer go to the link and the game at once.
+
+**Checked:** with a stand-in for Pyxel's runtime, I walked through it step by step: playing, Esc, pausing, clicking to resume, opening the guide, returning, and pressing Enter to resume. Keys reach the game only while it's playing, and no extra guide tabs open. The accessibility check still passes (60 pages, 0 problems). Two steps were added to `docs/accessibility-checklist.md`.
+

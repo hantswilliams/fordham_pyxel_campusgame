@@ -132,3 +132,11 @@ def test_game_page_opens_the_guide_in_a_new_tab_and_says_so():
     link = re.search(r'<a id="fcq-guide"[^>]*>.*?</a>', build_web.A11Y, re.S).group(0)
     assert 'target="_blank"' in link and 'rel="noopener"' in link
     assert "opens in a new tab" in link
+
+
+def test_game_page_shows_when_the_game_is_paused():
+    import build_web
+    page = build_web.A11Y
+    assert 'id="fcq-resume"' in page and "Game paused" in page
+    assert 'aria-live="polite"' in page                        # the bar's status is announced
+    assert "visibilitychange" in page                          # coming back to the tab
