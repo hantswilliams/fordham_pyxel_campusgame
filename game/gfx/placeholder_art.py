@@ -180,6 +180,21 @@ def _item_package(img, x, y):
         img.pset(x + px, y + py, Col.YELLOW)
 
 
+def _card_reader(img, x, y):
+    """An ID card reader on a post at a campus gate (decisions/0042): a
+    small paved square, a dark post, the reader with a maroon Fordham band
+    and a green light."""
+    _path(img, x, y)
+    img.rect(x + 7, y + 7, 2, 8, Col.NAVY)                  # the post
+    img.rect(x + 5, y + 14, 6, 1, Col.STONE_DK)             # its foot
+    img.rect(x + 4, y + 1, 8, 7, Col.STONE_DK)              # the reader
+    img.rectb(x + 4, y + 1, 8, 7, Col.NAVY)
+    img.rect(x + 5, y + 2, 6, 2, Col.MAROON)                # Fordham band
+    img.rect(x + 6, y + 5, 4, 1, Col.NAVY)                  # card slot
+    img.pset(x + 10, y + 5, Col.LIME)                       # green light
+    img.pset(x + 10, y + 6, Col.LIME)
+
+
 def _flowers(img, x, y):
     _grass(img, x, y)
     for (px, py), col in zip(
@@ -493,7 +508,7 @@ def _car(img, x, y):
 
 TILE_ART = {
     "grass": _grass, "path": _path, "wall": _wall, "roof": _roof,
-    "door": _door, "window": _window, "tree": _tree, "tree_purple": _tree_purple, "bike_rack": _bike_rack, "item_card": _item_card, "item_card_road": _item_card_road, "item_package": _item_package, "flowers": _flowers,
+    "door": _door, "window": _window, "tree": _tree, "tree_purple": _tree_purple, "bike_rack": _bike_rack, "item_card": _item_card, "item_card_road": _item_card_road, "card_reader": _card_reader, "item_package": _item_package, "flowers": _flowers,
     "hedge": _hedge, "water": _water, "bench": _bench, "sign": _sign,
     "banner": _banner, "lamp": _lamp,
     "roof_res": _roof_colored(Col.ORANGE, Col.BROWN, Col.PEACH),

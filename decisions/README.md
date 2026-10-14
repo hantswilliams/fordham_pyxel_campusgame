@@ -66,5 +66,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0039](0039-guide-tab-and-sign-lettering.md) | The guide link opens in a new tab; signs in the intro and building plaques lettered in the crisp font (bigger plaques), intro art scaled 3x in one step | 1 approved, A, A | Yes, on `crisp-signs` | Decided; built |
 | [0040](0040-keys-in-bar-wandering-people-bike-rack.md) | Tab and M in the top bar; six students who walk about near their spot; the bike rack moved west of Walsh Library and redrawn | Approve all three (A for Part 2) | Yes, on `campus-life` | Built, for your review |
 | [0041](0041-mission-items.md) | Mission items easier to find: the lost ID on the road, the package at McShane's front door, a "!" over each | Approve | Yes, on `mission-items` | Built, for your review |
+| [0042](0042-gate-officers-and-card-readers.md) | A Public Safety officer and a card reader at every gate; gates other than Webster stay open; an officer in the Matteo Ricci Circle booth; gate descriptions updated | Approve all four (A, A) | Not yet | For your review |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).
