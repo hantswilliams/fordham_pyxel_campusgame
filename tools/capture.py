@@ -27,6 +27,7 @@ from game.world.mapdata import MapObject  # noqa: E402
 from game.systems.input import Action, ScriptedInput  # noqa: E402
 from game.world.directions import Direction  # noqa: E402
 from game.world.mapdata import load_map  # noqa: E402
+from game.world import wander  # noqa: E402
 
 OUT = ROOT / "build" / "screenshots"
 FRAMES_PER_STEP = config.TILE // config.WALK_SPEED
@@ -230,6 +231,8 @@ def main() -> None:
         script += frames
         shot_at[len(script)] = name
 
+    # the walks above are planned on a still map, so people stay put (decisions/0040)
+    wander.ENABLED = False
     app = App(input_source=ScriptedInput(script), headless=True)
     for frame in range(1, len(script) + 1):
         app.update()

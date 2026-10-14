@@ -195,8 +195,8 @@
     },
     {
       "at": [
-        20,
-        71
+        3,
+        68
       ],
       "type": "bike_rack",
       "tile": "bike_rack",
@@ -206,8 +206,8 @@
     },
     {
       "at": [
-        21,
-        71
+        4,
+        68
       ],
       "type": "bike_rack",
       "tile": "bike_rack",
@@ -470,7 +470,8 @@
       "facing": "left",
       "lines": [
         "See that maroon sign? That's a Ram Van shuttle stop, right here on Rose Hill Manor Drive by Dealy Hall."
-      ]
+      ],
+      "wander": 1
     },
     {
       "at": [
@@ -483,7 +484,8 @@
       "facing": "down",
       "lines": [
         "McShane Campus Center is the place for food. There's dining in Keating, Dealy, O'Hare and Queen's Court too."
-      ]
+      ],
+      "wander": 2
     },
     {
       "at": [
@@ -497,7 +499,8 @@
       "lines": [
         "O'Hare Hall has the Health Center and the Counseling Center. Good to know where they are before you need them.",
         "The Fordham Store is in O'Hare too."
-      ]
+      ],
+      "wander": 2
     },
     {
       "at": [
@@ -511,7 +514,8 @@
       "lines": [
         "Walsh Library is the big one in the southwest corner of campus.",
         "Don't mix it up with Walsh Hall. That's a residence hall over on the south side!"
-      ]
+      ],
+      "wander": 2
     },
     {
       "at": [
@@ -539,7 +543,8 @@
       "lines": [
         "I commute in every day. The Metro-North station is right outside this gate.",
         "If you take the subway instead, the Fordham Road station is on Webster Avenue."
-      ]
+      ],
+      "wander": 2
     },
     {
       "at": [
@@ -552,7 +557,8 @@
       "facing": "down",
       "lines": [
         "I live in Martyrs' Court. This big lawn is Martyrs' Lawn, the heart of the residential side of campus."
-      ]
+      ],
+      "wander": 2
     },
     {
       "at": [

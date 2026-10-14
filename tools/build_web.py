@@ -73,6 +73,7 @@ A11Y = """<style>
     padding: 4px 10px; min-height: 32px; cursor: pointer; }
   #fcq-a11y :focus-visible { outline: 3px solid #ffd447; outline-offset: 2px; }
   #fcq-a11y.fcq-paused #fcq-keys { color: #ffd447; font-weight: 600; }
+  #fcq-keys:empty { display: none; }
   #fcq-resume { position: fixed; left: 0; right: 0; bottom: 0; top: var(--fcq-bar-h); z-index: 15;
     display: flex; align-items: center; justify-content: center; border: 0; padding: 16px;
     background: rgba(32, 33, 36, 0.6); cursor: pointer; font: 18px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
@@ -87,7 +88,8 @@ A11Y = """<style>
 </style>
 <div id="fcq-a11y" role="region" aria-label="Accessibility">
   <a id="fcq-guide" href="guide/index.html" target="_blank" rel="noopener">Accessible version: Rose Hill Campus Guide <span class="fcq-note">(opens in a new tab)</span></a>
-  <span id="fcq-keys" aria-live="polite">Esc leaves the game.</span>
+  <span id="fcq-help">Tab: missions &middot; M: map &middot; Esc: leave the game</span>
+  <span id="fcq-keys" aria-live="polite"></span>
   <button type="button" id="fcq-play">Play with the keyboard</button>
 </div>
 <button type="button" id="fcq-resume" hidden><span><strong>Game paused</strong>
@@ -121,8 +123,8 @@ A11Y = """<style>
       var paused = started && !gameHasKeys;
       resume.hidden = !paused;
       bar.classList.toggle("fcq-paused", paused);
-      keys.textContent = !started ? "Esc leaves the game." :
-        gameHasKeys ? "Playing. Esc leaves the game." : "Game paused: click the game to keep playing.";
+      keys.textContent = !started ? "" :
+        gameHasKeys ? "Playing" : "Game paused: click the game to keep playing.";
     }
     function play() {
       gameHasKeys = started = true;

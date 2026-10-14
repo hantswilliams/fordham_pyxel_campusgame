@@ -41,6 +41,7 @@ class MapObject:
     sprite: int = 0  # character sheet row (npc)
     facing: Direction = Direction.DOWN
     auto: bool = False  # npc starts talking when the player walks up to it
+    wander: int = 0  # npc strolls up to this many tiles from where it starts (decisions/0040)
     # checkpoint only: a gate a guard opens after checking your ID
     after_lines: list[str] = field(default_factory=list)
     open_tile: str = "path"
@@ -129,6 +130,18 @@ class MapData:
             if (x, y) in self._under:
                 self.tiles[y][x] = self._under.pop((x, y))
         return obj
+
+    def begin_move(self, obj: MapObject, x: int, y: int) -> None:
+        """An object starts stepping to (x, y): it holds both cells until
+        it gets there, so nothing walks into either (decisions/0040)."""
+        self._by_pos[(x, y)] = obj
+
+    def end_move(self, obj: MapObject, x: int, y: int) -> None:
+        """The step is done: the object is at (x, y) and its old cell is free."""
+        if self._by_pos.get((obj.x, obj.y)) is obj:
+            del self._by_pos[(obj.x, obj.y)]
+        obj.x, obj.y = x, y
+        self._by_pos[(x, y)] = obj
 
     def checkpoints(self) -> list[MapObject]:
         return [o for o in self.objects if o.type == "checkpoint"]
@@ -251,6 +264,7 @@ def _make_object(map_id: str, i: int, d: dict, width: int, height: int) -> MapOb
         sprite=d.get("sprite", 0),
         facing=Direction.from_name(d.get("facing", "down")),
         auto=bool(d.get("auto", False)),
+        wander=int(d.get("wander", 0)),
         after_lines=list(d.get("after_lines", [])),
         open_tile=d.get("open_tile", "path"),
     )

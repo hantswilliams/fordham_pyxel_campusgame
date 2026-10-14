@@ -20,6 +20,7 @@ from game.world.directions import Direction
 from game.world.mapdata import MapData, MapObject, load_map
 from game.world.movement import GridMover
 from game.world.tiles import TILES, slot_to_pixel
+from game.world.wander import Wanderers
 
 from .campus_map import CampusMapScene
 from .card import BuildingCardScene
@@ -120,6 +121,8 @@ class OverworldScene(Scene):
         # on the crisp screen the plaques' names are lettered each frame (decisions/0039)
         self.plaque_labels: list | None = [] if display.active else None
         draw_overlay(self.overlay, self.map, app.locations, self.plaque_labels)
+        # people who stroll about (decisions/0040)
+        self.wanderers = Wanderers(self.map, TILE)
         self._update_camera()
 
     # --- update ------------------------------------------------------------
@@ -133,6 +136,8 @@ class OverworldScene(Scene):
         self._watch_tracker()
 
         p = self.player
+        mine = {(p.tile_x, p.tile_y)} | ({p.front_tile} if p.moving else set())
+        self.wanderers.update(mine)
         if not p.moving and self.queue:
             self._present(self.queue.pop(0))
             return
@@ -369,7 +374,8 @@ class OverworldScene(Scene):
         drawables: list[tuple[int, int, int, Direction, int]] = []
         for obj in self.map.objects:
             if obj.type == "npc":
-                drawables.append((obj.y * TILE, obj.x * TILE, obj.sprite, obj.facing, 0))
+                ox, oy, frame = self._npc_xy(obj)
+                drawables.append((oy, ox, obj.sprite, obj.facing, frame))
         p = self.player
         bike_sprite = MAROON_BIKE_SPRITE if "maroon_bike" in self.progress.unlocks else BIKE_SPRITE
         sprite = bike_sprite if self.bike.riding else PLAYER_SPRITE
@@ -384,13 +390,21 @@ class OverworldScene(Scene):
             if obj.type == "npc":
                 mark = self.book.npc_marker(obj.name)
                 if mark:
-                    bx, by = obj.x * TILE + 3, obj.y * TILE - 17 - bob
+                    ox, oy, _ = self._npc_xy(obj)
+                    bx, by = ox + 3, oy - 17 - bob
                     pyxel.rect(bx, by - GROW, 12, 14 + GROW, Col.WHITE)
                     pyxel.rectb(bx, by - GROW, 12, 14 + GROW, Col.NAVY)
                     font.text(bx + 2, by + 1 - GROW, mark, Col.MAROON)
 
         display.camera()
         self._draw_hud()
+
+    def _npc_xy(self, obj) -> tuple[int, int, int]:
+        """Where to draw a person (map pixels) and their walking frame."""
+        w = self.wanderers.get(obj)
+        if w is None:
+            return obj.x * TILE, obj.y * TILE, 0
+        return (*w.pixel_xy, w.frame)
 
     def _tracker_key(self):
         m = self.book.tracked()
