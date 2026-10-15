@@ -16,7 +16,8 @@ img#pyxel-gamepad-menu{position:absolute;left:50%;bottom:1%;transform:translateX
   window.launchPyxel = function () {
     const s = document.createElement("div"); s.id = "pyxel-screen"; document.body.appendChild(s);
     const c = document.createElement("canvas"); c.id = "canvas"; s.appendChild(c);
-    const size = () => { const r = c.getBoundingClientRect(); c.width = c.offsetWidth; c.height = c.offsetHeight; return r; };
+    // as SDL does: the backing size is the canvas's getBoundingClientRect()
+    const size = () => { const r = c.getBoundingClientRect(); c.width = Math.round(r.width); c.height = Math.round(r.height); return r; };
     if (window.matchMedia("(pointer: coarse)").matches) {
       c.style.height = "80%";
       for (const id of ["cross", "button", "menu"]) {

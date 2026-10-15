@@ -110,11 +110,6 @@ A11Y = """<style>
   /* sideways, the game uses the full height and X / Y do what SELECT / START
      do, so the small menu button (which would sit over the game) is hidden */
   html.fcq-touch.fcq-landscape img#pyxel-gamepad-menu { display: none; }
-  /* the canvas: upright, exactly the game's shape across the top (so Pyxel
-     draws it edge to edge); sideways, the full height, with the controls in
-     the space either side of the game */
-  html.fcq-touch:not(.fcq-landscape) div#pyxel-screen canvas#canvas { height: min(80%, 75vw) !important; }
-  html.fcq-touch.fcq-landscape div#pyxel-screen canvas#canvas { height: 100% !important; }
   #fcq-pad-help div { position: fixed; z-index: 16; pointer-events: none; color: #ffffff;
     font: 600 12px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; text-align: center; }
   #fcq-walk { padding: 3px 8px; background: rgba(32, 33, 36, 0.85); border-radius: 10px; }
@@ -230,36 +225,36 @@ A11Y = """<style>
 # others. Instead the canvas stays exactly the game's size, so Pyxel draws it
 # 1:1 (2:1 on a Retina screen), and the browser scales it smoothly to fit
 # below the bar. As the art is already doubled, it stays sharp.
+#
+# Pyxel never draws its screen smaller than 1:1: in a canvas smaller than
+# 768 x 576 it shows only the middle of the game, zoomed in (what phones
+# showed, decisions/0043). SDL takes the canvas's size from
+# getBoundingClientRect(), which counts the scale() that shrinks it to fit,
+# so the game canvas reports its own size (768 x 576) instead. The game
+# doesn't use the mouse or touches on the canvas (the on-screen gamepad has
+# its own pictures), so nothing else depends on that size.
 CRISP = """<style>
-  html:not(.fcq-fill) div#pyxel-screen canvas#canvas { width: %(w)dpx !important; height: %(h)dpx !important;
+  div#pyxel-screen canvas#canvas { width: %(w)dpx !important; height: %(h)dpx !important;
     transform-origin: 0 0; image-rendering: auto; }
 </style>
 <script>
   (function () {
     var W = %(w)d, H = %(h)d;
+    var rectOf = HTMLCanvasElement.prototype.getBoundingClientRect;
+    function unscaled(canvas) {
+      if (canvas.fcqUnscaled) return;
+      canvas.fcqUnscaled = true;
+      canvas.getBoundingClientRect = function () {
+        var r = rectOf.call(this);
+        return new DOMRect(r.x, r.y, this.offsetWidth, this.offsetHeight);
+      };
+      window.dispatchEvent(new Event("resize"));     // let SDL measure it again
+    }
     function fitGame() {
       var screen = document.querySelector("div#pyxel-screen");
       var canvas = document.querySelector("canvas#canvas");
       if (!screen || !canvas) return;
-      // On an iPhone the fixed-size canvas showed only the middle of the game,
-      // zoomed in (decisions/0043). On phones and tablets, let Pyxel fill the
-      // canvas itself, as its own touch layout does, and only set the
-      // canvas's size (CSS in A11Y). ?fit=fixed brings the fixed size back,
-      // to compare on a phone.
-      if (document.documentElement.classList.contains("fcq-touch") && !/fit=fixed/.test(location.search)) {
-        document.documentElement.classList.add("fcq-fill");
-        canvas.style.transform = "";
-        placePadHelp();
-        return;
-      }
-      // if Pyxel ever sizes its drawing to the window rather than to the
-      // canvas, the picture would come out squashed: go back to Pyxel's own
-      // fill-the-window layout instead
-      if (canvas.width !== 300 && Math.abs(canvas.width / canvas.height - W / H) > 0.02) {
-        document.documentElement.classList.add("fcq-fill");
-        canvas.style.transform = "";
-        return;
-      }
+      unscaled(canvas);
       var r = screen.getBoundingClientRect();
       // with the on-screen gamepad (decisions/0043): upright, the game sits at
       // the top and the controls go below; sideways, it uses the full height
@@ -280,7 +275,7 @@ CRISP = """<style>
       if (!d) { d = document.createElement("div"); d.id = "fcq-debug";
         d.style.cssText = "position:fixed;left:4px;bottom:4px;z-index:30;font:11px monospace;color:#fff;background:#000a;padding:2px 4px;pointer-events:none";
         document.body.appendChild(d); }
-      var r = c.getBoundingClientRect();
+      var r = rectOf.call(c);
       d.textContent = "window " + innerWidth + "x" + innerHeight + " dpr " + devicePixelRatio +
         " | canvas css " + Math.round(r.width) + "x" + Math.round(r.height) + " backing " + c.width + "x" + c.height +
         " | " + document.documentElement.className;

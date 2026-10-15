@@ -6,6 +6,8 @@
 // sideways) and as a computer, with tools/pyxel_standin.js in place of
 // Pyxel's runtime, and checks that:
 // - on a phone the bar is one line and the game fits below it
+// - Pyxel's canvas is at least the game's full size (it never draws smaller
+//   than 1:1, so a smaller canvas shows only the middle of the game)
 // - the game doesn't sit under the on-screen gamepad, and the labels for the
 //   gamepad are there and don't cover the game
 // - nothing scrolls sideways
@@ -26,6 +28,7 @@ const DEVICES = [
   { name: "Android upright", width: 412, height: 915, touch: true },
   { name: "Android sideways", width: 915, height: 412, touch: true },
   { name: "computer", width: 1280, height: 800, touch: false },
+  { name: "small laptop window", width: 1000, height: 560, touch: false },
 ];
 
 function serve() {
@@ -58,21 +61,23 @@ const overlap = (a, b) => a && b && a.width && b.width &&
     await page.goto(url, { waitUntil: "load" });
     await page.waitForTimeout(800);
     await page.mouse.click(d.width / 2, d.height / 3);            // start playing
-    await page.waitForTimeout(300);
+    // SDL measures the canvas again on every resize (turning the phone, the
+    // address bar sliding away): make sure it's measured after the page has
+    // fitted the game
+    await page.evaluate(() => window.dispatchEvent(new Event("resize")));
+    await page.waitForTimeout(400);
     const m = await page.evaluate(() => {
       const rect = (sel) => { const e = document.querySelector(sel);
         if (!e || getComputedStyle(e).display === "none") return null;
         const r = e.getBoundingClientRect(); if (!r.width) return null; return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height }; };
-      // the game picture: on touch screens Pyxel draws it as big as fits in the
-      // canvas, centred (the canvas fills the space); elsewhere it is the canvas
-      const c = rect("canvas#canvas");
-      let game = c;
-      if (c && document.documentElement.classList.contains("fcq-fill")) {
-        const k = Math.min(c.width / 4, c.height / 3), w = 4 * k, h = 3 * k;
-        const left = c.left + (c.width - w) / 2, top = c.top + (c.height - h) / 2;
-        game = { left, top, right: left + w, bottom: top + h, width: w, height: h };
-      }
+      // the game picture is the canvas, as shown (the page makes the canvas
+      // report its unscaled size to SDL, so ask the prototype)
+      const cv = document.querySelector("canvas#canvas");
+      const cr = cv && HTMLCanvasElement.prototype.getBoundingClientRect.call(cv);
+      const game = cr && cr.width ? { left: cr.left, right: cr.right, top: cr.top, bottom: cr.bottom,
+        width: cr.width, height: cr.height } : null;
       return { bar: rect("#fcq-a11y"), game, cross: rect("img#pyxel-gamepad-cross"),
+        backing: cv ? [cv.width, cv.height] : null,
         buttons: rect("img#pyxel-gamepad-button"), menu: rect("img#pyxel-gamepad-menu"),
         walk: rect("#fcq-walk"), labels: rect("#fcq-buttons"), help: rect("#fcq-help"),
         status: document.getElementById("fcq-keys").textContent,
@@ -84,6 +89,10 @@ const overlap = (a, b) => a && b && a.width && b.width &&
         m.game.left < -1 || m.game.right > m.innerW + 1) bad.push("game doesn't fit on screen below the bar");
     if (d.touch && m.game && m.game.width < Math.min(m.innerW, (m.innerH - m.bar.height) * 4 / 3) * 0.6)
       bad.push(`game is only ${Math.round(m.game.width)}px wide`);
+    // Pyxel never draws smaller than 1:1: a smaller canvas shows only the
+    // middle of the game, zoomed in
+    if (!m.backing || m.backing[0] < 768 || m.backing[1] < 576)
+      bad.push(`Pyxel's canvas is ${m.backing && m.backing.join("x")}, so it would show only part of the game`);
     if (m.status !== "Playing") bad.push(`status says "${m.status}"`);
     if (d.touch) {
       if (m.bar.height > 44) bad.push(`bar is ${Math.round(m.bar.height)}px tall (more than one line)`);
