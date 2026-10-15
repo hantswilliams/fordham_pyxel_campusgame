@@ -225,25 +225,36 @@ A11Y = """<style>
 # others. Instead the canvas stays exactly the game's size, so Pyxel draws it
 # 1:1 (2:1 on a Retina screen), and the browser scales it smoothly to fit
 # below the bar. As the art is already doubled, it stays sharp.
+#
+# Pyxel never draws its screen smaller than 1:1: in a canvas smaller than
+# 768 x 576 it shows only the middle of the game, zoomed in (what phones
+# showed, decisions/0043). SDL takes the canvas's size from
+# getBoundingClientRect(), which counts the scale() that shrinks it to fit,
+# so the game canvas reports its own size (768 x 576) instead. The game
+# doesn't use the mouse or touches on the canvas (the on-screen gamepad has
+# its own pictures), so nothing else depends on that size.
 CRISP = """<style>
-  html:not(.fcq-fill) div#pyxel-screen canvas#canvas { width: %(w)dpx !important; height: %(h)dpx !important;
+  div#pyxel-screen canvas#canvas { width: %(w)dpx !important; height: %(h)dpx !important;
     transform-origin: 0 0; image-rendering: auto; }
 </style>
 <script>
   (function () {
     var W = %(w)d, H = %(h)d;
+    var rectOf = HTMLCanvasElement.prototype.getBoundingClientRect;
+    function unscaled(canvas) {
+      if (canvas.fcqUnscaled) return;
+      canvas.fcqUnscaled = true;
+      canvas.getBoundingClientRect = function () {
+        var r = rectOf.call(this);
+        return new DOMRect(r.x, r.y, this.offsetWidth, this.offsetHeight);
+      };
+      window.dispatchEvent(new Event("resize"));     // let SDL measure it again
+    }
     function fitGame() {
       var screen = document.querySelector("div#pyxel-screen");
       var canvas = document.querySelector("canvas#canvas");
       if (!screen || !canvas) return;
-      // if Pyxel ever sizes its drawing to the window rather than to the
-      // canvas, the picture would come out squashed: go back to Pyxel's own
-      // fill-the-window layout instead
-      if (canvas.width !== 300 && Math.abs(canvas.width / canvas.height - W / H) > 0.02) {
-        document.documentElement.classList.add("fcq-fill");
-        canvas.style.transform = "";
-        return;
-      }
+      unscaled(canvas);
       var r = screen.getBoundingClientRect();
       // with the on-screen gamepad (decisions/0043): upright, the game sits at
       // the top and the controls go below; sideways, it uses the full height
@@ -254,8 +265,58 @@ CRISP = """<style>
       var k = Math.max(0.1, Math.min(r.width / W, h / H));
       var top = pad && !wide ? 0 : (h - H * k) / 2;
       canvas.style.transform = "translate(" + (r.width - W * k) / 2 + "px," + top + "px) scale(" + k + ")";
+      if (pad) placePads(r, wide ? null : top + H * k);
       placePadHelp();
     }
+    // Upright, Pyxel pins its gamepad to the bottom of the screen, which on a
+    // tall phone leaves a wide gap under the game. Bring the d-pad and the
+    // buttons up to just below the game (with room for their labels), never
+    // lower than Pyxel puts them; the small menu button goes under them.
+    // Sideways, Pyxel's own places are kept.
+    var padsAt = "";
+    function placePads(r, gameBottom) {
+      var cross = document.querySelector("img#pyxel-gamepad-cross");
+      var btns = document.querySelector("img#pyxel-gamepad-button");
+      var menu = document.querySelector("img#pyxel-gamepad-menu");
+      var imgs = [cross, btns, menu].filter(Boolean);
+      var at = "pyxel";
+      if (gameBottom === null) {
+        imgs.forEach(function (e) { e.style.removeProperty("top"); e.style.removeProperty("bottom"); });
+      } else {
+        var n = Math.max(cross ? cross.offsetHeight : 0, btns ? btns.offsetHeight : 0);
+        if (!n) return;                                  // pictures not sized yet
+        var labels = document.getElementById("fcq-buttons");
+        var lh = (labels && labels.offsetHeight) || 90;
+        var y = Math.round(Math.min(gameBottom + lh + 16, r.height * 0.95 - n));
+        [cross, btns].forEach(function (e) {
+          if (!e) return;
+          e.style.setProperty("top", y + "px", "important");
+          e.style.setProperty("bottom", "auto", "important");
+        });
+        if (menu) {
+          var my = Math.round(Math.min(y + n + 10, r.height * 0.99 - menu.offsetHeight));
+          menu.style.setProperty("top", my + "px", "important");
+          menu.style.setProperty("bottom", "auto", "important");
+        }
+        at = y + "/" + n;
+      }
+      // Pyxel remembers where its gamepad pictures are until the next resize
+      if (at !== padsAt) { padsAt = at; window.dispatchEvent(new Event("resize")); }
+    }
+    // ?debug shows the sizes that matter for fitting the game, for phone testing
+    function debugSizes() {
+      if (!/debug/.test(location.search)) return;
+      var c = document.querySelector("canvas#canvas"), d = document.getElementById("fcq-debug");
+      if (!c) return;
+      if (!d) { d = document.createElement("div"); d.id = "fcq-debug";
+        d.style.cssText = "position:fixed;left:4px;bottom:4px;z-index:30;font:11px monospace;color:#fff;background:#000a;padding:2px 4px;pointer-events:none";
+        document.body.appendChild(d); }
+      var r = rectOf.call(c);
+      d.textContent = "window " + innerWidth + "x" + innerHeight + " dpr " + devicePixelRatio +
+        " | canvas css " + Math.round(r.width) + "x" + Math.round(r.height) + " backing " + c.width + "x" + c.height +
+        " | " + document.documentElement.className;
+    }
+    setInterval(debugSizes, 1000);
     // labels for the on-screen gamepad, just above the d-pad and the buttons
     function placePadHelp() {
       var help = document.getElementById("fcq-pad-help");
@@ -263,18 +324,25 @@ CRISP = """<style>
       var btns = document.querySelector("img#pyxel-gamepad-button");
       if (!help || !cross || !btns) return;
       help.style.display = "block";
+      var canvas = document.querySelector("canvas#canvas");
+      var g = canvas ? rectOf.call(canvas) : null;
       [["fcq-walk", cross], ["fcq-buttons", btns]].forEach(function (pair) {
         var box = document.getElementById(pair[0]), r = pair[1].getBoundingClientRect();
         if (!r.width) return;
-        box.style.width = pair[0] === "fcq-buttons" ? Math.max(r.width, 180) + "px" : "auto";
+        // sideways the controls sit beside the game: keep the labels off it
+        var lo = 4, hi = window.innerWidth - 4;
+        if (g && g.width && r.left >= g.right - 1) lo = g.right + 4;
+        if (g && g.width && r.right <= g.left + 1) hi = g.left - 4;
+        box.style.width = pair[0] === "fcq-buttons" ? Math.min(hi - lo, Math.max(r.width, 180)) + "px" : "auto";
         var w = box.getBoundingClientRect().width;
-        box.style.left = Math.max(4, Math.min(window.innerWidth - w - 4, r.left + (r.width - w) / 2)) + "px";
+        box.style.left = Math.max(lo, Math.min(hi - w, r.left + (r.width - w) / 2)) + "px";
         box.style.top = Math.max(0, r.top - box.getBoundingClientRect().height - 6) + "px";
       });
     }
     window.addEventListener("resize", function () { fitGame(); setTimeout(fitGame, 250); });
-    // Pyxel sizes its gamepad pictures after they load: keep the labels with them
-    if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) setInterval(placePadHelp, 500);
+    // Pyxel sizes its gamepad pictures after they load: keep them, and their
+    // labels, in place
+    if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) setInterval(fitGame, 500);
     new MutationObserver(fitGame).observe(document.documentElement, { childList: true, subtree: true,
       attributes: true, attributeFilter: ["width", "height"] });
     if (window.ResizeObserver) new ResizeObserver(fitGame).observe(document.documentElement);
