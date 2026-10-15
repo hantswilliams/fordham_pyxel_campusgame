@@ -27,7 +27,7 @@ from game.world.mapdata import MapObject  # noqa: E402
 from game.systems.input import Action, ScriptedInput  # noqa: E402
 from game.world.directions import Direction  # noqa: E402
 from game.world.mapdata import load_map  # noqa: E402
-from game.world import wander  # noqa: E402
+from game.world import shuttle, wander  # noqa: E402
 
 OUT = ROOT / "build" / "screenshots"
 FRAMES_PER_STEP = config.TILE // config.WALK_SPEED
@@ -233,6 +233,7 @@ def main() -> None:
 
     # the walks above are planned on a still map, so people stay put (decisions/0040)
     wander.ENABLED = False
+    shuttle.ENABLED = False          # no shuttle in the way of the planned walks (decisions/0044)
     app = App(input_source=ScriptedInput(script), headless=True)
     for frame in range(1, len(script) + 1):
         app.update()

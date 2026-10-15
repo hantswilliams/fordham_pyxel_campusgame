@@ -8,8 +8,9 @@ from game import config
 from game.config import SCREEN_H, SCREEN_W, TILE, Col
 from game.gfx.building_art import draw_on_map
 from game.gfx.building_overlay import draw_overlay
-from game.gfx.placeholder_art import (BIKE_SPRITE, CHAR_IMAGE_BANK, MAROON_BIKE_SPRITE, TILE_IMAGE_BANK,
-                                      character_uv)
+from game.gfx.placeholder_art import (BIKE_SPRITE, CHAR_IMAGE_BANK, MAROON_BIKE_SPRITE, RAM_VAN, SHUTTLE_VAN,
+                                      TILE_IMAGE_BANK, character_uv, van_uv)
+from game.systems import controls
 from game.systems.bike import Bike
 from game.systems.missions import Reaction
 from game.systems.input import Action
@@ -20,6 +21,8 @@ from game.world.directions import Direction
 from game.world.mapdata import MapData, MapObject, load_map
 from game.world.movement import GridMover
 from game.world.tiles import TILES, slot_to_pixel
+from game.world import shuttle as shuttle_mod
+from game.world.shuttle import ROAD, Route, Shuttle, eta_text
 from game.world.wander import Wanderers
 
 from .campus_map import CampusMapScene
@@ -123,6 +126,24 @@ class OverworldScene(Scene):
         draw_overlay(self.overlay, self.map, app.locations, self.plaque_labels)
         # people who stroll about (decisions/0040)
         self.wanderers = Wanderers(self.map, TILE)
+        # the Campus Shuttle, and the Ram Van parked at the garage (decisions/0044)
+        self.shuttle: Shuttle | None = None
+        self.shuttle_data = shuttle_mod.load_data(config.MAPS_DIR, map_id)
+        self.ram_van: tuple[int, int, Direction] | None = None
+        if self.shuttle_data and shuttle_mod.ENABLED:
+            route = Route(self.map, self.shuttle_data, TILE)
+            self.shuttle = Shuttle(route, self.shuttle_data.get("start_stop", 0))
+            rv = self.shuttle_data.get("ram_van")
+            if rv:
+                x, y = rv["at"]
+                facing = Direction.from_name(rv.get("facing", "left"))
+                self.ram_van = (x, y, facing)
+                for cx in (x, x + 1):           # it takes up two cells, side on
+                    self.map.add_object(MapObject(type="vehicle", x=cx, y=y, name="Ram Van",
+                                                  location=rv.get("location", "ram_van")))
+        self.riding_to: int | None = None       # the stop you're riding to
+        self.skipping = False
+        self.met_driver = False
         self._update_camera()
 
     # --- update ------------------------------------------------------------
@@ -138,6 +159,11 @@ class OverworldScene(Scene):
         p = self.player
         mine = {(p.tile_x, p.tile_y)} | ({p.front_tile} if p.moving else set())
         self.wanderers.update(mine)
+        if self.riding_to is not None:
+            self._update_ride()
+            return
+        if self.shuttle:
+            self.shuttle.update(mine | self._people_on_road(), self._beside_shuttle())
         if not p.moving and self.queue:
             self._present(self.queue.pop(0))
             return
@@ -163,7 +189,7 @@ class OverworldScene(Scene):
                 return
             for action, direction in DIRECTION_ACTIONS:
                 if self.input.held(action):
-                    if not p.try_move(direction, self.map.is_blocked):
+                    if not p.try_move(direction, self._blocked):
                         # walking into a closed gate starts the guard's ID check
                         ahead = self.map.object_at(*p.front_tile)
                         if ahead and ahead.type == "checkpoint":
@@ -179,6 +205,111 @@ class OverworldScene(Scene):
         if self.book.changed or self.autosave_timer <= 0:
             self._save()
         self._update_camera()
+
+    # --- the Campus Shuttle (decisions/0044) ----------------------------------------
+    def _blocked(self, x: int, y: int) -> bool:
+        return self.map.is_blocked(x, y) or bool(self.shuttle and (x, y) in self.shuttle.cells())
+
+    def _people_on_road(self) -> set:
+        """Anyone standing on the road, whom the shuttle mustn't drive into."""
+        return {(o.x, o.y) for o in self.map.objects
+                if o.type == "npc" and self.map.tiles[o.y][o.x] in ROAD}
+
+    def _beside_shuttle(self) -> bool:
+        p = self.player
+        cells = self.shuttle.cells()
+        return any((p.tile_x + d.dx, p.tile_y + d.dy) in cells for d in Direction)
+
+    def _shuttle_door(self) -> None:
+        """You pressed confirm at the shuttle: at a stop, get on and pick
+        where to go; anywhere else, the driver waves you to a stop."""
+        sh = self.shuttle
+        here = sh.stopped_at
+        if here is None:
+            self.app.scenes.push(DialogueScene(self.app, [
+                "The shuttle only lets people on and off at its stops, the maroon shuttle signs.",
+                "Wait at any stop and hop on when it pulls in."], "Shuttle Driver"))
+            return
+        stops = sh.route.stops
+        cur = stops.index(here)
+        dests = [(cur + k) % len(stops) for k in range(1, len(stops))]   # in the order it drives
+
+        def chosen(i):
+            if i < len(dests):
+                self._board(dests[i])
+
+        def ask():
+            self.app.scenes.push(ChoiceScene(self.app, f"{here.name} stop. Where to?",
+                                             [stops[i].name.upper() for i in dests] + ["NOT NOW"],
+                                             chosen, "Shuttle Driver"))
+        if not self.met_driver:
+            self.met_driver = True
+            self.app.scenes.push(DialogueScene(self.app, shuttle_mod.lines(self.shuttle_data, "driver"),
+                                               "Shuttle Driver", on_close=ask))
+        else:
+            ask()
+
+    def _board(self, dest: int) -> None:
+        if self.bike.riding:                    # you get off your bike first
+            self.bike.riding = False
+            self.player.speed = self.bike.speed
+        self.riding_to, self.skipping = dest, False
+        self.player.moving = False
+        self.player.progress = 0
+
+    def _update_ride(self) -> None:
+        """Riding: the van drives on with you aboard and the camera follows it.
+        Back skips ahead (the van goes FAST times quicker) to your stop."""
+        if not self.skipping and self.input.pressed(Action.CANCEL):
+            self.skipping = True
+        people = self._people_on_road()
+        for _ in range(shuttle_mod.FAST if self.skipping else 1):
+            if self.shuttle.update(people) == self.riding_to:
+                self._alight()
+                break
+        self._update_camera()
+
+    def _alight(self) -> None:
+        stop = self.shuttle.route.stops[self.riding_to]
+        self.riding_to, self.skipping = None, False
+        p = self.player
+        x, y = stop.alight
+        if self._blocked(x, y):                 # someone's standing there: the next free spot
+            x, y = min(((cx, cy) for cy in range(y - 3, y + 4) for cx in range(x - 3, x + 4)
+                        if self.map.in_bounds(cx, cy) and not self._blocked(cx, cy)
+                        and self.map.tiles[cy][cx] not in ROAD),
+                       key=lambda c: abs(c[0] - x) + abs(c[1] - y), default=(x, y))
+        p.tile_x, p.tile_y = x, y
+        vx, vy = stop.at
+        dx, dy = x - vx, y - vy
+        p.facing = (Direction.RIGHT if dx > 0 else Direction.LEFT) if abs(dx) > abs(dy) else \
+            (Direction.DOWN if dy > 0 else Direction.UP)
+        self._check_area()
+        self._update_camera()
+        self.progress.visited.add("campus_shuttle")
+        self.app.scenes.push(DialogueScene(self.app, [f"{stop.name}! Have a great day."], "Shuttle Driver"))
+        self.queue += self.book.read("campus_shuttle")      # riding counts for the checklist
+        self._save()
+
+    def _stop_sign(self, obj) -> None:
+        """A shuttle stop's sign says when the shuttle is next due, then shows its card."""
+        stops = self.shuttle.route.stops
+        stop = next((i for i, s in enumerate(stops) if s.sign == (obj.x, obj.y)), None)
+
+        def card():
+            self._open_card(obj.location)
+        if stop is None:
+            card()
+            return
+        when = eta_text(self.shuttle.eta(stop), config.FPS)
+        self.app.scenes.push(DialogueScene(self.app, [
+            f"Campus Shuttle stop: {stops[stop].name}. {when}",
+            controls.fmt("When it pulls in, face its door and press {confirm} to ride.")], on_close=card))
+
+    def _open_card(self, location: str) -> None:
+        self.app.scenes.push(BuildingCardScene(self.app, self.app.locations[location]))
+        self.progress.visited.add(location)
+        self.queue += self.book.read(location)
 
     # --- missions (decisions/0031) -----------------------------------------------------
     def _save(self) -> None:
@@ -278,8 +409,11 @@ class OverworldScene(Scene):
 
     def _update_camera(self) -> None:
         p = self.player
+        x, y = p.pixel_x + TILE / 2, p.pixel_y + TILE / 2
+        if self.riding_to is not None:          # on the shuttle: follow the van
+            x, y, _, _ = self.shuttle.pos
         self.cam = follow(
-            p.pixel_x + TILE / 2, p.pixel_y + TILE / 2,
+            x, y,
             SCREEN_W, SCREEN_H, self.map.width * TILE, self.map.height * TILE,
         )
 
@@ -327,6 +461,9 @@ class OverworldScene(Scene):
 
     def _interact(self) -> None:
         fx, fy = self.player.front_tile
+        if self.shuttle and (fx, fy) in self.shuttle.cells():
+            self._shuttle_door()
+            return
         obj = self.map.object_at(fx, fy)
         if obj is None:
             return
@@ -347,11 +484,10 @@ class OverworldScene(Scene):
             else:
                 self.app.scenes.push(DialogueScene(self.app, obj.lines, obj.name))
                 self.queue += reactions
+        elif obj.location == "campus_shuttle" and self.shuttle:
+            self._stop_sign(obj)
         elif obj.location:
-            self.app.scenes.push(
-                BuildingCardScene(self.app, self.app.locations[obj.location]))
-            self.progress.visited.add(obj.location)
-            self.queue += self.book.read(obj.location)
+            self._open_card(obj.location)
         else:
             self.app.scenes.push(DialogueScene(self.app, obj.lines))
 
@@ -380,10 +516,28 @@ class OverworldScene(Scene):
         bike_sprite = MAROON_BIKE_SPRITE if "maroon_bike" in self.progress.unlocks else BIKE_SPRITE
         sprite = bike_sprite if self.bike.riding else PLAYER_SPRITE
         frame = p.anim_frame if not self.bike.riding else (p.progress // 4) % 3 if p.moving else 0
-        drawables.append((p.pixel_y, p.pixel_x, sprite, p.facing, frame))
+        if self.riding_to is None:              # on the shuttle you're inside the van
+            drawables.append((p.pixel_y, p.pixel_x, sprite, p.facing, frame))
+        # the vans (decisions/0044): a sprite id of -1 / -2 marks them
+        if self.shuttle:
+            vx, vy, hx, hy = self.shuttle.pos
+            drawables.append((vy - TILE / 2, vx, -1, (hx, hy), 0))
+        if self.ram_van:
+            rx, ry, rf = self.ram_van
+            drawables.append((ry * TILE, (rx + 1) * TILE, -2, (rf.dx, rf.dy), 0))
         for y, x, sprite, facing, frame in sorted(drawables, key=lambda d: d[0]):
+            if sprite < 0:
+                self._draw_van(SHUTTLE_VAN if sprite == -1 else RAM_VAN, x, y + TILE / 2, *facing)
+                continue
             u, v = character_uv(sprite, facing, frame)
             pyxel.blt(x, y - 2, CHAR_IMAGE_BANK, u, v, TILE, TILE, Col.BLACK)
+        if self.shuttle and self.shuttle.beep:              # it's stopped for you
+            vx, vy, _, _ = self.shuttle.pos
+            w = font.width("BEEP!") + 6
+            bx, by = int(vx - w / 2), int(vy - 34 - GROW)
+            pyxel.rect(bx, by, w, 14 + GROW, Col.WHITE)
+            pyxel.rectb(bx, by, w, 14 + GROW, Col.NAVY)
+            font.text(bx + 3, by + 1, "BEEP!", Col.MAROON)
         # "!" over people with a mission for you, "?" over people a mission is waiting on
         bob = (pyxel.frame_count // 10) % 2
         for obj in self.map.objects:
@@ -403,6 +557,17 @@ class OverworldScene(Scene):
 
         display.camera()
         self._draw_hud()
+
+    def _draw_van(self, van: int, cx: float, cy: float, hx: float, hy: float) -> None:
+        """A van with its middle at (cx, cy), heading (hx, hy): side on when
+        it drives across or at an angle, front or back when it drives down or up."""
+        if abs(hx) >= abs(hy) * 0.7:
+            u, v, w = van_uv(van, "side")
+            flip = -1 if hx < 0 else 1
+            pyxel.blt(int(cx - 16), int(cy - 16), CHAR_IMAGE_BANK, u, v, w * flip, 24, Col.BLACK)
+        else:
+            u, v, w = van_uv(van, "front" if hy > 0 else "back")
+            pyxel.blt(int(cx - 8), int(cy - 16), CHAR_IMAGE_BANK, u, v, w, 24, Col.BLACK)
 
     def _npc_xy(self, obj) -> tuple[int, int, int]:
         """Where to draw a person (map pixels) and their walking frame."""
@@ -458,7 +623,15 @@ class OverworldScene(Scene):
             pyxel.rectb(x + 2, y + 2, w - 4, 28 + 2 * GROW, Col.WHITE)
             font.centered(y + 3, msg, Col.YELLOW)
             font.centered(y + 16 + GROW, self.complete_title, Col.WHITE)
-        if self.toast_timer > 0:
+        if self.riding_to is not None:
+            stop = self.shuttle.route.stops[self.riding_to].name.upper()
+            msg = f"SHUTTLE TO {stop}" + ("  SKIPPING AHEAD" if self.skipping else controls.fmt("  {back}: SKIP"))
+            w = font.width(msg) + 12
+            y = SCREEN_H - 22
+            pyxel.rect(4, y - GROW, w, 16 + GROW, Col.MAROON)
+            pyxel.rectb(4, y - GROW, w, 16 + GROW, Col.WHITE)
+            font.text(10, y + 2 - GROW, msg, Col.WHITE)
+        elif self.toast_timer > 0:
             w = font.width(self.toast) + 12
             y = SCREEN_H - 22
             pyxel.rect(4, y - GROW, w, 16 + GROW, Col.NAVY)

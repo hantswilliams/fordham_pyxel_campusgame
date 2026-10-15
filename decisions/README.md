@@ -68,5 +68,6 @@ This folder records the choices that shape the game. I'll add a new file here wh
 | [0041](0041-mission-items.md) | Mission items easier to find: the lost ID on the road, the package at McShane's front door, a "!" over each | Approve | Yes, on `mission-items` | Built, for your review |
 | [0042](0042-gate-officers-and-card-readers.md) | A Public Safety officer and a card reader at every gate; gates other than Webster stay open; an officer in the Matteo Ricci Circle booth; gate descriptions updated | Approve all four (A, A) | Not yet | For your review |
 | [0043](0043-mobile-and-touch.md) | Phones and tablets: labelled touch controls (X/Y for map and missions), button names that follow the device, a compact phone layout and browser fixes, text size, speed and real-phone testing | 1A, 2, 3, 4A, 5 | Yes, on `mobile` | Decided; built, needs a real-phone check |
+| [0044](0044-campus-shuttle.md) | A shuttle that drives the campus roads: a white Campus Shuttle on a whole-campus loop with six stops, the Ram Van parked at the garage, it stops for you, you can ride it, "next shuttle" times on the signs, the checklist and the Guide | B, B with one shuttle, 3, B with "next shuttle" times, 5 | Yes, on `campus-shuttle` | Decided; built, for your review |
 
 New decision? Copy [`TEMPLATE.md`](TEMPLATE.md).

@@ -116,7 +116,7 @@ def test_checklist_starts_itself_and_takes_any_order():
     book.read("hughes_hall"); book.read("dealy_hall")
     book.talk("Orientation Leader")
     assert {"academics", "community"} <= p.badges
-    for loc in ("mcshane_center", "walsh_library", "ohare_hall", "ram_van"):
+    for loc in ("mcshane_center", "walsh_library", "ohare_hall", "campus_shuttle"):
         book.read(loc)
     done = book.read("webster_gate")
     assert done[-1].completed and done[-1].completed.id == "first_week"
