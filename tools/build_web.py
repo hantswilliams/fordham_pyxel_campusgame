@@ -265,7 +265,43 @@ CRISP = """<style>
       var k = Math.max(0.1, Math.min(r.width / W, h / H));
       var top = pad && !wide ? 0 : (h - H * k) / 2;
       canvas.style.transform = "translate(" + (r.width - W * k) / 2 + "px," + top + "px) scale(" + k + ")";
+      if (pad) placePads(r, wide ? null : top + H * k);
       placePadHelp();
+    }
+    // Upright, Pyxel pins its gamepad to the bottom of the screen, which on a
+    // tall phone leaves a wide gap under the game. Bring the d-pad and the
+    // buttons up to just below the game (with room for their labels), never
+    // lower than Pyxel puts them; the small menu button goes under them.
+    // Sideways, Pyxel's own places are kept.
+    var padsAt = "";
+    function placePads(r, gameBottom) {
+      var cross = document.querySelector("img#pyxel-gamepad-cross");
+      var btns = document.querySelector("img#pyxel-gamepad-button");
+      var menu = document.querySelector("img#pyxel-gamepad-menu");
+      var imgs = [cross, btns, menu].filter(Boolean);
+      var at = "pyxel";
+      if (gameBottom === null) {
+        imgs.forEach(function (e) { e.style.removeProperty("top"); e.style.removeProperty("bottom"); });
+      } else {
+        var n = Math.max(cross ? cross.offsetHeight : 0, btns ? btns.offsetHeight : 0);
+        if (!n) return;                                  // pictures not sized yet
+        var labels = document.getElementById("fcq-buttons");
+        var lh = (labels && labels.offsetHeight) || 90;
+        var y = Math.round(Math.min(gameBottom + lh + 16, r.height * 0.95 - n));
+        [cross, btns].forEach(function (e) {
+          if (!e) return;
+          e.style.setProperty("top", y + "px", "important");
+          e.style.setProperty("bottom", "auto", "important");
+        });
+        if (menu) {
+          var my = Math.round(Math.min(y + n + 10, r.height * 0.99 - menu.offsetHeight));
+          menu.style.setProperty("top", my + "px", "important");
+          menu.style.setProperty("bottom", "auto", "important");
+        }
+        at = y + "/" + n;
+      }
+      // Pyxel remembers where its gamepad pictures are until the next resize
+      if (at !== padsAt) { padsAt = at; window.dispatchEvent(new Event("resize")); }
     }
     // ?debug shows the sizes that matter for fitting the game, for phone testing
     function debugSizes() {
@@ -288,18 +324,25 @@ CRISP = """<style>
       var btns = document.querySelector("img#pyxel-gamepad-button");
       if (!help || !cross || !btns) return;
       help.style.display = "block";
+      var canvas = document.querySelector("canvas#canvas");
+      var g = canvas ? rectOf.call(canvas) : null;
       [["fcq-walk", cross], ["fcq-buttons", btns]].forEach(function (pair) {
         var box = document.getElementById(pair[0]), r = pair[1].getBoundingClientRect();
         if (!r.width) return;
-        box.style.width = pair[0] === "fcq-buttons" ? Math.max(r.width, 180) + "px" : "auto";
+        // sideways the controls sit beside the game: keep the labels off it
+        var lo = 4, hi = window.innerWidth - 4;
+        if (g && g.width && r.left >= g.right - 1) lo = g.right + 4;
+        if (g && g.width && r.right <= g.left + 1) hi = g.left - 4;
+        box.style.width = pair[0] === "fcq-buttons" ? Math.min(hi - lo, Math.max(r.width, 180)) + "px" : "auto";
         var w = box.getBoundingClientRect().width;
-        box.style.left = Math.max(4, Math.min(window.innerWidth - w - 4, r.left + (r.width - w) / 2)) + "px";
+        box.style.left = Math.max(lo, Math.min(hi - w, r.left + (r.width - w) / 2)) + "px";
         box.style.top = Math.max(0, r.top - box.getBoundingClientRect().height - 6) + "px";
       });
     }
     window.addEventListener("resize", function () { fitGame(); setTimeout(fitGame, 250); });
-    // Pyxel sizes its gamepad pictures after they load: keep the labels with them
-    if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) setInterval(placePadHelp, 500);
+    // Pyxel sizes its gamepad pictures after they load: keep them, and their
+    // labels, in place
+    if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) setInterval(fitGame, 500);
     new MutationObserver(fitGame).observe(document.documentElement, { childList: true, subtree: true,
       attributes: true, attributeFilter: ["width", "height"] });
     if (window.ResizeObserver) new ResizeObserver(fitGame).observe(document.documentElement);

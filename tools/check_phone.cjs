@@ -100,6 +100,14 @@ const overlap = (a, b) => a && b && a.width && b.width &&
                             ["d-pad label", m.walk], ["button labels", m.labels]])
         if (overlap(r, m.game)) bad.push(`the ${n} cover the game`);
       if (!m.walk || !m.labels) bad.push("gamepad labels missing");
+      for (const [n, r] of [["d-pad", m.cross], ["buttons", m.buttons], ["menu button", m.menu]])
+        if (r && r.bottom > m.innerH + 1) bad.push(`the ${n} go off the bottom of the screen`);
+      if (overlap(m.menu, m.cross) || overlap(m.menu, m.buttons)) bad.push("the menu button covers the d-pad or buttons");
+      // upright, the controls sit just under the game rather than leaving a gap
+      if (d.height > d.width && m.game && m.labels && m.walk) {
+        const gap = Math.min(m.labels.top, m.walk.top) - m.game.bottom;
+        if (gap > 40) bad.push(`${Math.round(gap)}px gap between the game and the controls`);
+      }
       if (m.help) bad.push("keyboard hints showing on a touch screen");
     } else {
       if (m.walk || m.labels) bad.push("gamepad labels showing on a computer");
