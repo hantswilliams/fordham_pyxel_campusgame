@@ -222,6 +222,29 @@ def check_people_bikes_and_vans_are_drawn_in_full_detail():
     assert {Art.SKIN1, Art.OUTLINE} <= on_screen
 
 
+def check_things_on_the_map_are_drawn_in_full_detail():
+    """Signs, benches, the fence and the like (decisions/0045, step 3): each
+    drawn and outlined in its cell, nothing spilling into the next slot."""
+    from game.config import Art
+    from game.gfx import object_art as O
+    make(Art_)
+    sheet = O.sheet()
+
+    def seen(u, v, w, h):
+        return {sheet.pget(u + x, v + y) for x in range(w) for y in range(h)}
+
+    for name in O.OBJECTS:
+        u, v = O.uv(name)
+        inside = seen(u, v, 32, 32)
+        assert Art.OUTLINE in inside and len(inside) > 4, name
+        for margin in ((u - O.PAD, v - O.PAD, O.SLOT, O.PAD - 1), (u - O.PAD, v + 33, O.SLOT, O.PAD - 1)):
+            assert seen(*margin) == {Col.BLACK}, name
+    for name in O.TILES:
+        assert Col.BLACK not in seen(*O.uv(name), 32, 32), name         # building tiles fill their cell
+    for joins in range(16):
+        assert Art.IRON in seen(*O.fence_uv(joins), 32, 32), joins
+
+
 Art_ = Art                      # a plain scene, for checks that only need Pyxel started
 
 

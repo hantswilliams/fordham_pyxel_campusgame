@@ -5,7 +5,7 @@
 | **Status** | Decided 2026-10-19: Option B approved, with everything in "What comes with A and B". Being built on branch `finer-pixels` (from `campus-shuttle`) |
 | **Raised** | 2026-10-19. Version 1 looks like the original Pokémon Blue / Gold games; the next version should look cleaner and a little less pixelated |
 | **Affects** | All art (ground, trees, people, vehicles, buildings, card pictures), the text boxes, cards and menus, and how the screen is drawn (`game/gfx/display.py`). Not the maps, content, missions, saving, web build or Campus Guide |
-| **Built?** | Steps 1 and 2 of 5 (the ground, trees and shadows; people, the bike and the vans), on branch `finer-pixels`. See "What was built" at the end |
+| **Built?** | Steps 1 to 3 of 5 (the ground, trees and shadows; people, the bike and the vans; buildings and everything else on the map), on branch `finer-pixels`. See "What was built" at the end |
 
 ## What's being decided
 
@@ -200,3 +200,27 @@ If you approve, say if any item in "What comes with A and B" should be left out 
   - right-facing frames mirror the left-facing ones, and the steps differ from standing
   - both vans have their colours
   - the campus shows the new people
+
+### Step 3: buildings, signs, the fence and everything else on the map
+
+![Today, the approved mockup and step 3](images/0045/step3_compare.png)
+
+![The Webster Avenue gate in step 3](images/0045/step3_gate.png)
+
+- **All 38 drawn buildings** now have a second picture at twice the detail, `map_fine.png`, beside their `map.png`.
+  - Each building's picture already comes from a drawing script, and I checked that all 38 scripts still draw exactly today's pictures. Two had a small bug from D-0022 that stopped them running; both are fixed.
+  - `assets/buildings/_style/fine.py` runs the same scripts again at twice the size, with finer versions of the shared pieces: fieldstone, cut stone, brick, slate and flat roofs, windows (two panes, a glint, a sill), panelled doors, eaves, trees and parked cars.
+  - Outlines are thinned to 1 px, and lawns and walkways inside a picture use the new colours.
+  - Every building keeps its design. Only the drawing is finer.
+- **The fountain plaza is finished by hand** (`_style/fine_plaza.py`) in the mockup's look:
+  - Dealy Hall has a hipped slate roof with dormers and finer windows.
+  - Cunniffe House has slate wing roofs and a finer cupola.
+  - The fountain is dark bronze in a stone basin, with the plaza paving showing all round it.
+- **Everything else on the map** is redrawn too (`game/gfx/object_art.py`):
+  - info signs, Campus Shuttle stops, lamps, benches, statues (the one by the fountain is now the bronze Ram), the Victory Bell, graves, the observatory, guard booths, gate pillars, card readers, the closed gate, the bike rack, and the mission items
+  - **the campus fence:** light iron railings that join up along their length and turn corners
+  - **Faculty Memorial Hall,** the one building still made of tiles: slate roof, stone walls, panelled door
+- **Plaques and door mats** are drawn at full detail: thin borders, sharp lettering.
+- **Shadows:** everything casts one in its own shape. The fountain casts a low one.
+- **Kept for now:** `map.png` stays as it is, for the in-game campus map and the 1× fallback. The building cards still use today's pictures, until step 4.
+- **When a building changes:** run `uv run python assets/buildings/_style/fine.py <id>` after its own drawing script. The tests fail if a building has no `map_fine.png` or it's the wrong size.

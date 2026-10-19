@@ -191,7 +191,8 @@ A `tests/test_content.py` check validates the data: every NPC's dialogue exists,
 - Mission items and closed gates change while you play, so they're drawn each frame rather than baked in.
 - Gameplay still runs on 16 px cells.
 - People, the bike and the vans come from one sheet drawn in code at startup (`game/gfx/people_art.py`), with the same sprite numbers as today's. People stand 22 px tall, so their heads rise into the cell above.
-- Buildings and objects are today's art doubled until they're redrawn (steps 3–4 of the decision).
+- Drawn buildings use `map_fine.png`, made from each building's own drawing script by `assets/buildings/_style/fine.py`, with the fountain plaza hand-finished in `_style/fine_plaza.py`. `map.png` stays for the in-game campus map and the 1× fallback.
+- Signs, benches, lamps, the fence, the bike rack, mission items and Faculty Memorial Hall's tiles come from `game/gfx/object_art.py`. The plaques and mats are placed by `building_overlay` (`plaque_spots`, `mat_spots`) and drawn at full detail.
 - With `DISPLAY_SCALE = 1` the tiles are drawn as before.
 
 ---

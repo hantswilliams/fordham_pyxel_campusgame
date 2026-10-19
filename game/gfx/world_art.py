@@ -10,10 +10,11 @@ loads, the whole of it is drawn once into one picture with 32 px cells:
 2. shadows, falling down and to the right from buildings, trees and the
    things standing on the ground: one darker shade of whatever they land on
 3. drawn buildings at full detail (their map_fine.png, from
-   assets/buildings/_style/fine.py); today's building tiles and objects,
-   doubled (until they're redrawn)
-4. the outlines, mats and plaques (game/gfx/building_overlay.py), doubled,
-   with the plaques' names lettered at full detail
+   assets/buildings/_style/fine.py), and signs, benches, lamps, the fence
+   and the like (game/gfx/object_art.py); today's art doubled for anything
+   not redrawn
+4. the outlines, mats and plaques (placed by game/gfx/building_overlay.py),
+   at full detail, the plaques' names lettered sharp
 
 Each frame the overworld copies the part on screen and draws the rest over
 it at full size: trees in the new style, sorted with the people so a crown
@@ -33,7 +34,9 @@ import pyxel
 
 from game.config import ART_SCALE, SHADOW_OF, TILE, Art, Col
 from game.gfx.building_art import fine_image, map_image
-from game.gfx.building_overlay import BUILDING_TILES, draw_overlay
+from game.gfx import object_art
+from game.gfx.building_overlay import (BUILDING_TILES, CHAR_W, PLAQUE_H, ROOFS, SMALL_CHAR_W, WALLS, fits,
+                                       mat_spots, plaque_spots, plaque_width, tile_building_cells)
 from game.gfx.placeholder_art import TILE_IMAGE_BANK, object_tiles
 from game.ui import font
 from game.world import ground as G
@@ -366,7 +369,7 @@ class WorldArt:
 
     # 2. shadows
     def _draw_shadows(self) -> None:
-        img, tiles, objs = self.image, self.tiles, object_tiles()
+        img, tiles = self.image, self.tiles
         pictures = [_picture(b) for b in self.map.buildings]
         big = (max([p.width * k for p, k in pictures if p] + [128]),
                max([p.height * k for p, k in pictures if p] + [128]))
@@ -385,8 +388,8 @@ class WorldArt:
                     u, v, w, h = TREE_SHADOW
                     sh.cast(img, px - 4, py + 18, atlas(), u, v, w, h)
                 elif t in G.ON_GROUND:
-                    u, v = slot_to_pixel(TILES[t].slot)
-                    sh.cast(img, px + OBJECT_SHADOW[0], py + OBJECT_SHADOW[1], objs, u, v, TILE, TILE, K)
+                    src, u, v, k = self._thing(x, y, t)
+                    sh.cast(img, px + OBJECT_SHADOW[0], py + OBJECT_SHADOW[1], src, u, v, CELL // k, CELL // k, k)
         for b, (pic, k) in zip(self.map.buildings, pictures):
             # buildings cast a building's shadow, a landmark drawn at full
             # detail (the fountain, with the paving round it left clear) a low
@@ -406,16 +409,34 @@ class WorldArt:
                     pic.width, pic.height, k)
 
     # 3. buildings and objects, today's art doubled
+    def _thing(self, x: int, y: int, t: str):
+        """(picture, u, v, scale) for what stands on cell (x, y): at full
+        detail (game/gfx/object_art.py), or today's art to be doubled."""
+        if t == "fence":
+            joins = 0
+            for bit, (dx, dy) in ((object_art.N, (0, -1)), (object_art.S, (0, 1)),
+                                  (object_art.W, (-1, 0)), (object_art.E, (1, 0))):
+                if G.at(self.tiles, x + dx, y + dy) in ("fence", "pillar"):
+                    joins |= bit
+            return (object_art.sheet(), *object_art.fence_uv(joins), 1)
+        here = self.map.object_at(x, y)
+        if t == "statue" and here is not None and here.location in object_art.STATUES:
+            t = object_art.STATUES[here.location]
+        fine = object_art.uv(t)
+        if fine is not None:
+            return (object_art.sheet(), *fine, 1)
+        u, v = slot_to_pixel(TILES[t].slot)
+        return (object_tiles() if t in G.ON_GROUND else pyxel.images[TILE_IMAGE_BANK]), u, v, K
+
     def _draw_things(self) -> None:
-        img, tiles, objs = self.image, self.tiles, object_tiles()
-        bank = pyxel.images[TILE_IMAGE_BANK]
+        img, tiles = self.image, self.tiles
         for y, row in enumerate(tiles):
             for x, t in enumerate(row):
-                u, v = slot_to_pixel(TILES[t].slot)
-                if self.grid[y][x] is None:
-                    blt_up(img, x * CELL, y * CELL, bank, u, v, TILE, TILE)
-                elif t in G.ON_GROUND and t not in G.TREES:
-                    blt_up(img, x * CELL, y * CELL, objs, u, v, TILE, TILE, Col.BLACK)
+                whole = self.grid[y][x] is None
+                if whole or (t in G.ON_GROUND and t not in G.TREES):
+                    src, u, v, k = self._thing(x, y, t)
+                    blt_up(img, x * CELL, y * CELL, src, u, v, CELL // k, CELL // k,
+                           None if whole else Col.BLACK, k)
         for b in self.map.buildings:
             pic, k = _picture(b)
             if pic is not None:
@@ -426,14 +447,48 @@ class WorldArt:
 
     # 4. outlines, mats and plaques
     def _draw_overlay(self, locations) -> None:
-        m = self.map
-        overlay = pyxel.Image(m.width * TILE, m.height * TILE)
-        overlay.cls(Col.BLACK)
-        labels: list = []
-        draw_overlay(overlay, m, locations, labels)
-        blt_up(self.image, 0, 0, overlay, 0, 0, overlay.width, overlay.height, Col.BLACK)
-        for x, y, name, cell in labels:
-            font.letter(self.image, x * K, y * K, name, Col.NAVY, cell * K)
+        """The house style's finishing touches (decisions/0021), at full
+        detail: a one-pixel outline and eave round a building made of tiles,
+        a mat outside every door, and the name plaques, lettered sharp."""
+        m, img = self.map, self.image
+        cells = tile_building_cells(m)
+        e = CELL - 1
+        for x, y in cells:
+            px, py = x * CELL, y * CELL
+            if (x, y - 1) not in cells:
+                img.rect(px, py, CELL, 1, Col.NAVY)
+            if (x, y + 1) not in cells:
+                img.rect(px, py + e, CELL, 1, Col.NAVY)
+            if (x - 1, y) not in cells:
+                img.rect(px, py, 1, CELL, Col.NAVY)
+            if (x + 1, y) not in cells:
+                img.rect(px + e, py, 1, CELL, Col.NAVY)
+            if m.tiles[y][x] in ROOFS and (x, y + 1) in cells and m.tiles[y + 1][x] in WALLS:
+                img.rect(px, py + e, CELL, 1, Col.NAVY)
+                img.rect(px, py + CELL, CELL, 2, Col.ROOF_SH)
+        for x, y, edge in mat_spots(m):
+            px, py = x * CELL, y * CELL
+            if edge in ("top", "bottom"):
+                my = py if edge == "top" else py + CELL - 6
+                img.rect(px + 4, my, CELL - 8, 6, Col.MAROON)
+                img.rect(px + 5, my + 2, CELL - 10, 1, Art.MAROON_LT)
+                img.rect(px + 4, my + 5, CELL - 8, 1, Art.MAROON_SH)
+            else:
+                mx = px if edge == "left" else px + CELL - 6
+                img.rect(mx, py + 4, 6, CELL - 8, Col.MAROON)
+                img.rect(mx + 2, py + 5, 1, CELL - 10, Art.MAROON_LT)
+                img.rect(mx + 5, py + 4, 1, CELL - 8, Art.MAROON_SH)
+        for cx, ty, name, room in plaque_spots(m, locations):
+            small = room is not None and not fits(name, room)
+            w = plaque_width(name, small)
+            x0 = cx - w // 2
+            X, Y, W, H = x0 * K, ty * K, w * K, PLAQUE_H * K
+            img.rect(X, Y, W, H, Col.STONE_HI)
+            img.rect(X + 1, Y + H - 3, W - 2, 2, Col.STONE)
+            img.rectb(X, Y, W, H, Col.NAVY)
+            cell = SMALL_CHAR_W if small else CHAR_W
+            cap = cell * 1.46                    # M PLUS 1 Code's capitals, for a cell this wide
+            font.letter(img, (x0 + 3) * K, (ty + (PLAQUE_H - cap) / 2) * K, name, Col.NAVY, cell * K)
 
     # --- each frame --------------------------------------------------------
     def visible_trees(self, cx: int, cy: int, w: int, h: int):
@@ -451,11 +506,10 @@ class WorldArt:
     def draw_dynamic(self, dst, ox: int, oy: int) -> None:
         """Mission items and closed gates: their tiles come and go, so they're
         drawn on the ground each frame rather than baked into the picture."""
-        objs = object_tiles()
         for o in self.map.objects:
             if o.tile and o.type in ("item", "checkpoint"):
-                u, v = slot_to_pixel(TILES[o.tile].slot)
-                blt_up(dst, o.x * CELL - ox, o.y * CELL - oy, objs, u, v, TILE, TILE, Col.BLACK)
+                src, u, v, k = self._thing(o.x, o.y, o.tile)
+                blt_up(dst, o.x * CELL - ox, o.y * CELL - oy, src, u, v, CELL // k, CELL // k, Col.BLACK, k)
 
     def shadow(self, dst, x: float, y: float, shape) -> None:
         """A shadow shape from the atlas (PERSON_SHADOW...) at (x, y) on dst."""

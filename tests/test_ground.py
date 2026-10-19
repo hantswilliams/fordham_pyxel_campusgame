@@ -140,3 +140,12 @@ def test_every_ground_colour_has_a_darker_shadow():
         s = config.SHADOW_OF[c]
         assert s != c and lum(s) < lum(c)
         assert s not in config.SHADOW_OF                    # a shadow never darkens twice
+
+
+def test_everything_standing_on_the_ground_has_finer_art():
+    """Signs, benches, lamps and the rest (decisions/0045, step 3) are drawn
+    at full detail; trees are drawn each frame, and parked cars only stand in
+    the drawn car parks. The fence has its own pieces."""
+    from game.gfx import object_art
+    missing = set(G.ON_GROUND) - G.TREES - {"car", "fence"} - set(object_art.OBJECTS)
+    assert not missing
