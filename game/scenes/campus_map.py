@@ -70,7 +70,7 @@ def map_images(m: MapData, locations) -> tuple[pyxel.Image, pyxel.Image]:
         full = render_world(m, locations)
         w, h = full.width, full.height
         raw = _pixels(full)
-        rgb = [((c >> 16) & 255, (c >> 8) & 255, c & 255) for c in config.palette()]
+        rgb = [((c >> 16) & 255, (c >> 8) & 255, c & 255) for c in config.GAME_COLORS]
         k = config.TILE // DETAIL
         detail = downsample(raw, w, h, k, rgb)
         dw, dh = w // k, h // k

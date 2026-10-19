@@ -93,6 +93,18 @@ def sign(x: float, y: float, s: str, col: int, cell: float, bg: int) -> bool:
     return display.queue_text(x, y, s, col, f, cell_px, -top, bg)
 
 
+def letter(target, x: float, y: float, s: str, col: int, cell: float) -> None:
+    """Words painted on something, lettered straight into a picture at full
+    detail (the finer world, decisions/0045): each character `cell` pixels
+    wide, the capitals starting at y. The same lettering as sign()."""
+    cell_px = round(cell)
+    f, top = _sign_font(cell_px * 2)       # M PLUS 1 Code is half an em wide
+    px, py = round(x), round(y) - top
+    for i, c in enumerate(s):
+        if c != " ":
+            target.text(px + i * cell_px, py, c, col, f)
+
+
 def width(s: str) -> int:
     return len(s) * BIG_CHAR_W
 

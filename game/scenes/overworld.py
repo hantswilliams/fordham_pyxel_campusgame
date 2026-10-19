@@ -1,15 +1,18 @@
 """The walkable campus map: tiles, player, NPCs, signs, doors, area banners."""
 
+import time
+
 import pyxel
 
 from game.gfx import display
 
 from game import config
-from game.config import SCREEN_H, SCREEN_W, TILE, Col
+from game.config import ART_SCALE, SCREEN_H, SCREEN_W, TILE, Col
 from game.gfx.building_art import draw_on_map
 from game.gfx.building_overlay import draw_overlay
 from game.gfx.placeholder_art import (BIKE_SPRITE, CHAR_IMAGE_BANK, MAROON_BIKE_SPRITE, RAM_VAN, SHUTTLE_VAN,
                                       TILE_IMAGE_BANK, character_uv, van_uv)
+from game.gfx.world_art import PERSON_SHADOW, VAN_END_SHADOW, VAN_SIDE_SHADOW, blt_up, world_for
 from game.systems import controls
 from game.systems.bike import Bike
 from game.systems.missions import Reaction
@@ -118,12 +121,19 @@ class OverworldScene(Scene):
         self.queue += self.book.auto_start()        # the First Week Checklist
         self._sync_items(bake=False)
         bake_tilemap(self.map, TILEMAP_INDEX)
-        # outlines, eaves, door mats and name plaques (decisions/0021),
-        # drawn once into a map-sized image and copied each frame
-        self.overlay = pyxel.Image(self.map.width * TILE, self.map.height * TILE)
-        # on the crisp screen the plaques' names are lettered each frame (decisions/0039)
-        self.plaque_labels: list | None = [] if display.active else None
-        draw_overlay(self.overlay, self.map, app.locations, self.plaque_labels)
+        # On the full-size screen the world is drawn at twice the detail
+        # (decisions/0045): the whole map once, into one picture.
+        started = time.perf_counter()
+        self.world = world_for(self.map, app.locations) if display.active else None
+        if getattr(app, "perf", False):
+            print(f"map picture: {(time.perf_counter() - started) * 1000:.0f} ms")
+        # Otherwise the tiles are drawn as they are, with the outlines, eaves,
+        # door mats and name plaques (decisions/0021) drawn once into a
+        # map-sized image and copied each frame
+        self.overlay: pyxel.Image | None = None
+        if self.world is None:
+            self.overlay = pyxel.Image(self.map.width * TILE, self.map.height * TILE)
+            draw_overlay(self.overlay, self.map, app.locations)
         # people who stroll about (decisions/0040)
         self.wanderers = Wanderers(self.map, TILE)
         # the Campus Shuttle, and the Ram Van parked at the garage (decisions/0044)
@@ -493,44 +503,14 @@ class OverworldScene(Scene):
 
     # --- draw --------------------------------------------------------------
     def draw(self) -> None:
-        pyxel.cls(Col.GREEN)
         cx, cy = self.cam
-        display.camera(cx, cy)
-        pyxel.bltm(cx, cy, TILEMAP_INDEX, cx, cy, SCREEN_W, SCREEN_H)
-        # drawn buildings go over their footprint tiles (decisions/0020).
-        # Characters can't stand on a footprint, so they're always drawn after.
-        for b in self.map.buildings:
-            draw_on_map(b)
-        pyxel.blt(cx, cy, self.overlay, cx, cy, SCREEN_W, SCREEN_H, Col.BLACK)
-        for lx, ly, name, cell in self.plaque_labels or ():
-            if cx - 200 < lx < cx + SCREEN_W and cy - 16 < ly < cy + SCREEN_H:
-                font.sign(lx, ly, name, Col.NAVY, cell, bg=Col.STONE_HI)
-
-        # Characters, back to front so lower ones overlap upper ones.
-        drawables: list[tuple[int, int, int, Direction, int]] = []
-        for obj in self.map.objects:
-            if obj.type == "npc":
-                ox, oy, frame = self._npc_xy(obj)
-                drawables.append((oy, ox, obj.sprite, obj.facing, frame))
-        p = self.player
-        bike_sprite = MAROON_BIKE_SPRITE if "maroon_bike" in self.progress.unlocks else BIKE_SPRITE
-        sprite = bike_sprite if self.bike.riding else PLAYER_SPRITE
-        frame = p.anim_frame if not self.bike.riding else (p.progress // 4) % 3 if p.moving else 0
-        if self.riding_to is None:              # on the shuttle you're inside the van
-            drawables.append((p.pixel_y, p.pixel_x, sprite, p.facing, frame))
-        # the vans (decisions/0044): a sprite id of -1 / -2 marks them
-        if self.shuttle:
-            vx, vy, hx, hy = self.shuttle.pos
-            drawables.append((vy - TILE / 2, vx, -1, (hx, hy), 0))
-        if self.ram_van:
-            rx, ry, rf = self.ram_van
-            drawables.append((ry * TILE, (rx + 1) * TILE, -2, (rf.dx, rf.dy), 0))
-        for y, x, sprite, facing, frame in sorted(drawables, key=lambda d: d[0]):
-            if sprite < 0:
-                self._draw_van(SHUTTLE_VAN if sprite == -1 else RAM_VAN, x, y + TILE / 2, *facing)
-                continue
-            u, v = character_uv(sprite, facing, frame)
-            pyxel.blt(x, y - 2, CHAR_IMAGE_BANK, u, v, TILE, TILE, Col.BLACK)
+        if self.world is not None:
+            self._draw_world_finer(cx, cy)
+            display.camera(cx, cy)
+        else:
+            pyxel.cls(Col.GREEN)
+            display.camera(cx, cy)
+            self._draw_world_tiles(cx, cy)
         if self.shuttle and self.shuttle.beep:              # it's stopped for you
             vx, vy, _, _ = self.shuttle.pos
             w = font.width("BEEP!") + 6
@@ -557,6 +537,86 @@ class OverworldScene(Scene):
 
         display.camera()
         self._draw_hud()
+
+    def _drawables(self) -> list[tuple]:
+        """People and vans as (y, x, sprite, facing, frame), to draw back to
+        front so lower ones overlap upper ones. The vans (decisions/0044)
+        have sprite -1 (the shuttle) and -2 (the Ram Van), and a heading."""
+        drawables: list[tuple] = []
+        for obj in self.map.objects:
+            if obj.type == "npc":
+                ox, oy, frame = self._npc_xy(obj)
+                drawables.append((oy, ox, obj.sprite, obj.facing, frame))
+        p = self.player
+        bike_sprite = MAROON_BIKE_SPRITE if "maroon_bike" in self.progress.unlocks else BIKE_SPRITE
+        sprite = bike_sprite if self.bike.riding else PLAYER_SPRITE
+        frame = p.anim_frame if not self.bike.riding else (p.progress // 4) % 3 if p.moving else 0
+        if self.riding_to is None:              # on the shuttle you're inside the van
+            drawables.append((p.pixel_y, p.pixel_x, sprite, p.facing, frame))
+        if self.shuttle:
+            vx, vy, hx, hy = self.shuttle.pos
+            drawables.append((vy - TILE / 2, vx, -1, (hx, hy), 0))
+        if self.ram_van:
+            rx, ry, rf = self.ram_van
+            drawables.append((ry * TILE, (rx + 1) * TILE, -2, (rf.dx, rf.dy), 0))
+        return drawables
+
+    def _draw_world_tiles(self, cx: int, cy: int) -> None:
+        """The world as tiles, at layout size (when the screen isn't doubled)."""
+        pyxel.bltm(cx, cy, TILEMAP_INDEX, cx, cy, SCREEN_W, SCREEN_H)
+        # drawn buildings go over their footprint tiles (decisions/0020).
+        # Characters can't stand on a footprint, so they're always drawn after.
+        for b in self.map.buildings:
+            draw_on_map(b)
+        pyxel.blt(cx, cy, self.overlay, cx, cy, SCREEN_W, SCREEN_H, Col.BLACK)
+        for y, x, sprite, facing, frame in sorted(self._drawables(), key=lambda d: d[0]):
+            if sprite < 0:
+                self._draw_van(SHUTTLE_VAN if sprite == -1 else RAM_VAN, x, y + TILE / 2, *facing)
+                continue
+            u, v = character_uv(sprite, facing, frame)
+            pyxel.blt(x, y - 2, CHAR_IMAGE_BANK, u, v, TILE, TILE, Col.BLACK)
+
+    def _draw_world_finer(self, cx: int, cy: int) -> None:
+        """The world at twice the detail (decisions/0045), straight onto the
+        full-size screen: the part of the map picture in view, then trees,
+        people and vans back to front, each with its shadow. People and vans
+        are today's sprites, doubled, until they're redrawn."""
+        full = display.full_image()
+        k = ART_SCALE
+        ox, oy = cx * k, cy * k
+        w = self.world
+        full.blt(0, 0, w.image, ox, oy, SCREEN_W * k, SCREEN_H * k)
+        w.draw_dynamic(full, ox, oy)
+        # trees first, so a person level with a tree stands in front of it
+        things = [(ty * TILE, tx * TILE, None, tile, 0)
+                  for tx, ty, tile in w.visible_trees(cx, cy, SCREEN_W, SCREEN_H)]
+        sheet = pyxel.images[CHAR_IMAGE_BANK]
+        for y, x, sprite, facing, frame in sorted(things + self._drawables(), key=lambda d: d[0]):
+            if sprite is None:
+                w.draw_tree(full, x // TILE, y // TILE, facing, ox, oy)
+            elif sprite < 0:
+                self._draw_van_finer(full, SHUTTLE_VAN if sprite == -1 else RAM_VAN,
+                                     x, y + TILE / 2, *facing, ox, oy)
+            else:
+                w.shadow(full, x * k + 5 - ox, y * k + 25 - oy, PERSON_SHADOW)
+                u, v = character_uv(sprite, facing, frame)
+                blt_up(full, x * k - ox, (y - 2) * k - oy, sheet, u, v, TILE, TILE, Col.BLACK)
+
+    def _draw_van_finer(self, full, van: int, cx: float, cy: float, hx: float, hy: float,
+                        ox: int, oy: int) -> None:
+        """_draw_van on the full-size screen, with a shadow."""
+        k = ART_SCALE
+        sheet = pyxel.images[CHAR_IMAGE_BANK]
+        cx, cy = int(cx), int(cy)
+        if abs(hx) >= abs(hy) * 0.7:
+            u, v, w = van_uv(van, "side")
+            self.world.shadow(full, (cx - 16) * k - ox, (cy + 2) * k - oy, VAN_SIDE_SHADOW)
+            blt_up(full, (cx - 16) * k - ox, (cy - 16) * k - oy, sheet, u, v, w * (-1 if hx < 0 else 1), 24,
+                   Col.BLACK)
+        else:
+            u, v, w = van_uv(van, "front" if hy > 0 else "back")
+            self.world.shadow(full, (cx - 9) * k - ox, (cy + 3) * k - oy, VAN_END_SHADOW)
+            blt_up(full, (cx - 8) * k - ox, (cy - 16) * k - oy, sheet, u, v, w, 24, Col.BLACK)
 
     def _draw_van(self, van: int, cx: float, cy: float, hx: float, hy: float) -> None:
         """A van with its middle at (cx, cy), heading (hx, hy): side on when

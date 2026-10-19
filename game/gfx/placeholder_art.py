@@ -35,7 +35,13 @@ def character_uv(sprite: int, facing: Direction, frame: int) -> tuple[int, int]:
 
 # --- tiles -----------------------------------------------------------------
 
+# False while object_tiles() draws things without the ground under them
+_ground = True
+
+
 def _grass(img, x, y):
+    if not _ground:
+        return
     img.rect(x, y, 16, 16, Col.LIME)
     for px, py in ((2, 3), (10, 1), (6, 9), (13, 11), (3, 13), (9, 5)):
         img.pset(x + px, y + py, Col.GREEN)
@@ -44,6 +50,8 @@ def _grass(img, x, y):
 
 def _path(img, x, y):
     """Walkway: brick pavers, like the paths in front of Walsh Library."""
+    if not _ground:
+        return
     img.rect(x, y, 16, 16, Col.PEACH)
     for row in range(4):
         by = y + row * 4 + 3
@@ -296,6 +304,8 @@ def _offcampus(img, x, y):
 
 
 def _parking(img, x, y):
+    if not _ground:
+        return
     img.rect(x, y, 16, 16, Col.GRAY)
     img.rect(x, y + 1, 1, 14, Col.WHITE)
     img.pset(x + 9, y + 5, Col.DARK_BLUE)
@@ -361,6 +371,8 @@ def _dome(img, x, y):
 
 def _road(img, x, y):
     """Asphalt campus road. Deliberately darker and cooler than walkways."""
+    if not _ground:
+        return
     img.rect(x, y, 16, 16, Col.GRAY)
     for px, py in ((2, 3), (9, 1), (13, 7), (5, 10), (11, 13), (1, 14), (7, 6)):
         img.pset(x + px, y + py, Col.DARK_BLUE)
@@ -524,6 +536,28 @@ TILE_ART = {
     "glass_tower": _glass_tower, "glass_door": _glass_door,
     "plaza": _plaza, "car": _car,
 }
+
+
+_objects: pyxel.Image | None = None
+
+
+def object_tiles() -> pyxel.Image:
+    """Today's art for the things that stand on the ground (benches, signs,
+    lamps, gates, mission items), at the same slots as the tile sheet but
+    without the ground under them: the finer world draws its own ground
+    (decisions/0045). Black is transparent."""
+    global _objects, _ground
+    if _objects is None:
+        from game.world.ground import ON_GROUND
+        _objects = pyxel.Image(256, 256)
+        _objects.cls(Col.BLACK)
+        _ground = False
+        try:
+            for name in ON_GROUND:
+                TILE_ART[name](_objects, *slot_to_pixel(TILES[name].slot))
+        finally:
+            _ground = True
+    return _objects
 
 
 def build_tiles() -> None:

@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 import scene as S
 import pixel
 import smooth
-from pixel import P, Pen, outline
+from pixel import P, Pen
 from ui_pixel import READ, BOLD, crisp, rbox, wrap
 
 NAME = "DEALY HALL"

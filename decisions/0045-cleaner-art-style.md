@@ -5,7 +5,7 @@
 | **Status** | Decided 2026-10-19: Option B approved, with everything in "What comes with A and B". Being built on branch `finer-pixels` (from `campus-shuttle`) |
 | **Raised** | 2026-10-19. Version 1 looks like the original Pokémon Blue / Gold games; the next version should look cleaner and a little less pixelated |
 | **Affects** | All art (ground, trees, people, vehicles, buildings, card pictures), the text boxes, cards and menus, and how the screen is drawn (`game/gfx/display.py`). Not the maps, content, missions, saving, web build or Campus Guide |
-| **Built provisionally?** | No. Only mockups. Nothing in the game has changed |
+| **Built?** | Step 1 of 5 (the ground, trees and shadows), on branch `finer-pixels`. See "What was built" at the end |
 
 ## What's being decided
 
@@ -134,3 +134,38 @@ If you approve, say if any item in "What comes with A and B" should be left out 
 **Your notes:**
 
 >
+
+## What was built
+
+### Step 1: the ground, trees and shadows (branch `finer-pixels`)
+
+![Today, the approved mockup and step 1](images/0045/step1_compare.png)
+
+`step1_overworld.png`, `step1_dialogue.png` and `step1_card.png` are real screenshots from the game, taken the same way as the `today_*` ones.
+
+- **The world is drawn at twice the detail.**
+  - When the campus loads, the whole map is drawn once into one picture with 32 px cells (3,200 × 2,432 px).
+  - Each frame the part on screen is copied straight onto the full 768 × 576 screen, so the world's pixels are now the same size as the text's.
+  - Gameplay still runs on 16 px cells. Nothing about walking, the map files or the content changed.
+- **The ground** (`game/gfx/world_art.py`; `game/world/ground.py` says what goes where):
+  - lawns with soft patches and grass tufts
+  - walkways with a darker edging where they meet a lawn
+  - stone plazas in slabs
+  - roads with kerbs, crosswalks and parking
+  - flower beds
+- **Rounded corners.** Lawns and walkways round their corners, and so do roads, with the kerb following the curve. Walkways and roads drawn as staircases on the map join up into smooth winding paths and roads.
+- **Trees** are in the new style and drawn each frame, sorted with the people, so a tree's crown covers anyone standing behind it. The copper beeches are purple.
+- **Shadows** fall down and to the right from buildings, trees, signs, lamps and benches. People and vans now have shadows too. A shadow is one darker shade of whatever it lands on.
+- **Not redrawn yet** (steps 2 to 4):
+  - Today's buildings, signs, benches, lamps, people and vans are shown doubled.
+  - The text boxes, cards and menus are unchanged.
+  - Fields and flat landmarks (the fountain, the parking lot) cast no shadow yet, because today's pictures of them include their own paving and turf.
+- **Plaques** are lettered into the map picture at full detail, so people walking in front of them cover them naturally.
+- **Colours:** 107, up from 26: the new ground and tree colours, plus a shadow shade for each. The 26 building colours keep their numbers, so the drawn buildings and `assets/buildings/palette.hex` are unchanged.
+- **Speed:**
+  - The map picture takes 0.08 s to draw on a laptop. In Chrome it takes 0.13 s, and 0.55 s with the CPU slowed 4× to act like a phone.
+  - Walking stays at 30 frames a second. Drawing takes about 3.7 ms a frame in Chrome, and 15–20 ms with the CPU slowed 4×.
+  - Add `?perf` to the page address to see the frame rate, with the map picture's time in the browser console.
+- **Tests:**
+  - `tests/test_ground.py` (12 tests) checks what stands on what, where corners round, edging and kerbs, staircase paths and roads joining up, and the palette.
+  - `tests/test_display.py` checks that the campus is drawn in the new colours, with shadows and single-pixel detail.

@@ -50,6 +50,26 @@ def closeups():
     sheet.save(OUT / "closeups.png")
 
 
-overview()
-closeups()
+def built(name="step1"):
+    """Today, the approved mockup (B) and what's built, side by side."""
+    cols = [("today", "Today"), ("B", "Mockup B"), (name, "Built: " + name)]
+    w, h, gap, head = 512, 384, 16, 44
+    sheet = Image.new("RGB", (3 * w + 4 * gap, head + 2 * (h + gap) + gap), BG)
+    d = ImageDraw.Draw(sheet)
+    for i, (tag, title) in enumerate(cols):
+        x = gap + i * (w + gap)
+        d.text((x, 12), title, font=ImageFont.truetype(FB, 22), fill=INK)
+        for j, shot in enumerate(("overworld", "dialogue")):
+            im = Image.open(src(tag, shot)).convert("RGB").resize((w, h), Image.LANCZOS)
+            sheet.paste(im, (x, head + j * (h + gap)))
+    sheet.save(OUT / f"{name}_compare.png")
+
+
+import sys  # noqa: E402
+
+if len(sys.argv) > 1:
+    built(sys.argv[1])
+else:
+    overview()
+    closeups()
 print("ok")

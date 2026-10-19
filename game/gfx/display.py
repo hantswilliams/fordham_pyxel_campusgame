@@ -108,6 +108,13 @@ def queue_image(img, w: int, h: int, x: float, y: float, art_scale: float) -> bo
     return True
 
 
+def full_image() -> "pyxel.Image | None":
+    """The full-size picture this frame is built on, for a scene that draws
+    its art at full detail (the finer world, decisions/0045). Whatever the
+    scene then draws at layout size goes over it. None when not active."""
+    return _final if active else None
+
+
 def clear(x: float, y: float, w: float, h: float) -> None:
     """Mark part of the layer as undrawn, so what's beneath shows through."""
     pyxel.rect(x, y, w, h, _key)

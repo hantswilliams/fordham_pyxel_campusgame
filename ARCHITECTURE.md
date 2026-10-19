@@ -181,6 +181,18 @@ A `tests/test_content.py` check validates the data: every NPC's dialogue exists,
 
 **6f. The Campus Shuttle (decision 0044).** `game/world/shuttle.py` (pure logic, like the wandering people in `wander.py`) drives a white minivan round one loop of the roads. The loop is a list of road cells in `content/maps/rose_hill.json` (`"shuttle"`); `Route` joins them by the shortest way along open road, then pulls the path tight so staircase-shaped roads become diagonals. The van stops at the six maroon `campus_shuttle` signs (5 s, longer while you stand beside it), stops and says BEEP for anyone on the road just ahead, slows over crosswalks, and takes up the road cells under it. `OverworldScene` moves it each frame and draws it with the people, sorted by depth; facing a stop's sign shows when it's next due (`Shuttle.eta`), and pressing confirm at its door at a stop lets you pick a stop and ride (the camera follows the van, back skips ahead `FAST` times quicker). Riding counts for the checklist (`campus_shuttle`). A maroon Ram Van (the Lincoln Center service) is parked by the garage as two `vehicle` objects. Van pictures are drawn in code below the people on the character sheet (`placeholder_art.van_uv`). The Campus Guide lists the stops in order (`shuttle.timetable`). Screenshot runs turn it off (`shuttle.ENABLED`).
 
+**6g. The finer world (decision 0045).** On the crisp screen the campus is drawn at twice the detail.
+- `game/gfx/world_art.py` draws the whole map once, when it loads, into one picture with 32 px cells (`config.ART_SCALE`): the ground, shadows, buildings and objects, and the outlines, mats and plaques, with the plaques' names lettered at full detail.
+- Each frame `OverworldScene` copies the part in view straight onto display's full-size image (`display.full_image()`). It then draws trees, people and vans over it at full size, back to front, each with a shadow. Its HUD still draws at layout size, over all that.
+- `game/world/ground.py` (pure) works out:
+  - the ground under every cell: things standing on the ground (signs, benches) take their neighbours' ground
+  - where lawns, walkways and roads round their corners, and where edging and kerbs go
+- A shadow is one darker shade of whatever it falls on (`config.SHADOW_OF`). `world_art.Shadows` cuts it to shape with two scratch images, because Pyxel can't blend colours.
+- Mission items and closed gates change while you play, so they're drawn each frame rather than baked in.
+- Gameplay still runs on 16 px cells.
+- Buildings, objects, people and vans are today's art doubled until they're redrawn (steps 2–4 of the decision).
+- With `DISPLAY_SCALE = 1` the tiles are drawn as before.
+
 ---
 
 ## 4. Gameplay loop (Pokémon mechanics → onboarding)

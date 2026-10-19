@@ -1,7 +1,8 @@
-"""Today's look for decisions/0045, from the real game: the mockups' camera,
-people and line, saved as decisions/images/0045/today_*.png.
+"""The game as it looks now, for decisions/0045: the mockups' camera, people
+and line, saved as decisions/images/0045/<name>_*.png. "today" was taken
+before the finer world; "step1" after its first step.
 
-    uv run python tools/style_mockups/today.py
+    uv run python tools/style_mockups/today.py [name]
 """
 import sys
 from pathlib import Path
@@ -10,6 +11,7 @@ sys.path.insert(0, str(REPO))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 OUT = REPO / "decisions" / "images" / "0045"
 OUT.mkdir(parents=True, exist_ok=True)
+NAME = sys.argv[1] if len(sys.argv) > 1 else "today"
 
 import pyxel
 from game.app import App
@@ -42,15 +44,15 @@ def start(app):
 app = App(headless=True, start_scene=start)
 for _ in range(8):
     app.update(); app.draw()
-pyxel.screen.save(str(OUT / "today_overworld.png"), 1)
+pyxel.screen.save(str(OUT / f"{NAME}_overworld.png"), 1)
 app.scenes.push(DialogueScene(app, [S.LINE], speaker=S.SPEAKER))
 for _ in range(150):
     app.update(); app.draw()
-pyxel.screen.save(str(OUT / "today_dialogue.png"), 1)
+pyxel.screen.save(str(OUT / f"{NAME}_dialogue.png"), 1)
 from game.scenes.card import BuildingCardScene
 app.scenes.pop()
 app.scenes.push(BuildingCardScene(app, app.locations["dealy_hall"]))
 for _ in range(10):
     app.update(); app.draw()
-pyxel.screen.save(str(OUT / "today_card.png"), 1)
+pyxel.screen.save(str(OUT / f"{NAME}_card.png"), 1)
 print("ok")

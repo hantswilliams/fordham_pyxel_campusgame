@@ -157,6 +157,34 @@ def check_plaque_names_are_lettered_at_full_detail():
     assert {cell for *_, cell in labels} <= {CHAR_W, SMALL_CHAR_W}
 
 
+def check_the_world_is_drawn_at_twice_the_detail():
+    """The finer world (decisions/0045): the campus in its new colours, with
+    shadows, and details a single screen pixel wide, so it isn't doubled."""
+    from game.config import SHADOW_OF, Art
+    from game.scenes.overworld import OverworldScene
+    make(OverworldScene)
+    counts = {}
+    for y in range(0, pyxel.height, 2):
+        for x in range(0, pyxel.width, 2):
+            c = pyxel.pget(x, y)
+            counts[c] = counts.get(c, 0) + 1
+    total = sum(counts.values())
+    assert counts.get(Art.GRASS, 0) > total * 0.05
+    assert counts.get(Art.WALK, 0) > total * 0.02
+    assert counts.get(SHADOW_OF[Art.GRASS], 0) + counts.get(SHADOW_OF[Art.WALK], 0) > 0
+    assert counts.get(Col.LIME, 0) < total * 0.01               # today's grass is gone
+    # a grass tuft's pixels: some stand alone, one screen pixel wide
+    single = 0
+    for y in range(pyxel.height):
+        for x in range(1, pyxel.width - 1):
+            if pyxel.pget(x, y) == Art.GRASS_TUFT and pyxel.pget(x - 1, y) != Art.GRASS_TUFT \
+                    and pyxel.pget(x + 1, y) != Art.GRASS_TUFT:
+                single += 1
+                if single > 5:
+                    return
+    raise AssertionError("no detail finer than doubled pixels")
+
+
 def test_crisp_display():
     root = Path(__file__).resolve().parent.parent
     run = subprocess.run([sys.executable, "-m", "tests.test_display"], cwd=root,
