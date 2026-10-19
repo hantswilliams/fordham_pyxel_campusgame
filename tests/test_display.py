@@ -245,6 +245,38 @@ def check_things_on_the_map_are_drawn_in_full_detail():
         assert Art.IRON in seen(*O.fence_uv(joins), 32, 32), joins
 
 
+class Boxes(Scene):
+    """A rounded box with words in it (decisions/0045, game/ui/frames.py)."""
+    def draw(self):
+        from game.ui import frames
+        frames.rect(0, 0, 384, 288, Col.WHITE)     # a background, in order with the box
+        frames.box(10, 10, 100, 40)
+        font.text(20, 20, "HI", Col.MAROON)
+
+
+def check_boxes_are_drawn_at_full_detail_under_the_words():
+    from game.config import Art
+    make(Boxes)
+    assert pyxel.pget(20, 20) == Col.WHITE                    # its corner is rounded off
+    assert pyxel.pget(60, 20) == Art.OUTLINE                  # a dark rim, one fine pixel...
+    assert pyxel.pget(60, 22) == Art.UI_FRAME                 # ...then the light frame
+    assert Art.UI_PAGE in colours(60, 40, 40, 20)             # and the page
+    assert Col.MAROON in colours(40, 40, 32, 34)              # the words go on top
+
+
+class Street(Scene):
+    def draw(self):
+        from game.gfx import intro_art
+        intro_art.present_scene(intro_art.draw_street, 0.8, 0, 1)
+
+
+def check_the_intro_is_drawn_at_full_detail_with_close_ups():
+    from game.config import Art
+    make(Street)
+    seen = colours(0, 0, pyxel.width, 400)
+    assert {Art.SKIN1, Art.OUTLINE, Art.WALK, Art.ROAD} <= seen   # people, outlined, on the sidewalk
+
+
 Art_ = Art                      # a plain scene, for checks that only need Pyxel started
 
 

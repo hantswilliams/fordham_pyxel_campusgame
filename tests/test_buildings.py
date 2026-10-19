@@ -149,6 +149,18 @@ def test_finer_pictures_use_only_game_colors(b):
     assert not bad, f"{b.id}/map_fine.png uses colors outside the game's palette: {sorted(bad)[:5]}"
 
 
+@pytest.mark.parametrize("b", [b for b in BUILDINGS if b.card_png], ids=lambda b: b.id)
+def test_every_card_picture_has_a_finer_one(b):
+    """The building card's picture at twice the detail (decisions/0045)."""
+    assert b.card_fine_png, f"{b.id} has no card_fine.png: run assets/buildings/_style/fine.py {b.id}"
+    assert png_size(b.card_fine_png) == (CARD_SIZE[0] * 2, CARD_SIZE[1] * 2)
+    Image = pytest.importorskip("PIL.Image")
+    allowed = {((c >> 16) & 255, (c >> 8) & 255, c & 255) for c in config.GAME_COLORS}
+    im = Image.open(b.card_fine_png).convert("RGBA")
+    bad = {px[:3] for _, px in im.getcolors(1 << 20) if px[3] >= 128 and px[:3] not in allowed}
+    assert not bad, f"{b.id}/card_fine.png uses colors outside the game's palette: {sorted(bad)[:5]}"
+
+
 def test_every_drawn_building_has_a_script_for_its_finer_picture():
     import sys
     sys.path.insert(0, str(config.BUILDINGS_DIR / "_style"))

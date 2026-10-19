@@ -35,7 +35,7 @@ _layer: pyxel.Image | None = None
 _cam = (0, 0)
 _clip: tuple[int, int, int, int] | None = None
 _texts: list[tuple] = []
-_images: list[tuple] = []
+_under: list = []        # full-size drawing for this layer, in order, under its doubled picture
 _art = None              # (image, scale) the intro is drawing into, for sign masks
 _scratch: pyxel.Image | None = None
 
@@ -104,7 +104,24 @@ def queue_image(img, w: int, h: int, x: float, y: float, art_scale: float) -> bo
     not active."""
     if not active:
         return False
-    _images.append((img, w, h, x, y, art_scale * scale))
+    k = art_scale * scale
+
+    def draw(full, img=img, w=w, h=h, x=x, y=y, k=k):
+        # blt scales around the centre of the destination rectangle
+        full.blt(x * scale + w * (k - 1) / 2, y * scale + h * (k - 1) / 2, img, 0, 0, w, h, scale=k)
+    _under.append(draw)
+    return True
+
+
+def queue_full(draw) -> bool:
+    """Run draw(image) when this layer is finished, on the full-size picture,
+    under the layer (and in order with queue_image): for drawing that needs
+    every pixel, like rounded boxes and thin rims (decisions/0045,
+    game/ui/frames.py). draw takes full-size pixels; the camera isn't applied.
+    Returns False when not active."""
+    if not active:
+        return False
+    _under.append(draw)
     return True
 
 
@@ -126,7 +143,7 @@ def begin() -> None:
         return
     _cam, _clip = (0, 0), None
     _texts.clear()
-    _images.clear()
+    _under.clear()
     _final.cls(config.Col.BLACK)
     pyxel.camera()
     pyxel.clip()
@@ -137,7 +154,7 @@ def layer() -> None:
     """Finish the layer drawn so far, before an overlay draws over it. With
     no text waiting the overlay can simply draw over it, which saves doubling
     the picture twice (the costly part, about 4 ms)."""
-    if active and (_texts or _images):
+    if active and (_texts or _under):
         _flush()
 
 
@@ -149,9 +166,9 @@ def _flush() -> None:
     pyxel.clip()
     pyxel.dither(1.0)
     _layer.blt(0, 0, pyxel.screen, 0, 0, W, H)
-    for img, w, h, x, y, k in _images:
-        _final.blt(x * scale + w * (k - 1) / 2, y * scale + h * (k - 1) / 2, img, 0, 0, w, h, scale=k)
-    _images.clear()
+    for draw in _under:
+        draw(_final)
+    _under.clear()
     # blt scales around the centre of the destination rectangle
     _final.blt(W * (scale - 1) / 2, H * (scale - 1) / 2, _layer, 0, 0, W, H, _key, scale=scale)
     for x, y, s, col, font, cell, dy, rect, mask in _texts:

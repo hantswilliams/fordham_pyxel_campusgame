@@ -5,7 +5,7 @@
 | **Status** | Decided 2026-10-19: Option B approved, with everything in "What comes with A and B". Being built on branch `finer-pixels` (from `campus-shuttle`) |
 | **Raised** | 2026-10-19. Version 1 looks like the original Pokémon Blue / Gold games; the next version should look cleaner and a little less pixelated |
 | **Affects** | All art (ground, trees, people, vehicles, buildings, card pictures), the text boxes, cards and menus, and how the screen is drawn (`game/gfx/display.py`). Not the maps, content, missions, saving, web build or Campus Guide |
-| **Built?** | Steps 1 to 3 of 5 (the ground, trees and shadows; people, the bike and the vans; buildings and everything else on the map), on branch `finer-pixels`. See "What was built" at the end |
+| **Built?** | Steps 1 to 4 of 5 (the ground, trees and shadows; people, the bike and the vans; buildings and everything else on the map; the screens), on branch `finer-pixels`. Step 5 (checks on a real phone) is left. See "What was built" at the end |
 
 ## What's being decided
 
@@ -224,3 +224,36 @@ If you approve, say if any item in "What comes with A and B" should be left out 
 - **Shadows:** everything casts one in its own shape. The fountain casts a low one.
 - **Kept for now:** `map.png` stays as it is, for the in-game campus map and the 1× fallback. The building cards still use today's pictures, until step 4.
 - **When a building changes:** run `uv run python assets/buildings/_style/fine.py <id>` after its own drawing script. The tests fail if a building has no `map_fine.png` or it's the wrong size.
+
+### Step 4: the screens
+
+![Today, the approved mockup and step 4](images/0045/step4_compare.png)
+
+![The title, the intro, the ID check, the menus, the campus map and a mission offer](images/0045/step4_screens.png)
+
+- **Boxes, as in the mockup** (`game/ui/frames.py`):
+  - rounded corners, a thin dark rim, a light blue-grey frame and a soft drop
+  - the speaker's name on a maroon tab
+  - banners, the mission bar and messages as rounded bars
+  - the "!", "?" and BEEP as small speech bubbles with tails
+  - a finer checker to dim the world behind cards and menus
+
+  They're drawn at full detail, under each screen's words and icons.
+- **Cards:**
+  - All 35 card pictures now have a finer version, `card_fine.png`, made from their scripts like the map pictures, with round trees, finer stone and windows, and soft clouds.
+  - The card has a rounded frame with a maroon heading, the picture in a dark rim, and the kind of place on a rounded tag.
+- **Menus:** the Mission Log, a mission's page and the Ram Passport have a rounded tab, a soft highlight on the chosen mission, and stamps and badges as round discs at full detail.
+- **The ID check:** a rounded panel, and the card, the phone and the reader redrawn at full detail, with "FORDHAM" and "TAP ID" lettered sharp.
+- **The How to Play card** has key names on rounded blue chips.
+- **The campus map:**
+  - It's made from the new world, so it has the new colours, roads and lawns.
+  - It has round pins, a pin with a name tag for the chosen place, a round "you are here" marker, and a key with round dots.
+  - It's still shown at today's size (4 px a cell, doubled). Making it from the new world at full detail would take seconds on a phone, so it's halved first and then averaged as before, which costs the same as today.
+- **The title** shows the campus in the new look behind a rounded maroon panel, slowly panning across Edwards Parade and Keating Hall. The campus picture is made here once and kept for the walk.
+- **The intro** (the train, Fordham station, Webster Avenue) is drawn straight at full detail. It keeps the same layout and timing, with outlines, shading and finer windows. People are drawn at close-up size from the same drawing as on campus, not blown up, so the 2× and 3× close-ups from D-0019 stay sharp.
+- **Tests:**
+  - every card picture has a finer one
+  - a box is rounded, rimmed and under the words
+  - the intro shows the new people at full detail
+
+  422 tests pass.

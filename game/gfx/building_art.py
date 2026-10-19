@@ -50,6 +50,11 @@ def card_image(b: BuildingAsset) -> "pyxel.Image | None":
     return _load(b.card_png)
 
 
+def card_fine_image(b: BuildingAsset) -> "pyxel.Image | None":
+    """card_fine.png: the card picture at twice the detail (decisions/0045)."""
+    return _load(b.card_fine_png)
+
+
 def draw_on_map(b: BuildingAsset, target=None) -> bool:
     """Draw the building's map.png at its place (in map pixels). Draws to the
     screen, or into `target` (a pyxel.Image). False if it has no map.png."""

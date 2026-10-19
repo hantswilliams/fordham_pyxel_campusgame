@@ -5,11 +5,11 @@ import pyxel
 
 from game import config
 from game.config import SCREEN_H, SCREEN_W, Col
-from game.gfx.intro_art import SCENE_ART, present
+from game.gfx.intro_art import SCENE_ART, present_scene
 from game.systems import controls
 from game.systems.input import Action
 from game.systems.intro_timeline import IntroData, IntroTimeline, load_intro
-from game.ui import font
+from game.ui import font, frames
 from game.ui.text import BIG_CHAR_W, BIG_LINE_H, GROW, wrap
 from game.ui.textbox import MAX_CHARS, draw_text_box
 
@@ -37,12 +37,12 @@ class IntroScene(Scene):
 
     def draw(self) -> None:
         tl = self.timeline
-        present(SCENE_ART[tl.beat.scene], tl.scene_progress, tl.scene_frame, tl.scene_length)
+        present_scene(SCENE_ART[tl.beat.scene], tl.scene_progress, tl.scene_frame, tl.scene_length)
         draw_text_box(wrap(tl.beat.caption, MAX_CHARS), tl.revealed_chars, tl.caption_complete)
         hint = controls.fmt("{confirm}: NEXT  {back}: SKIP")
-        hw = font.width(hint) + 8
-        pyxel.rect(SCREEN_W - hw - 2, 2, hw, 15 + GROW, Col.NAVY)
-        font.text(SCREEN_W - hw + 2, 3, hint, Col.WHITE)
+        hw = font.width(hint) + 14
+        frames.pill(SCREEN_W - hw - 4, 3, hw, 15 + GROW, Col.NAVY, radius=4, shine=Col.DARK_BLUE)
+        font.text(SCREEN_W - hw + 3, 4, hint, Col.WHITE)
 
 
 class ControlsScene(Scene):
@@ -58,23 +58,19 @@ class ControlsScene(Scene):
             self.app.scenes.replace(OverworldScene(self.app))
 
     def draw(self) -> None:
-        present(SCENE_ART["street"], 1.0, pyxel.frame_count, 1)
-        pyxel.dither(0.6)
-        pyxel.rect(0, 0, SCREEN_W, SCREEN_H, Col.NAVY)
-        pyxel.dither(1.0)
-
+        present_scene(SCENE_ART["street"], 1.0, pyxel.frame_count, 1)
+        frames.dim()
         x, y, w, h = 6, 6, SCREEN_W - 12, SCREEN_H - 12
-        pyxel.rect(x, y, w, h, Col.WHITE)
-        pyxel.rectb(x, y, w, h, Col.NAVY)
-        pyxel.rectb(x + 1, y + 1, w - 2, h - 2, Col.NAVY)
-        pyxel.rect(x + 2, y + 2, w - 4, 16 + GROW, Col.MAROON)
+        frames.box(x, y, w, h, radius=8)
+        frames.header(x + 2.5, y + 2.5, w - 5, 16 + GROW)
         font.centered(y + 4, self.data.controls_title, Col.WHITE)
 
         row_y = y + 26 + GROW
         action_x = x + 24 + max(font.width(k) for k, _ in self.data.controls_rows)
         for keys, action in self.data.controls_rows:
-            pyxel.rect(x + 8, row_y - 1, font.width(keys) + 8, 14 + GROW, Col.DARK_BLUE)
-            font.text(x + 12, row_y, keys, Col.WHITE)
+            frames.pill(x + 8, row_y - 1, font.width(keys) + 10, 14 + GROW, Col.DARK_BLUE, radius=3,
+                        shine=Col.LIGHT_BLUE)
+            font.text(x + 13, row_y, keys, Col.WHITE)
             font.text(action_x, row_y, action, Col.BLACK)
             row_y += 18 + GROW
 

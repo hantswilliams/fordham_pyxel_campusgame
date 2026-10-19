@@ -72,6 +72,12 @@ class BuildingAsset:
         return p if p and p.exists() else None
 
     @property
+    def card_fine_png(self) -> Path | None:
+        """The card picture at twice the detail (decisions/0045)."""
+        p = self.folder / "card_fine.png" if self.folder else None
+        return p if p and p.exists() else None
+
+    @property
     def card_png(self) -> Path | None:
         p = self.folder / "card.png" if self.folder else None
         return p if p and p.exists() else None

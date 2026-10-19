@@ -193,7 +193,13 @@ A `tests/test_content.py` check validates the data: every NPC's dialogue exists,
 - People, the bike and the vans come from one sheet drawn in code at startup (`game/gfx/people_art.py`), with the same sprite numbers as today's. People stand 22 px tall, so their heads rise into the cell above.
 - Drawn buildings use `map_fine.png`, made from each building's own drawing script by `assets/buildings/_style/fine.py`, with the fountain plaza hand-finished in `_style/fine_plaza.py`. `map.png` stays for the in-game campus map and the 1× fallback.
 - Signs, benches, lamps, the fence, the bike rack, mission items and Faculty Memorial Hall's tiles come from `game/gfx/object_art.py`. The plaques and mats are placed by `building_overlay` (`plaque_spots`, `mat_spots`) and drawn at full detail.
-- With `DISPLAY_SCALE = 1` the tiles are drawn as before.
+- **Screens.** Boxes, tabs, bubbles and other screen pieces come from `game/ui/frames.py`.
+  - They're drawn at full detail through `display.queue_full`: under the layer's own drawing and text, and in order with `display.queue_image`.
+  - So a screen queues its background and boxes first, then draws its words and icons as before. Anything drawn straight onto the layer covers what's queued.
+  - Cards show `card_fine.png`.
+  - The intro scenes are drawn with `intro_art.Pen` straight onto a full-size picture (`present_scene`), with people from `people_art.close_up`.
+  - The title shows the campus picture.
+- With `DISPLAY_SCALE = 1` the tiles are drawn as before, and the frames draw plain versions.
 
 ---
 

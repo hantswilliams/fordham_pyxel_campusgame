@@ -9,15 +9,13 @@ Mission Log:   UP/DOWN pick, Z full page, M tracker on/off, LEFT/RIGHT tab
 Mission page:  UP/DOWN scroll, Z track/drop, X back
 TAB closes the menu from anywhere."""
 
-import math
-
 import pyxel
 
-from game.config import SCREEN_H, SCREEN_W, Col
+from game.config import SCREEN_H, SCREEN_W, Art, Col
 from game.systems import controls
 from game.systems.input import Action
 from game.systems.progress import BADGES
-from game.ui import font
+from game.ui import font, frames
 from game.ui.text import BIG_CHAR_W, GROW, wrap
 
 from .base import Scene
@@ -167,16 +165,16 @@ class MenuScene(Scene):
 
     # --- drawing --------------------------------------------------------------------------
     def draw(self) -> None:
-        pyxel.cls(Col.WHITE)
+        frames.rect(0, 0, SCREEN_W, SCREEN_H, Art.UI_PAGE)
         if self.page is not None:
             self._draw_page(self.page)
             return
-        pyxel.rect(0, 0, SCREEN_W, HEADER_H, Col.MAROON)
+        self._header_bar()
         x = 6
         for i, name in enumerate(TABS):
             w = font.width(name) + 10
             if i == self.tab:
-                pyxel.rect(x - 4, 1, w, HEADER_H - 1, Col.WHITE)
+                frames.header(x - 4, 2, w, HEADER_H - 2, fill=Art.UI_PAGE, radius=3, shine=None)
                 font.text(x + 1, 2, name, Col.MAROON)
             else:
                 font.text(x + 1, 2, name, Col.PEACH)
@@ -188,8 +186,14 @@ class MenuScene(Scene):
         else:
             self._draw_passport()
 
+    @staticmethod
+    def _header_bar() -> None:
+        frames.rect(0, 0, SCREEN_W, HEADER_H, Col.MAROON)
+        frames.rect(0, 0, SCREEN_W, 1, Art.MAROON_LT)
+
     def _footer(self, msg: str) -> None:
-        pyxel.rect(0, FOOTER_Y, SCREEN_W, SCREEN_H - FOOTER_Y, Col.NAVY)
+        frames.rect(0, FOOTER_Y, SCREEN_W, SCREEN_H - FOOTER_Y, Col.NAVY)
+        frames.rect(0, FOOTER_Y, SCREEN_W, 0.5, Col.DARK_BLUE)
         font.text(6, FOOTER_Y + 1, msg, Col.WHITE)
 
     def _status(self, m) -> tuple[str, int]:
@@ -227,7 +231,7 @@ class MenuScene(Scene):
             i = self.top + row
             y = LIST_Y + row * ROW_H
             if i == self.cursor:
-                pyxel.rect(2, y - 1, SCREEN_W - 4, ROW_H, Col.LIGHT_BLUE)
+                frames.pill(2, y - 1, SCREEN_W - 4, ROW_H, Art.UI_HILITE, rim=Art.UI_FRAME, radius=4)
             self._draw_icon(6, y + 3 + GROW // 2, m)
             status, col = self._status(m)
             sx = SCREEN_W - 8 - font.width(status)
@@ -240,11 +244,11 @@ class MenuScene(Scene):
                 pyxel.line(fx, y + 2, fx, y + 11, Col.NAVY)
                 pyxel.tri(fx + 1, y + 2, fx + 1, y + 7, fx + 6, y + 4, Col.MAROON)
         if self.top > 0:
-            pyxel.tri(SCREEN_W // 2 - 3, LIST_Y - 1, SCREEN_W // 2 + 3, LIST_Y - 1, SCREEN_W // 2, LIST_Y - 4, Col.GRAY)
+            frames.arrow(SCREEN_W // 2 - 4, LIST_Y - 5, Col.GRAY, down=False)
         sep = LIST_Y + LIST_ROWS * ROW_H + 1
         if self.top + LIST_ROWS < len(listed):
-            pyxel.tri(SCREEN_W // 2 - 3, sep - 2, SCREEN_W // 2 + 3, sep - 2, SCREEN_W // 2, sep + 1, Col.GRAY)
-        pyxel.line(6, sep, SCREEN_W - 7, sep, Col.GRAY)
+            frames.arrow(SCREEN_W // 2 - 4, sep - 3, Col.GRAY)
+        frames.rect(6, sep, SCREEN_W - 12, 0.5, Art.UI_LINE)
         self._draw_preview(listed[self.cursor], sep + 3)
         tr = "PINNED" if self.progress.show_tracker else "AUTO"
         self._footer(controls.fmt(f"{{confirm}}: OPEN  {{map}}: BAR {tr}  LEFT/RIGHT: TAB"))
@@ -280,7 +284,7 @@ class MenuScene(Scene):
 
     def _draw_page(self, m) -> None:
         st = self.book.state(m)
-        pyxel.rect(0, 0, SCREEN_W, HEADER_H, Col.MAROON)
+        self._header_bar()
         font.text(6, 2, m.title, Col.WHITE)
         tag = {"active": "IN PROGRESS", "available": "NOT STARTED", "done": "DONE"}[st.status]
         font.text(SCREEN_W - 6 - font.width(tag), 2, tag, Col.PEACH)
@@ -296,10 +300,9 @@ class MenuScene(Scene):
             font.text(6 + indent, y0 + j * LINE_H, text, col)
         cx = SCREEN_W - 8
         if self.scroll > 0:
-            pyxel.tri(cx - 3, y0 + 4, cx + 3, y0 + 4, cx, y0, Col.MAROON)
+            frames.arrow(cx - 4, y0, down=False)
         if self.scroll + rows < len(lines):
-            yb = FOOTER_Y - 6
-            pyxel.tri(cx - 3, yb, cx + 3, yb, cx, yb + 4, Col.MAROON)
+            frames.arrow(cx - 4, FOOTER_Y - 6)
         if st.status == "active":
             act = "TRACK/DROP" if m.optional else "TRACK"
             self._footer(controls.fmt(f"{{confirm}}: {act}  UP/DOWN: SCROLL  {{back}}: BACK"))
@@ -318,17 +321,13 @@ class MenuScene(Scene):
             stamp = m.reward.get("stamp")
             earned = stamp in self.progress.stamps
             if earned:
-                pyxel.circ(cx, cy, 16, Col.MAROON)
-                pyxel.circb(cx, cy, 16, Col.NAVY)
-                pyxel.circb(cx, cy, 13, Col.PEACH)
+                frames.disc(cx, cy, 16, Col.MAROON, ring=Col.PEACH)
                 words = [w for w in m.reward.get("stamp_name", m.title).split()
                          if w.lower() not in ("and", "of", "the", "a")]
                 initials = "".join(w[0] for w in words[:2]).upper()
                 font.text(cx - font.width(initials) // 2, cy - 6 - GROW // 2, initials, Col.WHITE)
             else:
-                for a in range(0, 360, 30):
-                    pyxel.pset(cx + round(16 * math.cos(math.radians(a))),
-                               cy + round(16 * math.sin(math.radians(a))), Col.GRAY)
+                frames.dots(cx, cy, 16, Col.GRAY, n=20)
                 font.text(cx - 4, cy - 6 - GROW // 2, "?", Col.GRAY)
             name = m.reward.get("stamp_name", m.title)
             for j, line in enumerate(wrap(name, (cw - 2) // BIG_CHAR_W)[:2]):
@@ -341,8 +340,8 @@ class MenuScene(Scene):
             x = 10 + (i % 3) * bw
             y = by + 15 + (i // 3) * 14
             got = b in self.progress.badges
-            pyxel.circ(x + 5, y + 6, 5, BADGE_COLORS[b] if got else Col.WHITE)
-            pyxel.circb(x + 5, y + 6, 5, Col.NAVY if got else Col.GRAY)
+            frames.disc(x + 5, y + 6, 5, BADGE_COLORS[b] if got else Art.UI_PAGE,
+                        rim=Art.OUTLINE if got else Col.GRAY)
             font.text(x + 14, y, b.title(), Col.BLACK if got else Col.GRAY)
         got, total = len(self.progress.stamps), n
         msg = f"STAMPS {got}/{total}"

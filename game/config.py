@@ -143,6 +143,8 @@ ART_COLORS = {
     "SIGN_BD": 0xF6F4EE, "POST": 0x6B6E78, "POST_DK": 0x4D5058,
     "WOOD_LT": 0xB07650, "WOOD_DK": 0x663B27, "IRON": 0x34363F, "IRON_HI": 0x6C7280,
     "CARD_BOX": 0xC98F55, "CARD_BOX_SH": 0x9E6C3B,
+    # boxes, cards and menus (game/ui/frames.py)
+    "UI_FRAME": 0xC4CEE2, "UI_PAGE": 0xFBFAF7, "UI_LINE": 0xDCDBE3, "UI_HILITE": 0xDCE6F8,
     # never drawn: marks "not this" while shadows are cut to shape (game/gfx/world_art.py)
     "MASK": 0xFF01FD,
 }

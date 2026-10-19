@@ -8,7 +8,8 @@ cut stone, brick, roofs, windows, doors, eaves, trees and cars. So each
 building keeps its design, and gets finer stone, slates, window panes and
 1 px outlines. The result is map_fine.png, beside map.png, at exactly
 twice its size; the game draws it in the finer world (game/gfx/world_art.py).
-map.png stays for the campus map and the doubled-up fallback.
+The same goes for card.png and card_fine.png, the picture on the building's
+card. map.png stays for the campus map and the doubled-up fallback.
 
     uv run python assets/buildings/_style/fine.py [building ids...]
 
@@ -460,14 +461,48 @@ def car(d, x, y, body, nose="up"):
         d.frect(lx, ly, lx + 1, ly + 1, art("HEADLIGHT"))
 
 
+def lawn(d, y, w=228, h=88):
+    """A card picture's lawn: grass with fine tufts (and the finer world's greens)."""
+    X0, Y0, X1, Y1 = _fine_box(0, y, w - 1, h - 1)
+    d.frect(X0, Y0, X1, Y1, LIME)
+    for i, x in enumerate(range(X0 + 3, X1, 9)):
+        ty = Y0 + 6 + (x * 7 + i * 5) % max(1, Y1 - Y0 - 8)
+        for dx, dy in ((0, 0), (1, 1), (2, 0), (1, -1)):
+            d.frect(x + dx, ty + dy, x + dx, ty + dy, GREEN)
+
+
+def clouds(d, spots=((24, 10, 26), (160, 14, 30))):
+    """Round white clouds with a soft underside."""
+    for cx, cy, w in spots:
+        X, Y, W = cx * K, cy * K, w * K
+        d.d.ellipse([X, Y + 2, X + W, Y + 14], fill=art("PANE_HI"))
+        d.d.ellipse([X, Y, X + W, Y + 11], fill=WHITE)
+        d.d.ellipse([X + W // 5, Y - 7, X + W * 3 // 5, Y + 8], fill=WHITE)
+        d.d.ellipse([X + W // 2, Y - 4, X + W * 4 // 5, Y + 8], fill=WHITE)
+
+
+def person(d, x, y, shirt):
+    """A tiny passer-by on a card picture, with a head and hair."""
+    X, Y = x * K, y * K
+    d.frect(X - 1, Y, X + 3, Y + 3, art("SKIN1"))
+    d.frect(X - 1, Y - 1, X + 3, Y, art("HAIR_BR"))
+    d.frect(X - 2, Y + 4, X + 4, Y + 11, shirt)
+    d.frect(X - 1, Y + 12, X, Y + 15, NAVY)
+    d.frect(X + 2, Y + 12, X + 3, Y + 15, NAVY)
+
+
 # names a script may use, and the finer drawing that replaces each
 SWAPS = {
     "fieldstone": fieldstone, "ashlar": ashlar, "brick": brick, "pink_brick": pink_brick,
     "stucco": stucco, "tan_stone": tan_stone, "panels": panels, "flat_roof": flat_roof,
     "slope_roof": slope_roof, "plaza": plaza, "eave": eave, "window": window,
     "arched_window": arched_window, "gothic_window": gothic_window, "framed_window": framed_window,
-    "door": door, "tree": tree, "car": car,
+    "door": door, "tree": tree, "car": car, "lawn": lawn, "clouds": clouds, "person": person,
 }
+# the first drafts' own helpers take other arguments: only the stand-ins
+# for PIL are swapped in there
+DRAFTS = {"keating": "keating_hall", "draft_walsh": "walsh_library",
+          "draft_campbell": "campbell_hall", "draft_dealy": "dealy_hall"}
 # where a script's own helper takes different arguments from the kit's
 PER_SCRIPT = {
     "draw_v2": {"window": window_v2, "door": door_v2, "fieldstone": fieldstone_v2},
@@ -486,6 +521,8 @@ def _load(name: str, path: Path):
 
 def _patch(mod, script: str) -> None:
     swaps = {**SWAPS, **PER_SCRIPT.get(script, {})}
+    if script in DRAFTS and script != "keating":
+        swaps = {}
     for attr in list(vars(mod)):
         if attr == "Image":
             setattr(mod, attr, _ImageModule)
@@ -507,7 +544,7 @@ def _script(script: str):
         _kit = kit
         _patch(kit, "kit")
     if script not in _mods:
-        path = BUILDINGS / "keating_hall" / "options" / "draft_v1.py" if script == "keating" \
+        path = BUILDINGS / DRAFTS[script] / "options" / "draft_v1.py" if script in DRAFTS \
             else HERE / f"{script}.py"
         mod = _load(script, path)
         _patch(mod, script)
@@ -557,6 +594,45 @@ SOURCES = {
     "regional_parking": ("draw_parking", lambda m: m.garage()),
 }
 
+# building id -> (script, how to draw its card picture)
+CARDS = {
+    "walsh_library": ("draft_walsh", lambda m: m.draw_card()),
+    "campbell_hall": ("draft_campbell", lambda m: m.draw_card()),
+    "dealy_hall": ("draft_dealy", lambda m: m.draw_card()),
+    "keating_hall": ("keating", lambda m: m.draw_card()),
+    "cunniffe_house": ("draw_fountain_quad", lambda m: m.cunniffe_card()),
+    "hughes_hall": ("draw_fountain_quad", lambda m: m.hughes_card()),
+    "cunniffe_fountain": ("draw_fountain_quad", lambda m: m.fountain_card()),
+    "lombardi_center": ("draw_athletics", lambda m: m.lombardi_card()),
+    "mcshane_center": ("draw_athletics", lambda m: m.mcshane_card()),
+    "rose_hill_gym": ("draw_athletics", lambda m: m.gym_card()),
+    "moglia_stadium": ("draw_athletics", lambda m: m.moglia_card()),
+    "jack_coffey_field": ("draw_athletics", lambda m: m.jack_coffey_card()),
+    "houlihan_park": ("draw_athletics", lambda m: m.houlihan_card()),
+    "murphy_field": ("draw_athletics", lambda m: m.murphy_card()),
+    "bahoshy_field": ("draw_athletics", lambda m: m.bahoshy_card()),
+    "loschert_hall": ("draw_residence", lambda m: m.loschert_card()),
+    "alumni_court_south": ("draw_residence", lambda m: m.alumni_south_card()),
+    "queens_court": ("draw_residence", lambda m: m.queens_card()),
+    "faber_hall": ("draw_residence", lambda m: m.faber_card()),
+    "loyola_hall": ("draw_residence", lambda m: m.loyola_card()),
+    "martyrs_court": ("draw_residence", lambda m: m.martyrs_card()),
+    "conley_salice": ("draw_residence", lambda m: m.conley_card()),
+    "ohare_hall": ("draw_residence", lambda m: m.ohare_card()),
+    "tierney_hall": ("draw_residence", lambda m: m.tierney_card()),
+    "finlay_hall": ("draw_residence", lambda m: m.finlay_card()),
+    "walsh_hall": ("draw_residence", lambda m: m.walsh_hall_card()),
+    "university_church": ("draw_academic", lambda m: m.church_card()),
+    "collins_hall": ("draw_academic", lambda m: m.collins_card()),
+    "thebaud_hall": ("draw_academic", lambda m: m.thebaud_card()),
+    "freeman_hall": ("draw_academic", lambda m: m.freeman_card()),
+    "larkin_hall": ("draw_academic", lambda m: m.larkin_card()),
+    "spellman_hall": ("draw_academic", lambda m: m.spellman_card()),
+    "mulcahy_hall": ("draw_academic", lambda m: m.mulcahy_card()),
+    "admissions": ("draw_academic", lambda m: m.duane_card()),
+    "regional_parking": ("draw_parking", lambda m: m.garage_card()),
+}
+
 # today's walkway and lawn colours inside pictures -> the finer world's
 REMAP = {LIME: art("GRASS"), GREEN: art("GRASS_TUFT"), PEACH: art("WALK")}
 
@@ -601,15 +677,26 @@ def draw(bid: str) -> PILImage.Image:
     return finish(picture.fine)
 
 
-def main(ids) -> None:
+def draw_card(bid: str) -> PILImage.Image:
+    script, fn = CARDS[bid]
+    picture = fn(_script(script))
+    return finish(picture.fine)
+
+
+def _save(bid: str, im: PILImage.Image, name: str) -> None:
     allowed = set(RGB)
+    bad = {c[:3] for _, c in im.getcolors(1 << 20) if c[3] and c[:3] not in allowed}
+    if bad:
+        raise SystemExit(f"{bid}/{name}: colours outside the game's palette: {sorted(bad)[:5]}")
+    im.save(BUILDINGS / bid / name)
+    print("wrote", bid, name, im.size)
+
+
+def main(ids) -> None:
     for bid in ids or SOURCES:
-        im = draw(bid)
-        bad = {c[:3] for _, c in im.getcolors(1 << 20) if c[3] and c[:3] not in allowed}
-        if bad:
-            raise SystemExit(f"{bid}: colours outside the game's palette: {sorted(bad)[:5]}")
-        im.save(BUILDINGS / bid / "map_fine.png")
-        print("wrote", bid, im.size)
+        _save(bid, draw(bid), "map_fine.png")
+        if bid in CARDS:
+            _save(bid, draw_card(bid), "card_fine.png")
 
 
 if __name__ == "__main__":

@@ -70,13 +70,15 @@ def _shade(name: str) -> int:
 
 
 class _Units:
-    """Draws in layout units (2 art pixels each) from (ox, oy) on img."""
+    """Draws in layout units (k art pixels each, 2 unless asked) from
+    (ox, oy) on img. The shapes don't depend on k, so the same drawing
+    comes out bigger and still sharp (the intro's close-ups)."""
 
-    def __init__(self, img, ox: int, oy: int):
-        self.img, self.ox, self.oy = img, ox, oy
+    def __init__(self, img, ox: int, oy: int, k: float = 2):
+        self.img, self.ox, self.oy, self.k = img, ox, oy, k
 
     def _p(self, x: float, y: float) -> tuple[int, int]:
-        return round(self.ox + x * 2), round(self.oy + y * 2)
+        return round(self.ox + x * self.k), round(self.oy + y * self.k)
 
     def rect(self, x0, y0, x1, y1, c) -> None:
         (X0, Y0), (X1, Y1) = self._p(x0, y0), self._p(x1, y1)
@@ -99,10 +101,16 @@ class _Units:
         X, Y = self._p(x, y)
         self.img.rect(X, Y, w, h, c)
 
+    def poly(self, pts, c) -> None:
+        """A filled convex polygon, as a fan of triangles."""
+        P = [self._p(x, y) for x, y in pts]
+        for a, b in zip(P[1:], P[2:]):
+            self.img.tri(*P[0], *a, *b, c)
+
     def limb(self, x0, y0, x1, y1, width, c) -> None:
         """A thick line with round ends (arms, legs, tubes), `width` units wide."""
         (X0, Y0), (X1, Y1) = self._p(x0, y0), self._p(x1, y1)
-        r = max(0, round(width - 1))         # width units = 2 * width px across
+        r = max(0, round(width * self.k / 2 - 1))     # width units = k * width px across
         steps = max(abs(X1 - X0), abs(Y1 - Y0), 1)
         for i in range(steps + 1):
             t = i / steps
@@ -165,9 +173,9 @@ def _head(u: _Units, L: Look, facing: Direction, hy: float) -> None:
             u.rect(1, 4.5 + hy, 5, 5.5 + hy, Art.EYE)
 
 
-def _person(img, ox: int, oy: int, L: Look, facing: Direction, frame: int) -> None:
+def _person(img, ox: int, oy: int, L: Look, facing: Direction, frame: int, k: float = 2) -> None:
     """One frame of a person on foot; frame 1 and 2 are the two steps."""
-    u = _Units(img, ox, oy)
+    u = _Units(img, ox, oy, k)
     sk, skd = _c(L.skin), _shade(L.skin)
     sh, shd = _c(L.shirt), _shade(L.shirt)
     pt, ptd = _c(L.pants), _shade(L.pants)
@@ -226,6 +234,42 @@ def _person(img, ox: int, oy: int, L: Look, facing: Direction, frame: int) -> No
         u.rect(6 + swing, 12.5 + by, 8 + swing, 16.5 + by, shd)
         u.rect(6 + swing, 16.5 + by, 8 + swing, 18 + by, sk)
     _head(u, L, facing, by)
+
+
+def _outline(flat):
+    """One outline round everything drawn on `flat`: the drawing shifted a
+    pixel each way in the outline colour, then the drawing on top."""
+    out = pyxel.Image(flat.width, flat.height)
+    out.cls(Col.BLACK)
+    for c in range(1, len(pyxel.colors)):
+        out.pal(c, Art.OUTLINE)
+    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        out.blt(dx, dy, flat, 0, 0, flat.width, flat.height, Col.BLACK)
+    out.pal()
+    out.blt(0, 0, flat, 0, 0, flat.width, flat.height, Col.BLACK)
+    return out
+
+
+_close_ups: dict = {}
+
+
+def close_up(sprite: int, facing: Direction, frame: int, k: float):
+    """A person drawn k pixels to the unit (16 units wide, 23 tall, feet at
+    22.5), outlined, for the intro's close-ups (decisions/0045). Cached."""
+    key = (sprite, facing, frame, k)
+    if key not in _close_ups:
+        w, h = round(16 * k) + 4, round(23 * k) + 4
+        flat = pyxel.Image(w, h)
+        flat.cls(Col.BLACK)
+        side = Direction.LEFT if facing == Direction.RIGHT else facing
+        _person(flat, 2, 2, LOOKS[sprite], side, frame, k)
+        img = _outline(flat)
+        if facing == Direction.RIGHT:
+            flipped = pyxel.Image(w, h)
+            flipped.blt(0, 0, img, 0, 0, -w, h)
+            img = flipped
+        _close_ups[key] = img
+    return _close_ups[key]
 
 
 # --- the player on the bike ---------------------------------------------------
@@ -426,14 +470,4 @@ def _build() -> pyxel.Image:
         _van_end(flat, u, v, van, True)
         u, v, _, _ = van_uv(van, "back")
         _van_end(flat, u, v, van, False)
-    # one outline round everything: the drawing shifted a pixel each way in
-    # the outline colour, then the drawing itself on top
-    out = pyxel.Image(flat.width, flat.height)
-    out.cls(Col.BLACK)
-    for c in range(1, len(pyxel.colors)):
-        out.pal(c, Art.OUTLINE)
-    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-        out.blt(dx, dy, flat, 0, 0, flat.width, flat.height, Col.BLACK)
-    out.pal()
-    out.blt(0, 0, flat, 0, 0, flat.width, flat.height, Col.BLACK)
-    return out
+    return _outline(flat)

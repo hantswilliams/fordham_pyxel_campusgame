@@ -7,7 +7,7 @@ import pyxel
 from game.gfx import display
 
 from game import config
-from game.config import ART_SCALE, SCREEN_H, SCREEN_W, TILE, Col
+from game.config import ART_SCALE, SCREEN_H, SCREEN_W, TILE, Art, Col
 from game.gfx.building_art import draw_on_map
 from game.gfx.building_overlay import draw_overlay
 from game.gfx.placeholder_art import (BIKE_SPRITE, CHAR_IMAGE_BANK, MAROON_BIKE_SPRITE, RAM_VAN, SHUTTLE_VAN,
@@ -18,7 +18,7 @@ from game.systems import controls
 from game.systems.bike import Bike
 from game.systems.missions import Reaction
 from game.systems.input import Action
-from game.ui import font
+from game.ui import font, frames
 from game.ui.text import BIG_CHAR_W, GROW
 from game.world.camera import follow
 from game.world.directions import Direction
@@ -514,11 +514,10 @@ class OverworldScene(Scene):
             self._draw_world_tiles(cx, cy)
         if self.shuttle and self.shuttle.beep:              # it's stopped for you
             vx, vy, _, _ = self.shuttle.pos
-            w = font.width("BEEP!") + 6
+            w = font.width("BEEP!") + 8
             bx, by = int(vx - w / 2), int(vy - 34 - GROW)
-            pyxel.rect(bx, by, w, 14 + GROW, Col.WHITE)
-            pyxel.rectb(bx, by, w, 14 + GROW, Col.NAVY)
-            font.text(bx + 3, by + 1, "BEEP!", Col.MAROON)
+            frames.bubble(bx, by, w, 14 + GROW)
+            font.text(bx + 4, by + 1, "BEEP!", Col.MAROON)
         # "!" over people with a mission for you, "?" over people a mission is waiting on
         bob = (pyxel.frame_count // 10) % 2
         above = 22 if self.world is not None else 17    # the finer people are taller (decisions/0045)
@@ -528,13 +527,11 @@ class OverworldScene(Scene):
                 if mark:
                     ox, oy, _ = self._npc_xy(obj)
                     bx, by = ox + 3, oy - above - bob
-                    pyxel.rect(bx, by - GROW, 12, 14 + GROW, Col.WHITE)
-                    pyxel.rectb(bx, by - GROW, 12, 14 + GROW, Col.NAVY)
+                    frames.bubble(bx, by - GROW, 12, 14 + GROW)
                     font.text(bx + 2, by + 1 - GROW, mark, Col.MAROON)
             elif obj.type == "item":                 # a mission item to pick up (decisions/0041)
                 bx, by = obj.x * TILE + 3, obj.y * TILE - 15 - bob
-                pyxel.rect(bx, by - GROW, 12, 14 + GROW, Col.WHITE)
-                pyxel.rectb(bx, by - GROW, 12, 14 + GROW, Col.NAVY)
+                frames.bubble(bx, by - GROW, 12, 14 + GROW)
                 font.text(bx + 2, by + 1 - GROW, "!", Col.MAROON)
 
         display.camera()
@@ -672,41 +669,36 @@ class OverworldScene(Scene):
         if tracker:
             most = (SCREEN_W - 20) // BIG_CHAR_W
             text = tracker if len(tracker) <= most else tracker[:most - 1] + "."
-            w = font.width(text) + 10
-            pyxel.rect(4, top, w, 15 + GROW, Col.NAVY)
-            pyxel.rectb(4, top, w, 15 + GROW, Col.PEACH)
-            font.text(9, top + 1, text, Col.WHITE)
+            w = font.width(text) + 14
+            frames.pill(4, top, w, 15 + GROW, Col.NAVY, radius=4, shine=Col.DARK_BLUE)
+            font.text(11, top + 1, text, Col.WHITE)
         if self.complete_timer > 0:
             msg = "MISSION COMPLETE!"
             w = font.width(msg) + 20
             x, y = (SCREEN_W - w) // 2, 40
             w = max(w, font.width(self.complete_title) + 20)
             x = (SCREEN_W - w) // 2
-            pyxel.rect(x, y, w, 32 + 2 * GROW, Col.MAROON)
-            pyxel.rectb(x, y, w, 32 + 2 * GROW, Col.YELLOW)
-            pyxel.rectb(x + 2, y + 2, w - 4, 28 + 2 * GROW, Col.WHITE)
+            frames.pill(x, y, w, 32 + 2 * GROW, Col.MAROON, radius=6, shine=Art.MAROON_LT,
+                        drop=Art.OUTLINE)
             font.centered(y + 3, msg, Col.YELLOW)
             font.centered(y + 16 + GROW, self.complete_title, Col.WHITE)
         if self.riding_to is not None:
             stop = self.shuttle.route.stops[self.riding_to].name.upper()
             msg = f"SHUTTLE TO {stop}" + ("  SKIPPING AHEAD" if self.skipping else controls.fmt("  {back}: SKIP"))
-            w = font.width(msg) + 12
+            w = font.width(msg) + 16
             y = SCREEN_H - 22
-            pyxel.rect(4, y - GROW, w, 16 + GROW, Col.MAROON)
-            pyxel.rectb(4, y - GROW, w, 16 + GROW, Col.WHITE)
-            font.text(10, y + 2 - GROW, msg, Col.WHITE)
+            frames.pill(4, y - GROW, w, 16 + GROW, Col.MAROON, radius=4, shine=Art.MAROON_LT)
+            font.text(12, y + 2 - GROW, msg, Col.WHITE)
         elif self.toast_timer > 0:
-            w = font.width(self.toast) + 12
+            w = font.width(self.toast) + 16
             y = SCREEN_H - 22
-            pyxel.rect(4, y - GROW, w, 16 + GROW, Col.NAVY)
-            pyxel.rectb(4, y - GROW, w, 16 + GROW, Col.WHITE)
-            font.text(10, y + 2 - GROW, self.toast, Col.WHITE)
+            frames.pill(4, y - GROW, w, 16 + GROW, Col.NAVY, radius=4, shine=Col.DARK_BLUE)
+            font.text(12, y + 2 - GROW, self.toast, Col.WHITE)
         if self.banner_timer <= 0:
             return
         name = self.area_name
-        w = font.width(name) + 16
+        w = font.width(name) + 20
         # slide in from the top, then hold
         y = min(4, -18 - GROW + (BANNER_FRAMES - self.banner_timer) * 2)
-        pyxel.rect(4, y, w, 18 + GROW, Col.MAROON)
-        pyxel.rectb(4, y, w, 18 + GROW, Col.WHITE)
-        font.text(12, y + 3, name, Col.WHITE)
+        frames.pill(4, y, w, 18 + GROW, Col.MAROON, radius=4, shine=Art.MAROON_LT, drop=Art.MAROON_SH)
+        font.text(14, y + 3, name, Col.WHITE)

@@ -11,6 +11,7 @@ assets/buildings/
     map.png           the drawing on the map
     map_fine.png      the same drawing at twice the detail, for the finer world (decisions/0045)
     card.png          the picture on its building card (228 x 88 px)
+    card_fine.png     the same picture at twice the detail (decisions/0045)
     notes.md          sources, simplifications, open questions
     options/          mockups and earlier versions
 ```
@@ -68,7 +69,7 @@ assets/buildings/
 1. Make the folder and `building.json`, copying the library's. Start with `"status": "draft"`.
 2. Draw `map.png` and `card.png`, or ask Claude for a first draft in code. The batch scripts in `_style/` draw most buildings with the shared kit `_style/kit.py`: `draw_athletics.py`, `draw_residence.py` and `draw_academic.py`.
 3. If the footprint changed, run `uv run python tools/stamp_buildings.py` to copy it into the map file. The tests tell you if they differ.
-4. Make its picture at twice the detail: `uv run python assets/buildings/_style/fine.py <id>`. This runs the building's drawing script again with finer stone, roofs, windows and doors (decisions/0045). A new building needs a line in `SOURCES` in `fine.py`. The game draws `map_fine.png`; the tests check that it's there, twice the size of `map.png`, in the game's colors.
+4. Make its pictures at twice the detail: `uv run python assets/buildings/_style/fine.py <id>`. This runs the building's drawing script again with finer stone, roofs, windows and doors (decisions/0045). A new building needs a line in `SOURCES` in `fine.py`, and in `CARDS` if it has a card picture. The game draws `map_fine.png` and `card_fine.png`; the tests check that they're there, twice the size, in the game's colors.
 5. Run the tests: `uv run pytest`.
 6. Build the review page: `uv run python tools/building_gallery.py`, then open `build/building_gallery.html`.
 7. When it looks right, set `"status": "approved"`.
