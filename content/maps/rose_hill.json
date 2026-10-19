@@ -312,7 +312,7 @@
       ],
       "type": "sign",
       "tile": "shuttle",
-      "location": "ram_van"
+      "location": "campus_shuttle"
     },
     {
       "at": [
@@ -321,7 +321,7 @@
       ],
       "type": "sign",
       "tile": "shuttle",
-      "location": "ram_van"
+      "location": "campus_shuttle"
     },
     {
       "at": [
@@ -330,7 +330,7 @@
       ],
       "type": "sign",
       "tile": "shuttle",
-      "location": "ram_van"
+      "location": "campus_shuttle"
     },
     {
       "at": [
@@ -339,7 +339,7 @@
       ],
       "type": "sign",
       "tile": "shuttle",
-      "location": "ram_van"
+      "location": "campus_shuttle"
     },
     {
       "at": [
@@ -348,7 +348,7 @@
       ],
       "type": "sign",
       "tile": "shuttle",
-      "location": "ram_van"
+      "location": "campus_shuttle"
     },
     {
       "at": [
@@ -357,7 +357,7 @@
       ],
       "type": "sign",
       "tile": "shuttle",
-      "location": "ram_van"
+      "location": "campus_shuttle"
     },
     {
       "at": [
@@ -426,7 +426,7 @@
         "Hey, you made it! Welcome to Fordham. I'm one of your Orientation Leaders.",
         "This is the Third Avenue / Webster Avenue gate. Whenever you take Metro-North, this is your way in.",
         "Edwards Parade, the big lawn at the heart of campus, is northeast of here. Follow Old Elm Road across Walsh Lawn, then go past Dealy Hall.",
-        "The gray roads are for the Ram Van shuttle and service vehicles, so stick to the sidewalks and cross at the striped crosswalks.",
+        "The gray roads are for the Campus Shuttle and service vehicles, so stick to the sidewalks and cross at the striped crosswalks.",
         "Face any door or sign and press Z to see what's there. Have fun exploring!"
       ],
       "auto": true
@@ -469,7 +469,7 @@
       "sprite": 2,
       "facing": "left",
       "lines": [
-        "See that maroon sign? That's a Ram Van shuttle stop, right here on Rose Hill Manor Drive by Dealy Hall."
+        "See that maroon sign? That's a Campus Shuttle stop, right here on Rose Hill Manor Drive by Dealy Hall. Read it to see when the next shuttle is due."
       ],
       "wander": 1
     },
@@ -938,6 +938,183 @@
         "Driving in? Show your parking permit or check in here.",
         "Parking is in the lot by Southern Boulevard."
       ]
+    },
+    {
+      "at": [
+        97,
+        56
+      ],
+      "type": "sign",
+      "tile": "shuttle",
+      "location": "ram_van"
+    },
+    {
+      "at": [
+        94,
+        55
+      ],
+      "type": "npc",
+      "name": "Ram Van Driver",
+      "sprite": 3,
+      "facing": "down",
+      "lines": [
+        "This is the Ram Van. It runs between Rose Hill and Fordham's Lincoln Center campus in Manhattan.",
+        "It leaves from the Ram Van office here on the garage's ground floor, from early morning until midnight or later.",
+        "A one-way ticket is $3.50, or 12 rides for $35. It's popular, so reserve a seat online up to 48 hours ahead.",
+        "Just getting around Rose Hill? Take the white Campus Shuttle from any maroon shuttle sign. It's free."
+      ]
     }
-  ]
+  ],
+  "shuttle": {
+    "_note": "The Campus Shuttle (decisions/0044). 'route': road cells it drives through, in order, as a loop; between them it takes the shortest way along the road. 'stops': where it stops ('at', a road cell on the route) and the maroon sign that goes with each. Facts in the lines need confirming with Fordham.",
+    "route": [
+      [
+        6,
+        67
+      ],
+      [
+        11,
+        37
+      ],
+      [
+        32,
+        35
+      ],
+      [
+        41,
+        20
+      ],
+      [
+        46,
+        10
+      ],
+      [
+        70,
+        13
+      ],
+      [
+        81,
+        24
+      ],
+      [
+        77,
+        41
+      ],
+      [
+        55,
+        33
+      ],
+      [
+        41,
+        49
+      ],
+      [
+        41,
+        58
+      ],
+      [
+        85,
+        58
+      ],
+      [
+        41,
+        59
+      ],
+      [
+        25,
+        53
+      ],
+      [
+        12,
+        61
+      ]
+    ],
+    "start_stop": 0,
+    "stops": [
+      {
+        "name": "Webster Avenue Gate",
+        "where": "Mill River Road, by the Webster Avenue gate",
+        "sign": [
+          3,
+          67
+        ],
+        "at": [
+          6,
+          67
+        ]
+      },
+      {
+        "name": "Alumni Court",
+        "where": "the Alumni Court circle",
+        "sign": [
+          11,
+          38
+        ],
+        "at": [
+          11,
+          37
+        ]
+      },
+      {
+        "name": "Cunniffe House",
+        "where": "Edgar Allan Poeway, by Cunniffe House",
+        "sign": [
+          33,
+          35
+        ],
+        "at": [
+          32,
+          35
+        ]
+      },
+      {
+        "name": "Dealy Hall",
+        "where": "Rose Hill Manor Drive, by Dealy Hall",
+        "sign": [
+          42,
+          49
+        ],
+        "at": [
+          41,
+          49
+        ]
+      },
+      {
+        "name": "Parking Garage",
+        "where": "the Fordham Regional Parking Facility, across from O'Hare Hall",
+        "sign": [
+          90,
+          56
+        ],
+        "at": [
+          85,
+          58
+        ]
+      },
+      {
+        "name": "Old Elm Road",
+        "where": "Mill River Road at Old Elm Road, by Walsh Lawn",
+        "sign": [
+          13,
+          62
+        ],
+        "at": [
+          12,
+          61
+        ]
+      }
+    ],
+    "driver": [
+      "Hi there! This is the Campus Shuttle. I drive a loop of Rose Hill and stop at every maroon shuttle sign.",
+      "It runs on weekdays, roughly 7:30 in the morning to 7 at night. Track it live in the TransLoc app: pick Fordham University.",
+      "Hop on whenever I'm at a stop. Press {back} on the way to skip ahead to your stop."
+    ],
+    "ram_van": {
+      "at": [
+        95,
+        55
+      ],
+      "facing": "left"
+    }
+  }
 }

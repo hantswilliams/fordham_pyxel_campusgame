@@ -23,7 +23,7 @@
     "short_name": "DEALY HALL",
     "real_entrance": "The columned main entrance is on the west side, facing Cunniffe House.",
     "kind": "academic",
-    "blurb": "Academic building of dark stone with white trim, beside Rose Hill Manor Drive across from Edwards Parade. A Ram Van shuttle stop is on the drive by its east end.",
+    "blurb": "Academic building of dark stone with white trim, beside Rose Hill Manor Drive across from Edwards Parade. A Campus Shuttle stop is on the drive by its east end.",
     "inside": [
       "Classrooms and offices",
       "Dining"
@@ -302,7 +302,7 @@
     "name": "Alumni Court South",
     "short_name": "ALUMNI CT",
     "kind": "residence",
-    "blurb": "One of the biggest first-year halls, on the far west side near the library and a Ram Van stop. Loschert Hall is its twin.",
+    "blurb": "One of the biggest first-year halls, on the far west side near the library and a Campus Shuttle stop. Loschert Hall is its twin.",
     "inside": [
       "Student rooms"
     ]
@@ -383,20 +383,37 @@
       "Student rooms"
     ]
   },
-  "ram_van": {
-    "name": "Ram Van Shuttle Stop",
+  "campus_shuttle": {
+    "name": "Campus Shuttle Stop",
+    "short_name": "SHUTTLE",
     "kind": "transit",
-    "blurb": "Campus shuttle stops are marked with maroon bus signs. Rose Hill stops include Rose Hill Manor Drive by Dealy Hall, Edgar Allan Poeway by Cunniffe House, the Alumni Court circle, the Fordham Regional Parking Facility, and two on Mill River Road: at Old Elm Road, and by the Webster Avenue gate.",
+    "blurb": "The white Campus Shuttle loops Rose Hill and stops at the six maroon shuttle signs. Public Safety runs it with student drivers, on weekdays from about 7:30 a.m. to 7 p.m. It's free.",
+    "inside": [
+      "Track it in the TransLoc app (pick Fordham University)",
+      "Not wheelchair accessible: ask Disability Services about other ways to get around"
+    ],
+    "guide": true
+  },
+  "ram_van": {
+    "name": "Ram Van to Lincoln Center",
+    "short_name": "RAM VAN",
+    "kind": "transit",
+    "blurb": "The Ram Van runs between Rose Hill and Fordham's Lincoln Center campus in Manhattan, from early morning until midnight or later. It leaves from the Ram Van office on the ground floor of the parking garage, across from O'Hare Hall. A one-way ticket is $3.50 (12 trips for $35), and you can reserve a seat online up to 48 hours ahead.",
+    "inside": [
+      "Rides to Lincoln Center, at 60th Street and Columbus Avenue",
+      "Tickets at the Ram Van office (cash or card)",
+      "Seat reservations online, up to 48 hours ahead"
+    ],
     "guide": true
   },
   "regional_parking": {
     "name": "Fordham Regional Parking Facility",
     "short_name": "PARKING",
     "kind": "transit",
-    "blurb": "Parking garage on the east side of campus. Ram Van pick-up and drop-off is here.",
+    "blurb": "Parking garage on the east side of campus. The Ram Van to Lincoln Center leaves from the Ram Van office on its ground floor, and the Campus Shuttle stops out front.",
     "inside": [
       "Parking",
-      "Ram Van pick-up / drop-off"
+      "The Ram Van office (rides to Lincoln Center)"
     ]
   },
   "parking_lot": {

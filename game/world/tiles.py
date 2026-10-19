@@ -42,7 +42,7 @@ TILES: dict[str, TileDef] = {
         TileDef("parking", 21, False),
         TileDef("statue", 22, True),
         TileDef("bell", 23, True),
-        TileDef("shuttle", 24, True),      # Ram Van shuttle stop sign
+        TileDef("shuttle", 24, True),      # maroon shuttle stop sign (Campus Shuttle, Ram Van)
         TileDef("pillar", 25, True),       # gate pillar
         TileDef("grave", 26, True),
         TileDef("dome", 27, True),         # Seismic Observatory

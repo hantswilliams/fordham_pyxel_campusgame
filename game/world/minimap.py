@@ -103,7 +103,7 @@ def build_pins(m: MapData, locations: dict[str, Location]) -> list[Pin]:
         if loc is None:
             continue
         if loc.kind == "transit":
-            if obj.location == "ram_van" or obj.location not in seen:
+            if obj.location == "campus_shuttle" or obj.location not in seen:
                 pins.append(Pin(loc.name, obj.x, obj.y, "transit", loc.id))
                 seen.add(obj.location)
         elif loc.guide and obj.location not in seen:

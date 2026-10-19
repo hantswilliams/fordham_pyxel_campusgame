@@ -119,6 +119,48 @@ def draw_plaque(target, cx: int, ty: int, text: str, room: int | None = None,
         target.text(x0 + 3, ty, text, Col.NAVY, plaque_font())
 
 
+def plaque_spots(m: MapData, locations: dict) -> list[tuple[int, int, str, int | None]]:
+    """(centre x, top y, name, room) for every plaque, in map pixels: above
+    each entrance, on a doorless landmark that sets a `nameplate`, and over a
+    sports field's gate. `room` is the wall it must fit on, if any."""
+    out = []
+    for loc, groups in door_groups(m).items():
+        name = getattr(locations.get(loc), "short_name", "")
+        if name:
+            for group in groups:
+                cx, ty, room = plaque_spot(m, loc, group)
+                out.append((cx, ty, name, room))
+    for b in m.buildings:
+        name = getattr(locations.get(b.location), "short_name", "")
+        if not name or b.entrances():
+            continue
+        ox, oy = b.origin
+        if b.nameplate:
+            out.append((ox * TILE + b.nameplate[0], oy * TILE + b.nameplate[1], name, None))
+        elif b.gate is not None:
+            out.append((*gate_plaque_spot(b, name), name, None))
+    return out
+
+
+def mat_spots(m: MapData) -> list[tuple[int, int, str]]:
+    """(cell x, cell y, edge) for every door mat: outside each door, and just
+    inside a sports field's gate. `edge` is the side of the cell it lies along."""
+    out = []
+    for groups in door_groups(m).values():
+        for group in groups:
+            for x, y in group:
+                if not m.is_blocked(x, y + 1):
+                    out.append((x, y + 1, "top"))
+    for b in m.buildings:
+        if b.gate is None:
+            continue
+        dx, dy = {"south": (0, 1), "north": (0, -1), "west": (-1, 0), "east": (1, 0)}[b.gate_faces]
+        x, y = b.origin[0] + b.gate[0] + dx, b.origin[1] + b.gate[1] + dy
+        if 0 <= x < m.width and 0 <= y < m.height and not m.is_blocked(x, y):
+            out.append((x, y, {(0, 1): "top", (0, -1): "bottom", (1, 0): "left", (-1, 0): "right"}[(dx, dy)]))
+    return out
+
+
 def draw_overlay(target, m: MapData, locations: dict, labels: list | None = None) -> None:
     """Draw outlines, eaves, mats and plaques into `target` (a pyxel.Image
     the size of the map, or the screen with the camera set)."""
@@ -138,44 +180,18 @@ def draw_overlay(target, m: MapData, locations: dict, labels: list | None = None
         if m.tiles[y][x] in ROOFS and (x, y + 1) in cells and m.tiles[y + 1][x] in WALLS:
             target.line(px, py + e, px + e, py + e, Col.NAVY)
             target.line(px, py + TILE, px + e, py + TILE, Col.ROOF_SH)
-
-    for loc, groups in door_groups(m).items():
-        for group in groups:
-            for x, y in group:                   # a mat outside each door
-                if not m.is_blocked(x, y + 1):
-                    px, py = x * TILE, (y + 1) * TILE
-                    target.rect(px + 2, py, TILE - 4, 3, Col.MAROON)
-                    target.line(px + 2, py + 1, px + TILE - 3, py + 1, Col.PINK)
-            name = getattr(locations.get(loc), "short_name", "")
-            if name:
-                cx, ty, room = plaque_spot(m, loc, group)
-                draw_plaque(target, cx, ty, name, room, labels)
-    # landmarks with no door (Moglia Stadium) can still carry a plaque, and
-    # a sports field's gate gets one just inside it
-    for b in m.buildings:
-        name = getattr(locations.get(b.location), "short_name", "")
-        if not name or b.entrances():
-            continue
-        ox, oy = b.origin
-        if b.nameplate:
-            draw_plaque(target, ox * TILE + b.nameplate[0], oy * TILE + b.nameplate[1], name, labels=labels)
-        elif b.gate is not None:
-            draw_plaque(target, *gate_plaque_spot(b, name), name, labels=labels)
-    for b in m.buildings:                        # a mat outside each field's gate
-        if b.gate is None:
-            continue
-        dx, dy = {"south": (0, 1), "north": (0, -1), "west": (-1, 0), "east": (1, 0)}[b.gate_faces]
-        x, y = b.origin[0] + b.gate[0] + dx, b.origin[1] + b.gate[1] + dy
-        if 0 <= x < m.width and 0 <= y < m.height and not m.is_blocked(x, y):
-            px, py = x * TILE, y * TILE
-            if dy:
-                py += 0 if dy > 0 else TILE - 3
-                target.rect(px + 2, py, TILE - 4, 3, Col.MAROON)
-                target.line(px + 2, py + 1, px + TILE - 3, py + 1, Col.PINK)
-            else:
-                px += 0 if dx > 0 else TILE - 3
-                target.rect(px, py + 2, 3, TILE - 4, Col.MAROON)
-                target.line(px + 1, py + 2, px + 1, py + TILE - 3, Col.PINK)
+    for x, y, edge in mat_spots(m):
+        px, py = x * TILE, y * TILE
+        if edge in ("top", "bottom"):
+            py += 0 if edge == "top" else TILE - 3
+            target.rect(px + 2, py, TILE - 4, 3, Col.MAROON)
+            target.line(px + 2, py + 1, px + TILE - 3, py + 1, Col.PINK)
+        else:
+            px += 0 if edge == "left" else TILE - 3
+            target.rect(px, py + 2, 3, TILE - 4, Col.MAROON)
+            target.line(px + 1, py + 2, px + 1, py + TILE - 3, Col.PINK)
+    for cx, ty, name, room in plaque_spots(m, locations):
+        draw_plaque(target, cx, ty, name, room, labels)
 
 
 def gate_plaque_spot(b, name: str) -> tuple[int, int]:

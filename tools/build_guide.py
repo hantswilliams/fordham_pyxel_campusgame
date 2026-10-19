@@ -36,6 +36,7 @@ from game.systems.progress import BADGES, Progress  # noqa: E402
 from game.world.buildings import load_buildings  # noqa: E402
 from game.world.locations import load_locations  # noqa: E402
 from game.world.mapdata import load_map  # noqa: E402
+from game.world import shuttle  # noqa: E402
 from game.world.routes import place_targets, route_to, sentences  # noqa: E402
 
 SITE = "Rose Hill Campus Guide"
@@ -288,7 +289,7 @@ between them, the First Week checklist and the optional missions.</p>
 <h2>Start here</h2>
 <ul>
   <li><a href="missions.html">The First Week checklist</a>: the places every new student needs.</li>
-  <li><a href="getting-around.html">Getting around</a>: the gates, the Ram Van shuttle and walking directions.</li>
+  <li><a href="getting-around.html">Getting around</a>: the gates, the Campus Shuttle, the Ram Van and walking directions.</li>
   <li><a href="places/index.html">All places</a>, by type.</li>
 </ul>
 <h2>How the campus is laid out</h2>
@@ -361,11 +362,40 @@ is Edwards Parade.</p>
         body = f"""<h1>Getting around</h1>
 <h2>Gates and transport</h2>
 <ul>{tlist}</ul>
+{self.shuttle_section()}
 <h2>Main walking routes</h2>
 <p>Directions follow the campus walkways and roads. Headings are compass directions: north is towards the athletics
 fields and McShane, south is towards East Fordham Road. Every place's page also has directions from both entrances.</p>
 {routes}"""
         self.page("getting-around.html", "Getting around", body)
+
+    def shuttle_section(self) -> str:
+        """The Campus Shuttle's stops in order, with rough times (decisions/0044)."""
+        data = shuttle.load_data(config.MAPS_DIR, config.START_MAP)
+        if not data:
+            return ""
+        route = shuttle.Route(self.map, data, config.TILE)
+        rows, loop = shuttle.timetable(route)
+
+        def mins(frames):
+            m = round(frames / config.FPS / 60)
+            return "at the start of the loop" if frames == 0 else \
+                ("under a minute later" if m < 1 else f"about {m} minute{'s' if m > 1 else ''} later")
+        items = "".join(f"<li><strong>{esc(s.name)}</strong>: {esc(s.where[:1].upper() + s.where[1:])}. In the game, {mins(f)}.</li>"
+                        for s, f in rows)
+        return f"""<h2>The Campus Shuttle</h2>
+<p>In the game, the white Campus Shuttle drives one loop of the campus roads, always in the same direction, and stops
+for a few seconds at each maroon shuttle sign. Each sign says when it's next due. Get on when it's at a stop, choose
+where you're going, and you ride along until it gets there. In the game a whole loop takes about
+{round(loop / config.FPS / 60)} minutes.</p>
+<p>Its stops, in the order it reaches them:</p>
+<ol>{items}</ol>
+<p>The real Campus Shuttle runs on weekdays, from about 7:30 a.m. to 7 p.m., and is free. Track it in the TransLoc app
+(choose Fordham University). It isn't wheelchair accessible: Fordham's Disability Services can help with
+<a href="https://www.fordham.edu/student-life/disability-services/resources/transportation-information">other ways
+to get around campus</a>.</p>
+<p>The <strong>Ram Van</strong> is a different service: it goes to Fordham's Lincoln Center campus in Manhattan, from the
+Ram Van office on the ground floor of the parking garage, across from O'Hare Hall.</p>"""
 
     def mission_steps(self, m) -> str:
         items = []

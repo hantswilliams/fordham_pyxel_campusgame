@@ -179,6 +179,28 @@ A `tests/test_content.py` check validates the data: every NPC's dialogue exists,
 
 **6e. Crisp text (decision 0038).** The real screen is `DISPLAY_SCALE` (2) times the layout: 768 × 576. Scenes still draw at 384 × 288 into the top-left corner; `game/gfx/display.py` doubles each layer onto a full-size image and draws that layer's reading-font text over it at full size (M PLUS 1 Code, 32 px, 16 px per character), so text gets four times the pixels while art and layout stay the same. `font.text` queues text with the camera offset and clip in force, so scenes use `display.camera` / `display.clip` instead of `pyxel.camera` / `pyxel.clip`. Each scene in the stack is a layer, so an overlay covers the text beneath it. In the browser the canvas is kept at 768 × 576 and scaled smoothly by CSS to fit below the accessibility bar. Words painted in the world (intro signs, the Ram Van, building plaques) go through `font.sign()` in M PLUS 1 Code Bold and carry their sign's colour, so they're only drawn where that sign still shows and anything in front covers them; the intro picture is scaled 3× in one step (`display.queue_image`) so its pixels stay even (decision 0039).
 
+**6f. The Campus Shuttle (decision 0044).** `game/world/shuttle.py` (pure logic, like the wandering people in `wander.py`) drives a white minivan round one loop of the roads. The loop is a list of road cells in `content/maps/rose_hill.json` (`"shuttle"`); `Route` joins them by the shortest way along open road, then pulls the path tight so staircase-shaped roads become diagonals. The van stops at the six maroon `campus_shuttle` signs (5 s, longer while you stand beside it), stops and says BEEP for anyone on the road just ahead, slows over crosswalks, and takes up the road cells under it. `OverworldScene` moves it each frame and draws it with the people, sorted by depth; facing a stop's sign shows when it's next due (`Shuttle.eta`), and pressing confirm at its door at a stop lets you pick a stop and ride (the camera follows the van, back skips ahead `FAST` times quicker). Riding counts for the checklist (`campus_shuttle`). A maroon Ram Van (the Lincoln Center service) is parked by the garage as two `vehicle` objects. Van pictures are drawn in code below the people on the character sheet (`placeholder_art.van_uv`). The Campus Guide lists the stops in order (`shuttle.timetable`). Screenshot runs turn it off (`shuttle.ENABLED`).
+
+**6g. The finer world (decision 0045).** On the crisp screen the campus is drawn at twice the detail.
+- `game/gfx/world_art.py` draws the whole map once, when it loads, into one picture with 32 px cells (`config.ART_SCALE`): the ground, shadows, buildings and objects, and the outlines, mats and plaques, with the plaques' names lettered at full detail.
+- Each frame `OverworldScene` copies the part in view straight onto display's full-size image (`display.full_image()`). It then draws trees, people and vans over it at full size, back to front, each with a shadow. Its HUD still draws at layout size, over all that.
+- `game/world/ground.py` (pure) works out:
+  - the ground under every cell: things standing on the ground (signs, benches) take their neighbours' ground
+  - where lawns, walkways and roads round their corners, and where edging and kerbs go
+- A shadow is one darker shade of whatever it falls on (`config.SHADOW_OF`). `world_art.Shadows` cuts it to shape with two scratch images, because Pyxel can't blend colours.
+- Mission items and closed gates change while you play, so they're drawn each frame rather than baked in.
+- Gameplay still runs on 16 px cells.
+- People, the bike and the vans come from one sheet drawn in code at startup (`game/gfx/people_art.py`), with the same sprite numbers as today's. People stand 22 px tall, so their heads rise into the cell above.
+- Drawn buildings use `map_fine.png`, made from each building's own drawing script by `assets/buildings/_style/fine.py`, with the fountain plaza hand-finished in `_style/fine_plaza.py`. `map.png` stays for the in-game campus map and the 1× fallback.
+- Signs, benches, lamps, the fence, the bike rack, mission items and Faculty Memorial Hall's tiles come from `game/gfx/object_art.py`. The plaques and mats are placed by `building_overlay` (`plaque_spots`, `mat_spots`) and drawn at full detail.
+- **Screens.** Boxes, tabs, bubbles and other screen pieces come from `game/ui/frames.py`.
+  - They're drawn at full detail through `display.queue_full`: under the layer's own drawing and text, and in order with `display.queue_image`.
+  - So a screen queues its background and boxes first, then draws its words and icons as before. Anything drawn straight onto the layer covers what's queued.
+  - Cards show `card_fine.png`.
+  - The intro scenes are drawn with `intro_art.Pen` straight onto a full-size picture (`present_scene`), with people from `people_art.close_up`.
+  - The title shows the campus picture.
+- With `DISPLAY_SCALE = 1` the tiles are drawn as before, and the frames draw plain versions.
+
 ---
 
 ## 4. Gameplay loop (Pokémon mechanics → onboarding)

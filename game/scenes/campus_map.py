@@ -15,11 +15,11 @@ import pyxel
 from game.gfx import display
 
 from game import config
-from game.config import SCREEN_H, SCREEN_W, Col
+from game.config import SCREEN_H, SCREEN_W, Art, Col
 from game.gfx.map_render import render_world
 from game.systems import controls
 from game.systems.input import Action
-from game.ui import font
+from game.ui import font, frames
 from game.ui.text import BIG_CHAR_W, GROW
 from game.world.directions import Direction
 from game.world.mapdata import MapData
@@ -67,10 +67,18 @@ def map_images(m: MapData, locations) -> tuple[pyxel.Image, pyxel.Image]:
     render the whole map at full size, then shrink it with colour
     averaging so it reads like a painted map rather than blocks."""
     if m.id not in _cache:
-        full = render_world(m, locations)
+        if display.active:
+            # the finer world (decisions/0045), halved to the size the old
+            # render had: the averaging below costs the same, in its colours
+            from game.gfx.world_art import world_for
+            fine = world_for(m, locations).image
+            full = pyxel.Image(fine.width // 2, fine.height // 2)
+            full.blt(-fine.width / 4, -fine.height / 4, fine, 0, 0, fine.width, fine.height, scale=0.5)
+        else:
+            full = render_world(m, locations)
         w, h = full.width, full.height
         raw = _pixels(full)
-        rgb = [((c >> 16) & 255, (c >> 8) & 255, c & 255) for c in config.palette()]
+        rgb = [((c >> 16) & 255, (c >> 8) & 255, c & 255) for c in config.GAME_COLORS]
         k = config.TILE // DETAIL
         detail = downsample(raw, w, h, k, rgb)
         dw, dh = w // k, h // k
@@ -154,8 +162,10 @@ class CampusMapScene(Scene):
 
     # --- drawing ----------------------------------------------------------------------
     def draw(self) -> None:
-        pyxel.cls(Col.NAVY)
-        pyxel.blt(0, VIEW_Y, self.image, round(self.cam_x), round(self.cam_y), SCREEN_W, VIEW_H)
+        frames.rect(0, 0, SCREEN_W, SCREEN_H, Col.NAVY)
+        cx, cy = round(self.cam_x), round(self.cam_y)
+        if not frames.blit(self.image, cx, cy, SCREEN_W, VIEW_H, 0, VIEW_Y):
+            pyxel.blt(0, VIEW_Y, self.image, cx, cy, SCREEN_W, VIEW_H)
 
         blink = (pyxel.frame_count // 8) % 2 == 0
         display.clip(0, VIEW_Y, SCREEN_W, VIEW_H)
@@ -164,11 +174,9 @@ class CampusMapScene(Scene):
                 self._draw_pin(pin, selected=False, blink=blink)
         self._draw_player(blink)
         for gx, gy in self.goals:
-            cx, cy = self._screen_xy(gx, gy)
-            pyxel.rect(cx - 5, cy - 16 - GROW, 11, 14 + GROW, Col.WHITE)
-            pyxel.rectb(cx - 5, cy - 16 - GROW, 11, 14 + GROW, Col.MAROON)
-            font.text(cx - 4, cy - 15 - GROW, "!", Col.MAROON)
-            pyxel.pset(cx, cy - 1, Col.MAROON)
+            x, y = self._screen_xy(gx, gy)
+            frames.bubble(x - 6, y - 17 - GROW, 12, 14 + GROW)
+            font.text(x - 4, y - 16 - GROW, "!", Col.MAROON)
         if self.selected is not None:
             self._draw_pin(self.pins[self.selected], selected=True, blink=blink)
         display.clip()
@@ -178,7 +186,8 @@ class CampusMapScene(Scene):
         self._draw_footer()
 
     def _draw_header(self) -> None:
-        pyxel.rect(0, 0, SCREEN_W, HEADER_H, Col.MAROON)
+        frames.rect(0, 0, SCREEN_W, HEADER_H, Col.MAROON)
+        frames.rect(0, 0, SCREEN_W, 1, Art.MAROON_LT)
         font.text(6, 2, "ROSE HILL CAMPUS MAP", Col.WHITE)
         close = controls.fmt("{map}: CLOSE")
         font.text(SCREEN_W - 6 - font.width(close), 2, close, Col.PEACH)
@@ -187,26 +196,29 @@ class CampusMapScene(Scene):
         cx, cy = self._screen_xy(pin.x, pin.y)
         col = PIN_COLORS[pin.kind]
         if not selected:
-            pyxel.rect(cx - 1, cy - 1, 3, 3, col)        # small, so the buildings show
-            pyxel.rectb(cx - 2, cy - 2, 5, 5, Col.NAVY)
+            frames.disc(cx, cy, 2.5, col)                # small, so the buildings show
             return
-        # a map pin with the place's name on a tag above it
-        pyxel.tri(cx - 3, cy - 6, cx + 3, cy - 6, cx, cy, col)
-        pyxel.circ(cx, cy - 8, 4, col)
-        pyxel.circb(cx, cy - 8, 4, Col.WHITE if blink else Col.NAVY)
-        pyxel.pset(cx, cy - 8, Col.WHITE)
+
+        def drop(u, col=col, ring=Col.WHITE if blink else Art.OUTLINE):
+            u.poly([(1.5, 6), (8.5, 6), (5, 13.5)], Art.OUTLINE)
+            u.oval(0, 0, 10, 10, Art.OUTLINE)
+            u.poly([(2.5, 6), (7.5, 6), (5, 12)], col)
+            u.oval(1, 1, 9, 9, col)
+            u.oval(3, 3, 7, 7, ring)
+        if not frames.art(cx - 5, cy - 13, drop):         # a map pin, its name on a tag above it
+            pyxel.tri(cx - 3, cy - 6, cx + 3, cy - 6, cx, cy, col)
+            pyxel.circ(cx, cy - 8, 4, col)
         name = pin.name
-        tw = font.width(name) + 8
+        tw = font.width(name) + 10
         tx = min(max(cx - tw // 2, 2), SCREEN_W - tw - 2)
-        ty = max(cy - 30 - GROW, VIEW_Y + 2)
-        pyxel.rect(tx, ty, tw, 15 + GROW, Col.WHITE)
-        pyxel.rectb(tx, ty, tw, 15 + GROW, Col.NAVY)
-        font.text(tx + 4, ty + 1, name, Col.NAVY)
+        ty = max(cy - 32 - GROW, VIEW_Y + 2)
+        frames.pill(tx, ty, tw, 15 + GROW, Art.UI_PAGE, radius=4)
+        font.text(tx + 5, ty + 1, name, Col.NAVY)
 
     def _draw_player(self, blink: bool) -> None:
         cx, cy = self._screen_xy(*self.player_xy)
-        pyxel.circ(cx, cy, 3, Col.MAROON)
-        pyxel.circb(cx, cy, 5 if blink else 4, Col.WHITE)
+        frames.disc(cx, cy, 5 if blink else 4.5, Col.WHITE, rim=Art.OUTLINE)
+        frames.disc(cx, cy, 3, Col.MAROON, rim=None)
 
     def _draw_overview(self, blink: bool) -> None:
         """The whole campus, small, in the top-right corner, with a yellow box
@@ -215,9 +227,9 @@ class CampusMapScene(Scene):
         skip = SKIP_ROWS * DETAIL // OVERVIEW
         w, h = ov.width, ov.height - skip
         x0, y0 = SCREEN_W - w - 4, VIEW_Y + 4
-        pyxel.rect(x0 - 2, y0 - 2, w + 4, h + 4, Col.NAVY)
-        pyxel.blt(x0, y0, ov, 0, skip, w, h)
-        pyxel.rectb(x0 - 1, y0 - 1, w + 2, h + 2, Col.WHITE)
+        frames.pill(x0 - 3, y0 - 3, w + 6, h + 6, Art.UI_PAGE, radius=3)
+        if not frames.blit(ov, 0, skip, w, h, x0, y0):
+            pyxel.blt(x0, y0, ov, 0, skip, w, h)
         display.clip(x0, y0, w, h)
         pyxel.rectb(x0 + round(self.cam_x / OVERVIEW), y0 + round(self.cam_y / OVERVIEW) - skip,
                     SCREEN_W // OVERVIEW, VIEW_H // OVERVIEW, Col.YELLOW)
@@ -228,26 +240,24 @@ class CampusMapScene(Scene):
         pyxel.rect(x0 + px * DETAIL // OVERVIEW - 1, y0 + py * DETAIL // OVERVIEW - skip - 1, 3, 3,
                    Col.MAROON if blink else Col.WHITE)
         display.clip()
-        self._draw_key(x0 - 2, y0 + h + 2, w + 4)
+        self._draw_key(x0 - 3, y0 + h + 6, w + 6)
 
     def _draw_key(self, x: int, y: int, w: int) -> None:
         """What the pin colours mean, in a panel under the overview."""
         rows = (("Place", "building"), ("Landmark", "landmark"), ("Gate/Ram", "transit"))
-        w = max(w, 14 + max(font.width(r[0]) for r in rows) + 4)
+        w = max(w, 16 + max(font.width(r[0]) for r in rows) + 4)
         x = min(x, SCREEN_W - w - 2)
-        h = len(rows) * (12 + GROW) + 4
-        pyxel.rect(x, y, w, h, Col.WHITE)
-        pyxel.rectb(x, y, w, h, Col.NAVY)
+        h = len(rows) * (12 + GROW) + 6
+        frames.pill(x, y, w, h, Art.UI_PAGE, radius=3)
         for i, (label, kind) in enumerate(rows):
-            ry = y + 2 + i * (12 + GROW)
-            pyxel.rectb(x + 3, ry + 3 + GROW // 2, 7, 7, Col.NAVY)
-            pyxel.rect(x + 4, ry + 4 + GROW // 2, 5, 5, PIN_COLORS[kind])
-            font.text(x + 13, ry, label, Col.DARK_BLUE)
+            ry = y + 3 + i * (12 + GROW)
+            frames.disc(x + 7, ry + 6 + GROW // 2, 3.5, PIN_COLORS[kind])
+            font.text(x + 14, ry, label, Col.DARK_BLUE)
 
     def _draw_footer(self) -> None:
         y = SCREEN_H - FOOTER_H
-        pyxel.rect(0, y, SCREEN_W, FOOTER_H, Col.WHITE)
-        pyxel.line(0, y, SCREEN_W, y, Col.NAVY)
+        frames.rect(0, y, SCREEN_W, FOOTER_H, Art.UI_PAGE)
+        frames.rect(0, y, SCREEN_W, 1, Art.OUTLINE)
         max_chars = (SCREEN_W - 12) // BIG_CHAR_W
         if self.selected is None:
             font.text(6, y + 2, f"You are here: {self.area_name}"[:max_chars], Col.BLACK)

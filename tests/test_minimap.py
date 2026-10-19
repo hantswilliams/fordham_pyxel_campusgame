@@ -36,12 +36,12 @@ def test_pins_cover_gates_shuttles_and_guide_places():
     ids = [p.location for p in pins]
     for gate in ("webster_gate", "main_entrance", "bathgate_gate", "clavius_gate"):
         assert gate in ids
-    stops = sum(1 for o in M.objects if o.location == "ram_van")
-    assert ids.count("ram_van") == stops >= 6  # every stop gets its own pin
+    stops = sum(1 for o in M.objects if o.location == "campus_shuttle")
+    assert ids.count("campus_shuttle") == stops >= 6  # every stop gets its own pin
     for loc in LOCATIONS.values():
         if loc.guide:
             assert loc.id in ids, f"Campus Guide place {loc.id} has no pin"
-    assert len(ids) == len(set(ids)) + ids.count("ram_van") - 1  # no other duplicates
+    assert len(ids) == len(set(ids)) + ids.count("campus_shuttle") - 1  # no other duplicates
 
 
 def test_next_pin_prefers_the_pressed_direction():

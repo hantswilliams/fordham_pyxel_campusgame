@@ -9,11 +9,11 @@ import pyxel
 
 from game.gfx import display
 
-from game.config import SCREEN_H, SCREEN_W, Col
-from game.gfx.building_art import card_image
+from game.config import SCREEN_H, SCREEN_W, Art, Col
+from game.gfx.building_art import card_fine_image, card_image
 from game.systems import controls
 from game.systems.input import Action
-from game.ui import font
+from game.ui import font, frames
 from game.ui.text import BIG_CHAR_W, BIG_LINE_H, GROW, wrap
 from game.world.locations import Location
 
@@ -75,6 +75,8 @@ class BuildingCardScene(Scene):
         self.scroll = 0
         building = getattr(app, "buildings", {}).get(location.id)
         self.picture = card_image(building) if building else None
+        # on the full-size screen, the picture at twice the detail (decisions/0045)
+        self.fine = card_fine_image(building) if building and display.active else None
 
     @property
     def body_top(self) -> int:
@@ -101,16 +103,10 @@ class BuildingCardScene(Scene):
             self.app.scenes.pop()
 
     def draw(self) -> None:
-        # dim the world behind the card
-        pyxel.dither(0.5)
-        pyxel.rect(0, 0, SCREEN_W, SCREEN_H, Col.NAVY)
-        pyxel.dither(1.0)
-
+        frames.dim()                                # the world behind, dimmed
         x, y, w, h = CARD_X, CARD_Y, CARD_W, CARD_H
-        pyxel.rect(x, y, w, h, Col.WHITE)
-        pyxel.rectb(x, y, w, h, Col.NAVY)
-        pyxel.rectb(x + 1, y + 1, w - 2, h - 2, Col.NAVY)
-        pyxel.rect(x + 2, y + 2, w - 4, HEADER_H - 2, Col.MAROON)
+        frames.box(x, y, w, h, radius=8)
+        frames.header(x + 2.5, y + 2.5, w - 5, HEADER_H - 1)
         font.text(x + PAD, y + 4, self.loc.name.upper()[:MAX_CHARS], Col.WHITE)
 
         top = y + self.body_top
@@ -121,8 +117,8 @@ class BuildingCardScene(Scene):
         if self.picture:
             py = top + 1 - self.scroll * BIG_LINE_H
             px = x + (w - PIC_W) // 2
-            self._draw_picture(px, py)
-            self._draw_tag(px + 3, py + PIC_H - 18 - GROW)  # on the lawn, not the building
+            self._draw_picture(px, py, (x + 2, top, w - 4, self.visible_lines * BIG_LINE_H))
+            self._draw_tag(px + 4, py + PIC_H - 19 - GROW)  # on the lawn, not the building
             first = PIC_LINES
         for i, (s, col) in enumerate(self.lines):
             row = first + i - self.scroll
@@ -132,21 +128,24 @@ class BuildingCardScene(Scene):
 
         # footer: scroll arrows + close hint
         fy = y + h - FOOTER_H + 1
-        pyxel.line(x + 4, fy - 2, x + w - 5, fy - 2, Col.GRAY)
+        frames.rect(x + 6, fy - 2, w - 12, 0.5, Art.UI_LINE)
         if self.scroll > 0:
-            pyxel.tri(x + PAD, fy + 9, x + PAD + 8, fy + 9, x + PAD + 4, fy + 4, Col.MAROON)
+            frames.arrow(x + PAD, fy + 4, down=False)
         if self.scroll < self.max_scroll:
-            pyxel.tri(x + PAD + 12, fy + 4, x + PAD + 20, fy + 4, x + PAD + 16, fy + 9, Col.MAROON)
+            frames.arrow(x + PAD + 12, fy + 4)
         footer = controls.fmt("{confirm}: CLOSE")
         font.text(x + w - PAD - font.width(footer), fy, footer, Col.DARK_BLUE)
 
     def _draw_tag(self, tx: int, ty: int) -> None:
         label = self.loc.kind_label
         tag_col = KIND_COLORS.get(self.loc.kind, Col.GRAY)
-        pyxel.rect(tx, ty, font.width(label) + 8, 15 + GROW, tag_col)
-        font.text(tx + 4, ty + 1, label, Col.WHITE)
+        frames.pill(tx, ty, font.width(label) + 12, 15 + GROW, tag_col, radius=4)
+        font.text(tx + 6, ty + 1, label, Col.WHITE)
 
-    def _draw_picture(self, px: int, py: int) -> None:
+    def _draw_picture(self, px: int, py: int, clip) -> None:
+        fine = self.fine
+        if fine is not None and frames.picture(fine, fine.width, fine.height, px, py, clip):
+            return
         img = self.picture
         pyxel.blt(px, py, img, 0, 0, min(img.width, PIC_W), min(img.height, PIC_H))
         pyxel.rectb(px - 1, py - 1, PIC_W + 2, PIC_H + 2, Col.NAVY)

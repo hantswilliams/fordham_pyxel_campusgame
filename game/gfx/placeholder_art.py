@@ -35,7 +35,13 @@ def character_uv(sprite: int, facing: Direction, frame: int) -> tuple[int, int]:
 
 # --- tiles -----------------------------------------------------------------
 
+# False while object_tiles() draws things without the ground under them
+_ground = True
+
+
 def _grass(img, x, y):
+    if not _ground:
+        return
     img.rect(x, y, 16, 16, Col.LIME)
     for px, py in ((2, 3), (10, 1), (6, 9), (13, 11), (3, 13), (9, 5)):
         img.pset(x + px, y + py, Col.GREEN)
@@ -44,6 +50,8 @@ def _grass(img, x, y):
 
 def _path(img, x, y):
     """Walkway: brick pavers, like the paths in front of Walsh Library."""
+    if not _ground:
+        return
     img.rect(x, y, 16, 16, Col.PEACH)
     for row in range(4):
         by = y + row * 4 + 3
@@ -296,6 +304,8 @@ def _offcampus(img, x, y):
 
 
 def _parking(img, x, y):
+    if not _ground:
+        return
     img.rect(x, y, 16, 16, Col.GRAY)
     img.rect(x, y + 1, 1, 14, Col.WHITE)
     img.pset(x + 9, y + 5, Col.DARK_BLUE)
@@ -361,6 +371,8 @@ def _dome(img, x, y):
 
 def _road(img, x, y):
     """Asphalt campus road. Deliberately darker and cooler than walkways."""
+    if not _ground:
+        return
     img.rect(x, y, 16, 16, Col.GRAY)
     for px, py in ((2, 3), (9, 1), (13, 7), (5, 10), (11, 13), (1, 14), (7, 6)):
         img.pset(x + px, y + py, Col.DARK_BLUE)
@@ -526,6 +538,28 @@ TILE_ART = {
 }
 
 
+_objects: pyxel.Image | None = None
+
+
+def object_tiles() -> pyxel.Image:
+    """Today's art for the things that stand on the ground (benches, signs,
+    lamps, gates, mission items), at the same slots as the tile sheet but
+    without the ground under them: the finer world draws its own ground
+    (decisions/0045). Black is transparent."""
+    global _objects, _ground
+    if _objects is None:
+        from game.world.ground import ON_GROUND
+        _objects = pyxel.Image(256, 256)
+        _objects.cls(Col.BLACK)
+        _ground = False
+        try:
+            for name in ON_GROUND:
+                TILE_ART[name](_objects, *slot_to_pixel(TILES[name].slot))
+        finally:
+            _ground = True
+    return _objects
+
+
 def build_tiles() -> None:
     img = pyxel.images[TILE_IMAGE_BANK]
     for name, tile in TILES.items():
@@ -607,6 +641,78 @@ def build_characters() -> None:
                 _bike(img, u, v, d, frame, color)
 
 
+# --- vans (decisions/0044) ---------------------------------------------------------
+# Below the people on the character sheet: the white Campus Shuttle, then the
+# maroon Ram Van. Each has a side view facing right (32 x 24, flipped for
+# left), a front view (16 x 24, driving down) and a back view (driving up).
+SHUTTLE_VAN = 0
+RAM_VAN = 1
+VAN_TOP = 160
+
+
+def van_uv(van: int, view: str) -> tuple[int, int, int]:
+    """(u, v, width) of a van picture: view is "side", "front" or "back"."""
+    v = VAN_TOP + van * 32
+    return {"side": (0, v, 32), "front": (32, v, 16), "back": (48, v, 16)}[view]
+
+
+def _van_colors(van: int):
+    # body, roof shade, stripe
+    return (Col.WHITE, Col.GRAY, Col.MAROON) if van == SHUTTLE_VAN else (Col.MAROON, Col.NAVY, Col.WHITE)
+
+
+def _van_side(img, u, v, van):
+    body, shade, stripe = _van_colors(van)
+    img.rect(u, v, 32, 24, Col.BLACK)
+    img.rect(u + 1, v + 6, 30, 14, Col.NAVY)               # outline
+    img.rect(u + 2, v + 7, 28, 12, body)
+    img.rect(u + 2, v + 7, 28, 2, shade)                    # roof
+    img.rect(u + 23, v + 9, 6, 5, Col.NAVY)                 # windscreen (the front is on the right)
+    img.rect(u + 24, v + 10, 4, 3, Col.LIGHT_BLUE)
+    img.pset(u + 24, v + 10, Col.WHITE)
+    for x in (3, 9, 15):                                    # side windows
+        img.rect(u + x, v + 9, 5, 5, Col.NAVY)
+        img.rect(u + x + 1, v + 10, 3, 3, Col.LIGHT_BLUE)
+        img.pset(u + x + 1, v + 10, Col.WHITE)
+    img.rect(u + 2, v + 15, 28, 2, stripe)                  # stripe
+    img.pset(u + 30, v + 17, Col.YELLOW)                    # headlight
+    img.pset(u + 1, v + 17, Col.RED)                        # tail light
+    for x in (7, 24):                                       # wheels
+        img.circ(u + x, v + 20, 3, Col.NAVY)
+        img.pset(u + x, v + 20, Col.GRAY)
+
+
+def _van_end(img, u, v, van, front: bool):
+    body, shade, stripe = _van_colors(van)
+    img.rect(u, v, 16, 24, Col.BLACK)
+    img.rect(u + 1, v + 21, 3, 3, Col.NAVY)                 # tyres
+    img.rect(u + 12, v + 21, 3, 3, Col.NAVY)
+    img.rect(u + 1, v + 4, 14, 18, Col.NAVY)                # outline
+    img.rect(u + 2, v + 5, 12, 16, body)
+    img.rect(u + 2, v + 5, 12, 2, shade)                    # roof
+    img.rect(u + 3, v + 8, 10, 5, Col.NAVY)                 # windscreen / rear window
+    img.rect(u + 4, v + 9, 8, 3, Col.LIGHT_BLUE)
+    img.pset(u + 4, v + 9, Col.WHITE)
+    img.rect(u + 2, v + 15, 12, 2, stripe)
+    lamp = Col.YELLOW if front else Col.RED
+    img.pset(u + 3, v + 18, lamp)
+    img.pset(u + 12, v + 18, lamp)
+    if front:
+        img.rect(u + 6, v + 18, 4, 2, Col.NAVY)             # grille
+
+
+def build_vans() -> None:
+    img = pyxel.images[CHAR_IMAGE_BANK]
+    for van in (SHUTTLE_VAN, RAM_VAN):
+        u, v, _ = van_uv(van, "side")
+        _van_side(img, u, v, van)
+        u, v, _ = van_uv(van, "front")
+        _van_end(img, u, v, van, True)
+        u, v, _ = van_uv(van, "back")
+        _van_end(img, u, v, van, False)
+
+
 def build_all() -> None:
     build_tiles()
     build_characters()
+    build_vans()

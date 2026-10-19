@@ -1,11 +1,12 @@
 """The Pokemon-style text box used for dialogue and intro captions
-(decisions/0018): big black pixel text on white, double border, 3 lines."""
+(decisions/0018): big black text on white, 3 lines, in a rounded box with
+a maroon name tab (decisions/0045)."""
 
 import pyxel
 
-from game.config import SCREEN_H, SCREEN_W, Col
+from game.config import SCREEN_H, SCREEN_W, Art, Col
 
-from . import font
+from . import font, frames
 from .text import BIG_CHAR_W, BIG_LINE_H, GROW
 
 MARGIN = 4
@@ -25,16 +26,11 @@ def box_top() -> int:
 def draw_text_box(lines: list[str], revealed: int, complete: bool,
                   speaker: str = "") -> None:
     x, y = MARGIN, box_top()
-    pyxel.rect(x, y, BOX_W, BOX_H, Col.WHITE)
-    pyxel.rectb(x, y, BOX_W, BOX_H, Col.NAVY)
-    pyxel.rectb(x + 1, y + 1, BOX_W - 2, BOX_H - 2, Col.NAVY)
-    pyxel.rectb(x + 3, y + 3, BOX_W - 6, BOX_H - 6, Col.MAROON)
-
+    frames.box(x, y, BOX_W, BOX_H)              # rounded, with a soft drop (decisions/0045)
     if speaker:
-        tw = font.width(speaker) + 12
-        pyxel.rect(x + 8, y - 13 - GROW, tw, 15 + GROW, Col.MAROON)
-        pyxel.rectb(x + 8, y - 13 - GROW, tw, 15 + GROW, Col.NAVY)
-        font.text(x + 14, y - 12 - GROW, speaker, Col.WHITE)
+        tw = font.width(speaker) + 16
+        frames.pill(x + 8, y - 13 - GROW, tw, 17 + GROW, Col.MAROON, shine=Art.MAROON_LT)
+        font.text(x + 16, y - 12 - GROW, speaker, Col.WHITE)
 
     remaining = revealed
     for i, line in enumerate(lines[:LINES]):
@@ -42,5 +38,4 @@ def draw_text_box(lines: list[str], revealed: int, complete: bool,
         remaining -= len(line)
 
     if complete and (pyxel.frame_count // 8) % 2 == 0:
-        ax, ay = x + BOX_W - 16, y + BOX_H - 10
-        pyxel.tri(ax, ay, ax + 8, ay, ax + 4, ay + 4, Col.MAROON)
+        frames.arrow(x + BOX_W - 18, y + BOX_H - 11)

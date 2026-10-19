@@ -3,11 +3,9 @@ small box above it on the right, a cursor you move with UP/DOWN and pick
 with Z. X picks the last option (usually "NOT NOW"). Used for mission
 offers and questions (decisions/0031)."""
 
-import pyxel
-
 from game.config import SCREEN_W, Col
 from game.systems.input import Action
-from game.ui import font
+from game.ui import font, frames
 from game.ui.text import BIG_LINE_H, wrap
 from game.ui.textbox import MAX_CHARS, box_top, draw_text_box
 
@@ -45,12 +43,10 @@ class ChoiceScene(Scene):
         draw_text_box(self.lines, 10_000, False, self.speaker)
         w = max(font.width(o) for o in self.options) + 26
         h = len(self.options) * BIG_LINE_H + 12
-        x, y = SCREEN_W - w - 6, box_top() - h - 2
-        pyxel.rect(x, y, w, h, Col.WHITE)
-        pyxel.rectb(x, y, w, h, Col.NAVY)
-        pyxel.rectb(x + 2, y + 2, w - 4, h - 4, Col.MAROON)
+        x, y = SCREEN_W - w - 6, box_top() - h - 4
+        frames.box(x, y, w, h)
         for i, opt in enumerate(self.options):
             oy = y + 6 + i * BIG_LINE_H
             font.text(x + 18, oy, opt, Col.BLACK)
             if i == self.cursor:
-                pyxel.tri(x + 8, oy + 2, x + 8, oy + 10, x + 13, oy + 6, Col.MAROON)
+                frames.cursor(x + 8, oy + 2)

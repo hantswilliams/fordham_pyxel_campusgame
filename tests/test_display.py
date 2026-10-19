@@ -157,6 +157,129 @@ def check_plaque_names_are_lettered_at_full_detail():
     assert {cell for *_, cell in labels} <= {CHAR_W, SMALL_CHAR_W}
 
 
+def check_the_world_is_drawn_at_twice_the_detail():
+    """The finer world (decisions/0045): the campus in its new colours, with
+    shadows, and details a single screen pixel wide, so it isn't doubled."""
+    from game.config import SHADOW_OF, Art
+    from game.scenes.overworld import OverworldScene
+    make(OverworldScene)
+    counts = {}
+    for y in range(0, pyxel.height, 2):
+        for x in range(0, pyxel.width, 2):
+            c = pyxel.pget(x, y)
+            counts[c] = counts.get(c, 0) + 1
+    total = sum(counts.values())
+    assert counts.get(Art.GRASS, 0) > total * 0.05
+    assert counts.get(Art.WALK, 0) > total * 0.02
+    assert counts.get(SHADOW_OF[Art.GRASS], 0) + counts.get(SHADOW_OF[Art.WALK], 0) > 0
+    assert counts.get(Col.LIME, 0) < total * 0.01               # today's grass is gone
+    # a grass tuft's pixels: some stand alone, one screen pixel wide
+    single = 0
+    for y in range(pyxel.height):
+        for x in range(1, pyxel.width - 1):
+            if pyxel.pget(x, y) == Art.GRASS_TUFT and pyxel.pget(x - 1, y) != Art.GRASS_TUFT \
+                    and pyxel.pget(x + 1, y) != Art.GRASS_TUFT:
+                single += 1
+                if single > 5:
+                    return
+    raise AssertionError("no detail finer than doubled pixels")
+
+
+def check_people_bikes_and_vans_are_drawn_in_full_detail():
+    """The finer people (decisions/0045, step 2): every frame drawn, outlined,
+    inside its frame, right the mirror of left, steps different from standing."""
+    from game.config import Art
+    from game.gfx import people_art as P
+    from game.world.directions import Direction
+    make(Art_)
+    sheet = P.sheet()
+
+    def frame(sprite, d, f):
+        u, v = P.frame_uv(sprite, d, f)
+        return [[sheet.pget(u + x, v + y) for x in range(P.FRAME_W)] for y in range(P.FRAME_H)]
+
+    for sprite in range(P.MAROON_BIKE_SPRITE + 1):
+        for d in Direction:
+            frames = [frame(sprite, d, f) for f in range(3)]
+            for px in frames:
+                seen = {c for row in px for c in row}
+                assert Art.OUTLINE in seen and len(seen) > 6, (sprite, d)
+                assert set(px[-1]) == {Col.BLACK}, (sprite, d)        # room below the feet
+                assert {row[0] for row in px} | {row[-1] for row in px} == {Col.BLACK}, (sprite, d)
+            assert frames[1] != frames[0] and frames[2] != frames[0], (sprite, d)
+        for f in range(3):
+            left, right = frame(sprite, Direction.LEFT, f), frame(sprite, Direction.RIGHT, f)
+            assert right == [row[::-1] for row in left]
+    for van, body in ((P.SHUTTLE_VAN, Art.VAN), (P.RAM_VAN, Col.MAROON)):
+        for view in ("side", "front", "back"):
+            u, v, w, h = P.van_uv(van, view)
+            seen = {sheet.pget(u + x, v + y) for x in range(w) for y in range(h)}
+            assert body in seen and Art.TYRE in seen, (van, view)
+    # and the campus uses them
+    from game.scenes.overworld import OverworldScene
+    make(OverworldScene)
+    on_screen = {pyxel.pget(x, y) for x in range(0, pyxel.width, 2) for y in range(0, pyxel.height, 2)}
+    assert {Art.SKIN1, Art.OUTLINE} <= on_screen
+
+
+def check_things_on_the_map_are_drawn_in_full_detail():
+    """Signs, benches, the fence and the like (decisions/0045, step 3): each
+    drawn and outlined in its cell, nothing spilling into the next slot."""
+    from game.config import Art
+    from game.gfx import object_art as O
+    make(Art_)
+    sheet = O.sheet()
+
+    def seen(u, v, w, h):
+        return {sheet.pget(u + x, v + y) for x in range(w) for y in range(h)}
+
+    for name in O.OBJECTS:
+        u, v = O.uv(name)
+        inside = seen(u, v, 32, 32)
+        assert Art.OUTLINE in inside and len(inside) > 4, name
+        for margin in ((u - O.PAD, v - O.PAD, O.SLOT, O.PAD - 1), (u - O.PAD, v + 33, O.SLOT, O.PAD - 1)):
+            assert seen(*margin) == {Col.BLACK}, name
+    for name in O.TILES:
+        assert Col.BLACK not in seen(*O.uv(name), 32, 32), name         # building tiles fill their cell
+    for joins in range(16):
+        assert Art.IRON in seen(*O.fence_uv(joins), 32, 32), joins
+
+
+class Boxes(Scene):
+    """A rounded box with words in it (decisions/0045, game/ui/frames.py)."""
+    def draw(self):
+        from game.ui import frames
+        frames.rect(0, 0, 384, 288, Col.WHITE)     # a background, in order with the box
+        frames.box(10, 10, 100, 40)
+        font.text(20, 20, "HI", Col.MAROON)
+
+
+def check_boxes_are_drawn_at_full_detail_under_the_words():
+    from game.config import Art
+    make(Boxes)
+    assert pyxel.pget(20, 20) == Col.WHITE                    # its corner is rounded off
+    assert pyxel.pget(60, 20) == Art.OUTLINE                  # a dark rim, one fine pixel...
+    assert pyxel.pget(60, 22) == Art.UI_FRAME                 # ...then the light frame
+    assert Art.UI_PAGE in colours(60, 40, 40, 20)             # and the page
+    assert Col.MAROON in colours(40, 40, 32, 34)              # the words go on top
+
+
+class Street(Scene):
+    def draw(self):
+        from game.gfx import intro_art
+        intro_art.present_scene(intro_art.draw_street, 0.8, 0, 1)
+
+
+def check_the_intro_is_drawn_at_full_detail_with_close_ups():
+    from game.config import Art
+    make(Street)
+    seen = colours(0, 0, pyxel.width, 400)
+    assert {Art.SKIN1, Art.OUTLINE, Art.WALK, Art.ROAD} <= seen   # people, outlined, on the sidewalk
+
+
+Art_ = Art                      # a plain scene, for checks that only need Pyxel started
+
+
 def test_crisp_display():
     root = Path(__file__).resolve().parent.parent
     run = subprocess.run([sys.executable, "-m", "tests.test_display"], cwd=root,

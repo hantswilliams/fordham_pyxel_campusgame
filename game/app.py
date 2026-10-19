@@ -39,7 +39,10 @@ class App:
                    fps=config.FPS, quit_key=quit_key, headless=headless)
         config.apply_palette(pyxel.colors)
         display.setup(s)
-        if _asked_for_perf():            # add ?perf to the page address (decisions/0043)
+        # add ?perf to the page address (decisions/0043): the frame rate, and
+        # how long the map picture takes to draw (decisions/0045), in the console
+        self.perf = _asked_for_perf()
+        if self.perf:
             pyxel.perf_monitor(True)
         build_all()
 
