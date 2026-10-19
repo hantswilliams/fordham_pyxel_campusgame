@@ -2,10 +2,10 @@
 
 | | |
 |---|---|
-| **Status** | Decided 2026-10-19: Option B approved, with everything in "What comes with A and B". Being built on branch `finer-pixels` (from `campus-shuttle`) |
+| **Status** | Decided 2026-10-19: Option B approved, with everything in "What comes with A and B". Built on branch `finer-pixels` (from `campus-shuttle`) and checked on an iPhone |
 | **Raised** | 2026-10-19. Version 1 looks like the original Pokémon Blue / Gold games; the next version should look cleaner and a little less pixelated |
 | **Affects** | All art (ground, trees, people, vehicles, buildings, card pictures), the text boxes, cards and menus, and how the screen is drawn (`game/gfx/display.py`). Not the maps, content, missions, saving, web build or Campus Guide |
-| **Built?** | Steps 1 to 4 of 5 (the ground, trees and shadows; people, the bike and the vans; buildings and everything else on the map; the screens), on branch `finer-pixels`. Step 5 (checks on a real phone) is left. See "What was built" at the end |
+| **Built?** | Yes, all five steps, on branch `finer-pixels`. Checked on an iPhone. See "What was built" at the end |
 
 ## What's being decided
 
@@ -257,3 +257,17 @@ If you approve, say if any item in "What comes with A and B" should be left out 
   - the intro shows the new people at full detail
 
   422 tests pass.
+
+### Step 5: checks
+
+- **Tests:** 422 pass. They check the ground, the palette, the people, the things on the map, the buildings' finer pictures, the cards, the boxes and the intro.
+- **The capture screenshots** (`tools/capture.py`) run from the train to the passport stamp without errors.
+- **The 1× fallback** still runs from the title through the intro to the campus.
+- **The web build** is 3.2 MB.
+- **Speed in Chrome:** about 30 frames a second on every screen at normal speed and with the CPU slowed 4×. Drawing takes 2 to 5 ms a frame at normal speed and about 9 ms slowed. The campus picture is built while the title shows, in about 0.1 s (0.3 s slowed).
+- **On a real iPhone** (2026-10-19), checked by you: it looks good.
+
+**Possible next steps:**
+- check it on an Android phone
+- hand-finish more buildings, as the fountain plaza was
+- show the campus map at full detail, if a fast enough way turns up
