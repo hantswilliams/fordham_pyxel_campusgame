@@ -5,7 +5,7 @@
 | **Status** | Decided 2026-10-19: Option B approved, with everything in "What comes with A and B". Being built on branch `finer-pixels` (from `campus-shuttle`) |
 | **Raised** | 2026-10-19. Version 1 looks like the original Pokémon Blue / Gold games; the next version should look cleaner and a little less pixelated |
 | **Affects** | All art (ground, trees, people, vehicles, buildings, card pictures), the text boxes, cards and menus, and how the screen is drawn (`game/gfx/display.py`). Not the maps, content, missions, saving, web build or Campus Guide |
-| **Built?** | Step 1 of 5 (the ground, trees and shadows), on branch `finer-pixels`. See "What was built" at the end |
+| **Built?** | Steps 1 and 2 of 5 (the ground, trees and shadows; people, the bike and the vans), on branch `finer-pixels`. See "What was built" at the end |
 
 ## What's being decided
 
@@ -169,3 +169,34 @@ If you approve, say if any item in "What comes with A and B" should be left out 
 - **Tests:**
   - `tests/test_ground.py` (12 tests) checks what stands on what, where corners round, edging and kerbs, staircase paths and roads joining up, and the palette.
   - `tests/test_display.py` checks that the campus is drawn in the new colours, with shadows and single-pixel detail.
+
+### Step 2: people, the bike and the vans
+
+![Today, the approved mockup and step 2](images/0045/step2_compare.png)
+
+![The people, bikes and vans](images/0045/step2_people.png)
+
+- **People** (`game/gfx/people_art.py`) are redrawn at full detail for the six looks the game already uses, so no map or mission file changed:
+  - the player
+  - the Orientation Leader
+  - the two students
+  - the staff member
+  - Public Safety
+- **The new look:**
+  - They stand 22 px tall instead of 16, so their heads rise into the cell above, as in the Game Boy Advance games.
+  - They have faces with a glint in the eyes, hair with a highlight, and shading on the side away from the light.
+  - Small details: the player's backpack, the Orientation Leader's maroon lanyard, the staff member's collar, and the officers' peaked caps and badges.
+  - One student has long hair.
+- **Walking** has two steps each way, with the legs, arms and a little bob changing.
+- **The bike** has the rider sitting on it, pedals turning, in all four directions. Side on you see both wheels and the frame; from the front and back the wheel is end-on under the handlebars. It comes in both colours, light blue and the maroon one from the Bike Courier mission.
+- **The vans** are the white Campus Shuttle with its maroon stripe and the maroon Ram Van with a white one. Each is drawn side on, from the front and from the back, with windows, wheels, lights and bumpers. They're the same size and in the same place as before.
+- **Outlines:** everything on the sheet gets one dark outline in a single pass.
+- **Mission markers:** the "!" and "?" over people's heads sit higher, above the taller heads.
+- **Not changed yet:**
+  - The intro (train, station, street) still uses today's characters. It's restyled in step 4 with the other screens.
+  - The 1× fallback and the gallery tools still use today's sheet.
+- **Tests:** `tests/test_display.py` checks that:
+  - every frame is drawn and outlined, with room round its edges
+  - right-facing frames mirror the left-facing ones, and the steps differ from standing
+  - both vans have their colours
+  - the campus shows the new people

@@ -185,6 +185,46 @@ def check_the_world_is_drawn_at_twice_the_detail():
     raise AssertionError("no detail finer than doubled pixels")
 
 
+def check_people_bikes_and_vans_are_drawn_in_full_detail():
+    """The finer people (decisions/0045, step 2): every frame drawn, outlined,
+    inside its frame, right the mirror of left, steps different from standing."""
+    from game.config import Art
+    from game.gfx import people_art as P
+    from game.world.directions import Direction
+    make(Art_)
+    sheet = P.sheet()
+
+    def frame(sprite, d, f):
+        u, v = P.frame_uv(sprite, d, f)
+        return [[sheet.pget(u + x, v + y) for x in range(P.FRAME_W)] for y in range(P.FRAME_H)]
+
+    for sprite in range(P.MAROON_BIKE_SPRITE + 1):
+        for d in Direction:
+            frames = [frame(sprite, d, f) for f in range(3)]
+            for px in frames:
+                seen = {c for row in px for c in row}
+                assert Art.OUTLINE in seen and len(seen) > 6, (sprite, d)
+                assert set(px[-1]) == {Col.BLACK}, (sprite, d)        # room below the feet
+                assert {row[0] for row in px} | {row[-1] for row in px} == {Col.BLACK}, (sprite, d)
+            assert frames[1] != frames[0] and frames[2] != frames[0], (sprite, d)
+        for f in range(3):
+            left, right = frame(sprite, Direction.LEFT, f), frame(sprite, Direction.RIGHT, f)
+            assert right == [row[::-1] for row in left]
+    for van, body in ((P.SHUTTLE_VAN, Art.VAN), (P.RAM_VAN, Col.MAROON)):
+        for view in ("side", "front", "back"):
+            u, v, w, h = P.van_uv(van, view)
+            seen = {sheet.pget(u + x, v + y) for x in range(w) for y in range(h)}
+            assert body in seen and Art.TYRE in seen, (van, view)
+    # and the campus uses them
+    from game.scenes.overworld import OverworldScene
+    make(OverworldScene)
+    on_screen = {pyxel.pget(x, y) for x in range(0, pyxel.width, 2) for y in range(0, pyxel.height, 2)}
+    assert {Art.SKIN1, Art.OUTLINE} <= on_screen
+
+
+Art_ = Art                      # a plain scene, for checks that only need Pyxel started
+
+
 def test_crisp_display():
     root = Path(__file__).resolve().parent.parent
     run = subprocess.run([sys.executable, "-m", "tests.test_display"], cwd=root,

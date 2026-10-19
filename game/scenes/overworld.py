@@ -12,7 +12,8 @@ from game.gfx.building_art import draw_on_map
 from game.gfx.building_overlay import draw_overlay
 from game.gfx.placeholder_art import (BIKE_SPRITE, CHAR_IMAGE_BANK, MAROON_BIKE_SPRITE, RAM_VAN, SHUTTLE_VAN,
                                       TILE_IMAGE_BANK, character_uv, van_uv)
-from game.gfx.world_art import PERSON_SHADOW, VAN_END_SHADOW, VAN_SIDE_SHADOW, blt_up, world_for
+from game.gfx import people_art
+from game.gfx.world_art import PERSON_SHADOW, VAN_END_SHADOW, VAN_SIDE_SHADOW, world_for
 from game.systems import controls
 from game.systems.bike import Bike
 from game.systems.missions import Reaction
@@ -520,12 +521,13 @@ class OverworldScene(Scene):
             font.text(bx + 3, by + 1, "BEEP!", Col.MAROON)
         # "!" over people with a mission for you, "?" over people a mission is waiting on
         bob = (pyxel.frame_count // 10) % 2
+        above = 22 if self.world is not None else 17    # the finer people are taller (decisions/0045)
         for obj in self.map.objects:
             if obj.type == "npc":
                 mark = self.book.npc_marker(obj.name)
                 if mark:
                     ox, oy, _ = self._npc_xy(obj)
-                    bx, by = ox + 3, oy - 17 - bob
+                    bx, by = ox + 3, oy - above - bob
                     pyxel.rect(bx, by - GROW, 12, 14 + GROW, Col.WHITE)
                     pyxel.rectb(bx, by - GROW, 12, 14 + GROW, Col.NAVY)
                     font.text(bx + 2, by + 1 - GROW, mark, Col.MAROON)
@@ -579,8 +581,7 @@ class OverworldScene(Scene):
     def _draw_world_finer(self, cx: int, cy: int) -> None:
         """The world at twice the detail (decisions/0045), straight onto the
         full-size screen: the part of the map picture in view, then trees,
-        people and vans back to front, each with its shadow. People and vans
-        are today's sprites, doubled, until they're redrawn."""
+        people and vans back to front, each with its shadow."""
         full = display.full_image()
         k = ART_SCALE
         ox, oy = cx * k, cy * k
@@ -590,33 +591,36 @@ class OverworldScene(Scene):
         # trees first, so a person level with a tree stands in front of it
         things = [(ty * TILE, tx * TILE, None, tile, 0)
                   for tx, ty, tile in w.visible_trees(cx, cy, SCREEN_W, SCREEN_H)]
-        sheet = pyxel.images[CHAR_IMAGE_BANK]
+        sheet = people_art.sheet()
+        px, py = people_art.ORIGIN
         for y, x, sprite, facing, frame in sorted(things + self._drawables(), key=lambda d: d[0]):
             if sprite is None:
                 w.draw_tree(full, x // TILE, y // TILE, facing, ox, oy)
             elif sprite < 0:
-                self._draw_van_finer(full, SHUTTLE_VAN if sprite == -1 else RAM_VAN,
+                self._draw_van_finer(full, people_art.SHUTTLE_VAN if sprite == -1 else people_art.RAM_VAN,
                                      x, y + TILE / 2, *facing, ox, oy)
             else:
-                w.shadow(full, x * k + 5 - ox, y * k + 25 - oy, PERSON_SHADOW)
-                u, v = character_uv(sprite, facing, frame)
-                blt_up(full, x * k - ox, (y - 2) * k - oy, sheet, u, v, TILE, TILE, Col.BLACK)
+                w.shadow(full, x * k + 5 - ox, y * k + 26 - oy, PERSON_SHADOW)
+                u, v = people_art.frame_uv(sprite, facing, frame)
+                full.blt(x * k - px - ox, y * k - py - oy, sheet, u, v,
+                         people_art.FRAME_W, people_art.FRAME_H, Col.BLACK)
 
     def _draw_van_finer(self, full, van: int, cx: float, cy: float, hx: float, hy: float,
                         ox: int, oy: int) -> None:
-        """_draw_van on the full-size screen, with a shadow."""
+        """A van on the full-size screen, with a shadow: where _draw_van puts
+        today's van, doubled."""
         k = ART_SCALE
-        sheet = pyxel.images[CHAR_IMAGE_BANK]
+        sheet = people_art.sheet()
         cx, cy = int(cx), int(cy)
         if abs(hx) >= abs(hy) * 0.7:
-            u, v, w = van_uv(van, "side")
+            u, v, w, h = people_art.van_uv(van, "side")
             self.world.shadow(full, (cx - 16) * k - ox, (cy + 2) * k - oy, VAN_SIDE_SHADOW)
-            blt_up(full, (cx - 16) * k - ox, (cy - 16) * k - oy, sheet, u, v, w * (-1 if hx < 0 else 1), 24,
-                   Col.BLACK)
+            full.blt((cx - 16) * k - ox, (cy - 16) * k - oy, sheet, u, v, w * (-1 if hx < 0 else 1), h,
+                     Col.BLACK)
         else:
-            u, v, w = van_uv(van, "front" if hy > 0 else "back")
+            u, v, w, h = people_art.van_uv(van, "front" if hy > 0 else "back")
             self.world.shadow(full, (cx - 9) * k - ox, (cy + 3) * k - oy, VAN_END_SHADOW)
-            blt_up(full, (cx - 8) * k - ox, (cy - 16) * k - oy, sheet, u, v, w, 24, Col.BLACK)
+            full.blt((cx - 8) * k - ox, (cy - 16) * k - oy, sheet, u, v, w, h, Col.BLACK)
 
     def _draw_van(self, van: int, cx: float, cy: float, hx: float, hy: float) -> None:
         """A van with its middle at (cx, cy), heading (hx, hy): side on when

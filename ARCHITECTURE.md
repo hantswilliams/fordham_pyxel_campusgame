@@ -190,7 +190,8 @@ A `tests/test_content.py` check validates the data: every NPC's dialogue exists,
 - A shadow is one darker shade of whatever it falls on (`config.SHADOW_OF`). `world_art.Shadows` cuts it to shape with two scratch images, because Pyxel can't blend colours.
 - Mission items and closed gates change while you play, so they're drawn each frame rather than baked in.
 - Gameplay still runs on 16 px cells.
-- Buildings, objects, people and vans are today's art doubled until they're redrawn (steps 2–4 of the decision).
+- People, the bike and the vans come from one sheet drawn in code at startup (`game/gfx/people_art.py`), with the same sprite numbers as today's. People stand 22 px tall, so their heads rise into the cell above.
+- Buildings and objects are today's art doubled until they're redrawn (steps 3–4 of the decision).
 - With `DISPLAY_SCALE = 1` the tiles are drawn as before.
 
 ---
