@@ -131,6 +131,31 @@ def test_pictures_use_only_game_colors(b):
         assert not bad, f"{path.name} uses colors outside palette.hex: {sorted(bad)[:5]}"
 
 
+@pytest.mark.parametrize("b", [b for b in BUILDINGS if b.map_png], ids=lambda b: b.id)
+def test_every_picture_has_a_finer_one_twice_the_size(b):
+    """The finer world (decisions/0045) draws map_fine.png, made from the
+    same script as map.png by assets/buildings/_style/fine.py."""
+    assert b.map_fine_png, f"{b.id} has no map_fine.png: run assets/buildings/_style/fine.py {b.id}"
+    w, h = png_size(b.map_png)
+    assert png_size(b.map_fine_png) == (w * 2, h * 2)
+
+
+@pytest.mark.parametrize("b", [b for b in BUILDINGS if b.map_fine_png], ids=lambda b: b.id)
+def test_finer_pictures_use_only_game_colors(b):
+    Image = pytest.importorskip("PIL.Image")
+    allowed = {((c >> 16) & 255, (c >> 8) & 255, c & 255) for c in config.GAME_COLORS}
+    im = Image.open(b.map_fine_png).convert("RGBA")
+    bad = {px[:3] for _, px in im.getcolors(1 << 20) if px[3] >= 128 and px[:3] not in allowed}
+    assert not bad, f"{b.id}/map_fine.png uses colors outside the game's palette: {sorted(bad)[:5]}"
+
+
+def test_every_drawn_building_has_a_script_for_its_finer_picture():
+    import sys
+    sys.path.insert(0, str(config.BUILDINGS_DIR / "_style"))
+    from fine import SOURCES
+    assert {b.id for b in BUILDINGS if b.map_png} <= set(SOURCES)
+
+
 def test_extra_colors_are_few():
     """D-0020 Part 4: a short list of extra colors; D-0022 raised the cap
     from 8 to 10 for Cunniffe's pink brick. More needs a decision."""

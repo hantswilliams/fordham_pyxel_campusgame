@@ -9,8 +9,9 @@ loads, the whole of it is drawn once into one picture with 32 px cells:
    which)
 2. shadows, falling down and to the right from buildings, trees and the
    things standing on the ground: one darker shade of whatever they land on
-3. today's building tiles, drawn buildings and objects, doubled (until
-   they're redrawn)
+3. drawn buildings at full detail (their map_fine.png, from
+   assets/buildings/_style/fine.py); today's building tiles and objects,
+   doubled (until they're redrawn)
 4. the outlines, mats and plaques (game/gfx/building_overlay.py), doubled,
    with the plaques' names lettered at full detail
 
@@ -31,7 +32,7 @@ import math
 import pyxel
 
 from game.config import ART_SCALE, SHADOW_OF, TILE, Art, Col
-from game.gfx.building_art import map_image
+from game.gfx.building_art import fine_image, map_image
 from game.gfx.building_overlay import BUILDING_TILES, draw_overlay
 from game.gfx.placeholder_art import TILE_IMAGE_BANK, object_tiles
 from game.ui import font
@@ -295,7 +296,7 @@ class WorldArt:
     def __init__(self, m: MapData, locations):
         self.map = m
         self.tiles = G.base_tiles(m)
-        self.grid = G.ground_grid(m)
+        self.grid = G.ground_grid(m, self._drawn_cells())
         self.trees = [(x, y, t) for y, row in enumerate(self.tiles) for x, t in enumerate(row)
                       if t in G.TREES]
         self.image = pyxel.Image(m.width * CELL, m.height * CELL)
@@ -360,14 +361,15 @@ class WorldArt:
 
     def _drawn_cells(self) -> set[tuple[int, int]]:
         """Cells covered by a drawn building's picture."""
-        return {(x, y) for b in self.map.buildings if map_image(b) is not None
+        return {(x, y) for b in self.map.buildings if _picture(b)[0] is not None
                 for x, y, _ in b.cells()}
 
     # 2. shadows
     def _draw_shadows(self) -> None:
         img, tiles, objs = self.image, self.tiles, object_tiles()
-        pictures = [map_image(b) for b in self.map.buildings]
-        big = max([p.width for p in pictures if p] + [64]) * K, max([p.height for p in pictures if p] + [64]) * K
+        pictures = [_picture(b) for b in self.map.buildings]
+        big = (max([p.width * k for p, k in pictures if p] + [128]),
+               max([p.height * k for p, k in pictures if p] + [128]))
         sh = Shadows(*big)
         drawn = self._drawn_cells()
         for y, row in enumerate(tiles):
@@ -385,16 +387,23 @@ class WorldArt:
                 elif t in G.ON_GROUND:
                     u, v = slot_to_pixel(TILES[t].slot)
                     sh.cast(img, px + OBJECT_SHADOW[0], py + OBJECT_SHADOW[1], objs, u, v, TILE, TILE, K)
-        for b, pic in zip(self.map.buildings, pictures):
-            # fields and flat landmarks have today's paving and turf drawn
-            # into their pictures, so they'd cast a square shadow: none yet
-            if pic is None or not _is_building(b):
+        for b, (pic, k) in zip(self.map.buildings, pictures):
+            # buildings cast a building's shadow, a landmark drawn at full
+            # detail (the fountain, with the paving round it left clear) a low
+            # one; fields lie flat, and today's landmark pictures have their
+            # paving drawn in, so they'd cast a square shadow
+            if pic is None:
                 continue
-            dx, dy = BUILDING_SHADOW
+            if _is_building(b):
+                dx, dy = BUILDING_SHADOW
+            elif b.landmark and k == 1:
+                dx, dy = LOW_SHADOW
+            else:
+                continue
             ox, oy = b.origin
             sx, sy = b.sprite_offset
             sh.cast(img, (ox * TILE + sx) * K + dx, (oy * TILE + sy) * K + dy, pic, 0, 0,
-                    pic.width, pic.height, K)
+                    pic.width, pic.height, k)
 
     # 3. buildings and objects, today's art doubled
     def _draw_things(self) -> None:
@@ -408,12 +417,12 @@ class WorldArt:
                 elif t in G.ON_GROUND and t not in G.TREES:
                     blt_up(img, x * CELL, y * CELL, objs, u, v, TILE, TILE, Col.BLACK)
         for b in self.map.buildings:
-            pic = map_image(b)
+            pic, k = _picture(b)
             if pic is not None:
                 ox, oy = b.origin
                 sx, sy = b.sprite_offset
                 blt_up(img, (ox * TILE + sx) * K, (oy * TILE + sy) * K, pic, 0, 0,
-                       pic.width, pic.height, Col.BLACK)
+                       pic.width, pic.height, Col.BLACK, k)
 
     # 4. outlines, mats and plaques
     def _draw_overlay(self, locations) -> None:
@@ -452,6 +461,16 @@ class WorldArt:
         """A shadow shape from the atlas (PERSON_SHADOW...) at (x, y) on dst."""
         u, v, w, h = shape
         self.shadows.cast(dst, x, y, atlas(), u, v, w, h)
+
+
+def _picture(b):
+    """(picture, how much to scale it): map_fine.png as it is, or today's
+    map.png doubled, or (None, 0)."""
+    fine = fine_image(b)
+    if fine is not None:
+        return fine, 1
+    pic = map_image(b)
+    return (pic, K) if pic is not None else (None, 0)
 
 
 def _is_building(b) -> bool:

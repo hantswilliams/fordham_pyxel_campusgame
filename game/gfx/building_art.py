@@ -36,6 +36,16 @@ def map_image(b: BuildingAsset) -> "pyxel.Image | None":
     return _maps[b.folder]
 
 
+_fine: dict = {}
+
+
+def fine_image(b: BuildingAsset) -> "pyxel.Image | None":
+    """map_fine.png: the picture at twice the detail (decisions/0045)."""
+    if b.folder not in _fine:
+        _fine[b.folder] = _load(b.map_fine_png)
+    return _fine[b.folder]
+
+
 def card_image(b: BuildingAsset) -> "pyxel.Image | None":
     return _load(b.card_png)
 

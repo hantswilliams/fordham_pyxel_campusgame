@@ -22,7 +22,7 @@ from game.config import palette  # noqa: E402
 RGB = [((c >> 16) & 255, (c >> 8) & 255, c & 255) for c in palette()]
 (BLACK, NAVY, MAROON, GREEN, BROWN, DBLUE, LBLUE, WHITE, RED, ORANGE, YELLOW,
  LIME, CYAN, GRAY, PINK, PEACH, ST_HI, ST, ST_SH, ST_DK, ROOF, ROOF_SH,
- BRICK, BRICK_DK) = RGB
+ BRICK, BRICK_DK, PBRICK, PBRICK_SH) = RGB
 CLEAR = (0, 0, 0, 0)
 
 

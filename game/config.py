@@ -133,6 +133,12 @@ ART_COLORS = {
     "BIKE": 0x7FB3E6, "BIKE_SH": 0x5A8CC4, "METAL": 0xB9BCC4, "TYRE": 0x26252D, "HUB": 0x9EA2AA,
     "VAN": 0xF4F4F0, "VAN_SH": 0xD4D5D8, "VAN_GLASS": 0x6D8FC0, "VAN_GLASS_HI": 0xBCD6F2,
     "VAN_GLASS_DK": 0x3F5A86, "BUMPER": 0x6F737D, "HEADLIGHT": 0xFBE7A0, "TAILLIGHT": 0xD93A3A,
+    # buildings' windows at full detail (assets/buildings/_style/fine.py)
+    "PANE_DK": 0x8DA6EA, "PANE_HI": 0xE2EBFF, "SILL": 0xC9C4BA,
+    # hand-finished buildings (assets/buildings/_style/fine_plaza.py): slate, bronze, water
+    "SLATE": 0x737A86, "SLATE_HI": 0xA9AFB9, "WIN": 0x30395A, "WIN_LT": 0x5A6DA0,
+    "BRONZE": 0x5D5148, "BRONZE_LT": 0x857566, "BRONZE_DK": 0x3E352F,
+    "WATER": 0x7CB6E8, "WATER_DK": 0x5A92CF, "WATER_HI": 0xCDE8FF,
     # never drawn: marks "not this" while shadows are cut to shape (game/gfx/world_art.py)
     "MASK": 0xFF01FD,
 }

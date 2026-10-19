@@ -60,15 +60,20 @@ def base_tiles(m: MapData) -> list[list[str]]:
     return tiles
 
 
-def ground_grid(m: MapData) -> list[list[str | None]]:
+def ground_grid(m: MapData, pictured=()) -> list[list[str | None]]:
     """The ground kind under every cell, [y][x]; None under things drawn
-    whole (see base_tiles for the cells that change)."""
+    whole (see base_tiles for the cells that change). Cells under a drawn
+    building's picture (`pictured`) get ground too, from their neighbours,
+    to show through wherever the picture is see-through (round a fountain)."""
     tiles = base_tiles(m)
     grid: list[list[str | None]] = [[GROUND_TILES.get(t) for t in row] for row in tiles]
     for y, row in enumerate(tiles):
         for x, t in enumerate(row):
             if t in ON_GROUND:
                 grid[y][x] = _from_neighbours(grid, x, y, ON_GROUND[t])
+    for x, y in sorted(pictured, key=lambda c: (c[1], c[0])):
+        if grid[y][x] is None:
+            grid[y][x] = _from_neighbours(grid, x, y, GRASS)
     return grid
 
 
