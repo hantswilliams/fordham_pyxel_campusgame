@@ -1,0 +1,136 @@
+# D-0045: A cleaner, less pixelated look
+
+| | |
+|---|---|
+| **Status** | Decided 2026-10-19: Option B approved, with everything in "What comes with A and B". Being built on branch `finer-pixels` (from `campus-shuttle`) |
+| **Raised** | 2026-10-19. Version 1 looks like the original Pokémon Blue / Gold games; the next version should look cleaner and a little less pixelated |
+| **Affects** | All art (ground, trees, people, vehicles, buildings, card pictures), the text boxes, cards and menus, and how the screen is drawn (`game/gfx/display.py`). Not the maps, content, missions, saving, web build or Campus Guide |
+| **Built provisionally?** | No. Only mockups. Nothing in the game has changed |
+
+## What's being decided
+
+How far to move from today's Game Boy Color look, and whether that means a rewrite.
+
+Today the art is 16 px tiles shown at 2×, with speckled grass, paths and roads, 16 × 16 people and 26 colours. Since D-0038 the text is drawn at full screen resolution (768 × 576) but the art isn't, so fine letters sit next to chunky art.
+
+I've drawn the same spot, the Cunniffe Fountain plaza, in three styles, from small to large changes:
+
+- **A. Tidied.** Same pixel size as today, with cleaner art (Pokémon FireRed / Emerald, Game Boy Advance era).
+- **B. Finer pixels.** The same cleaner art at twice the detail, so each pixel is half as big. Still pixel art, but it looks smooth from a normal distance.
+- **C. Smooth.** No visible pixels: gradients, soft shadows, rounded see-through boxes. Like a modern mobile game.
+
+## The mockups
+
+All pictures are in `decisions/images/0045/`. **Start with `overview.png`, then `closeups.png`.**
+
+| Picture | What it shows |
+|---|---|
+| `overview.png` | All four looks side by side (today, A, B, C): the plaza, a conversation, and Dealy Hall's card. Half size |
+| `closeups.png` | The fountain and the two people at 3× zoom in each look. This is where A and B differ most |
+| `today_*.png` | **Real game screenshots**, taken with the mockups' camera, people and words |
+| `A_*.png`, `B_*.png`, `C_*.png` | Each look at full size: `_overworld`, `_dialogue`, `_card` |
+
+![Overview](images/0045/overview.png)
+
+![Close-ups](images/0045/closeups.png)
+
+**What to keep in mind:**
+
+- A, B and C are drawn by a script (`tools/style_mockups/`), not by the game. Only this corner of campus is drawn, and the buildings are quick sketches based on today's drawings, not traced from photos.
+- A and B use the game's own font, drawn the way Pyxel draws it. C uses M PLUS Rounded 1c, a free font from the same family, which the game would have to add.
+- C's card also changes the card's layout (a big title, "Inside" as tags, a Close button). A and B keep today's layout.
+
+---
+
+## Options
+
+### What comes with A and B
+
+These come with both pixel styles. If you'd rather not have one, say so in your notes.
+
+- **No speckle textures.** Grass, paths and roads become flat colours with a few small details: grass tufts, paving slabs and kerbs.
+- **Rounded lawn corners** where paths meet grass.
+- **Shadows** under trees, people, signs and buildings, falling down and to the right. Each is one darker shade of whatever it lands on.
+- **Outlines** round buildings, trees and people. The ground has none.
+- **Taller people.** They're 22 px tall instead of 16, and their heads overlap the tile above, as in the Game Boy Advance games. They get faces, hair highlights and shading.
+- **About 110 colours instead of 26.** Each material gets 3–4 shades. Pyxel allows about 255.
+- **New frames** for the dialogue box, cards and the area banner: rounded, with a soft blue-grey rim.
+- Small extras: the Ram statue becomes a ram, and Dealy Hall gets dormers.
+
+### A. Tidied: same pixel size, cleaned up
+
+- **Pros:**
+  - The smallest change. The engine, screen and picture sizes all stay as they are.
+  - Still unmistakably a Pokémon-style game.
+  - Cheapest: redraw the art at today's sizes.
+- **Cons:**
+  - Still as pixelated as today. It's cleaner, not less pixelated, so it only half answers the brief.
+  - Fine text next to chunky art stays a mismatch.
+
+### B. Finer pixels: twice the detail (recommended)
+
+The game still plays on 16 px cells. Every picture is drawn at twice the size (32 px tiles, people 32 × 44, Dealy Hall 192 × 160) and shown 1:1 on the 768 × 576 screen.
+
+- **Pros:**
+  - It's what "a little less pixelated, cleaner" means while staying a pixel game. Up close it's pixel art; at normal size it reads as clean drawing. Compare the B and Today close-ups.
+  - Art and text finally share one resolution.
+  - It stays in Pyxel: about 110 colours, and nothing Pyxel can't draw.
+  - Room for detail: window frames, faces, paving, roof slates.
+- **Cons:**
+  - All art is redrawn at double size. Most of it is drawn by code already: the tiles in `placeholder_art.py`, and the buildings through `assets/buildings/_style/kit.py` and its draw scripts. So most of the work is upgrading that code, not drawing by hand.
+  - The screen pipeline changes. The world would be drawn at full size instead of doubled. The map would be drawn once into one big picture (about 3,200 × 2,400 px), the way the plaque overlay is today.
+  - Speed on phones needs checking again (D-0043). It should cost about the same as today, since today's art is already doubled up to full size every frame.
+
+### C. Smooth: no visible pixels
+
+- **Pros:**
+  - The most modern and polished look, closest to an app.
+  - Smooth, proportional text that fits more words per line.
+- **Cons:**
+  - **This one is a rewrite.** Pyxel can't draw it:
+    - It has about 255 colours; the mockup uses about 26,000.
+    - It can't blend one picture into another, so no soft shadows, smooth edges between overlapping things, or see-through boxes.
+  - C means moving to a different engine, such as a browser game library (Phaser or PixiJS, in JavaScript) or Godot. That rewrites the 6,300 lines of game code, the tests and the web build. The maps and `content/` would carry over.
+  - Illustrated art is slower to make and harder to keep consistent than pixel art.
+  - It no longer looks like Pokémon, which has been the idea since D-0003 and D-0021.
+
+## Rewrite or major revision?
+
+**A or B is a major revision, not a rewrite.** The scenes, map files, content, missions, saving, web build, Campus Guide and accessibility work all stay. Only C needs a rewrite.
+
+What B would touch:
+
+| Area | Today | With B |
+|---|---|---|
+| Ground and object tiles | 49 tile types, 16 px, `game/gfx/placeholder_art.py` | Redrawn at 32 px with the new rules |
+| People and vehicles | 6 people, 4 directions × 3 steps, the bike, 2 vans | Redrawn at 32 × 44 |
+| Drawn buildings | 38 map pictures and 35 card pictures, from `kit.py` and the draw scripts | Kit and scripts upgraded to draw at 2× |
+| Screen | Scenes drawn at 384 × 288 and doubled (`display.py`) | World drawn at full size; layout and gameplay unchanged |
+| Boxes and menus | Text box, card, menus, campus map, title, intro | New frames; same layout and text |
+| Colours | 26 | About 110 |
+
+## How B would be built, if approved
+
+One branch per step, each with screenshots for review (the same way as D-0023 to D-0025):
+
+1. **Kit and screen:** the palette, ground, trees, shadows and full-size drawing. The whole map in the new ground, with today's buildings scaled up for now.
+2. **People and vehicles.**
+3. **Buildings:** the fountain plaza first (Hughes, Cunniffe, Dealy, Collins and the fountain), then athletics, residence halls and academic buildings in batches.
+4. **Screens:** dialogue, cards and their pictures, menus, campus map, title and intro.
+5. **Checks:** tests, the capture screenshots, the web build, and speed on a real phone.
+
+## My recommendation
+
+**Option B.** It's the version that's actually less pixelated, it keeps the Pokémon feel the game is built around, and it stays in Pyxel. That makes it a big art job, not a rewrite. It also fixes the mismatch between fine text and chunky art that D-0038 left. A is the fallback if B costs too much. I'd only choose C if the game should stop looking like a Pokémon game, because it means starting the engine again.
+
+## Your decision
+
+- [x] **Approve**: go with Option B
+- [ ] **Not approve**: say which option you'd prefer, or why
+- [ ] **Other**: describe below
+
+If you approve, say if any item in "What comes with A and B" should be left out (the taller people, for example), and if any building should come first.
+
+**Your notes:**
+
+>
