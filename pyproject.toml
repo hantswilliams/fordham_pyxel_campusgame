@@ -1,6 +1,6 @@
 [project]
 name = "fordham-campus-quest"
-version = "0.1.0"
+version = "0.2.0"
 description = "A Pokemon-style campus exploration game for new Fordham students, built with Pyxel."
 readme = "README.md"
 requires-python = ">=3.11"
