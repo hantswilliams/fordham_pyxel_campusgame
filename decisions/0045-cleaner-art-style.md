@@ -267,6 +267,23 @@ If you approve, say if any item in "What comes with A and B" should be left out 
 - **Speed in Chrome:** about 30 frames a second on every screen at normal speed and with the CPU slowed 4×. Drawing takes 2 to 5 ms a frame at normal speed and about 9 ms slowed. The campus picture is built while the title shows, in about 0.1 s (0.3 s slowed).
 - **On a real iPhone** (2026-10-19), checked by you: it looks good.
 
+### After v0.2.0: the intro's people (branch `intro-people`)
+
+You noticed the people in the intro looked rough, and as if you could see the scenery through them. Nothing in them was actually see-through. They were the campus drawing blown up 3 to 4.5 times, which caused three problems:
+- **A thin outline.** The 1-pixel outline barely showed at that size.
+- **Flat hair shading.** It became big rectangles. The white-haired passenger's grey shading matched the grey building behind, and a brown face sat against a brown building.
+- **The nose.** It floated outside the head.
+
+They now have their own close-up drawing (`people_art.close_up`), the same six people in the same clothes:
+- a slightly smaller head
+- shading that follows the round of the head and body
+- eyes with a glint, an ear, a nose and a mouth inside the face
+- a 2-pixel outline
+
+A new test checks that nothing inside them is see-through and that the outline is thick.
+
+![The train and the station, before and after](images/0045/intro_people_before_after.png)
+
 **Possible next steps:**
 - check it on an Android phone
 - hand-finish more buildings, as the fountain plaza was

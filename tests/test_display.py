@@ -277,6 +277,32 @@ def check_the_intro_is_drawn_at_full_detail_with_close_ups():
     assert {Art.SKIN1, Art.OUTLINE, Art.WALK, Art.ROAD} <= seen   # people, outlined, on the sidewalk
 
 
+def check_close_ups_are_solid_with_a_thick_outline():
+    """The intro's people (decisions/0045): nothing inside them is see-through,
+    and the outline is thick enough to read against the scenery behind."""
+    from game.config import Art
+    from game.gfx import people_art as P
+    from game.world.directions import Direction
+    make(Art_)
+    for sprite in range(len(P.LOOKS)):
+        for d in Direction:
+            img = P.close_up(sprite, d, 0, 6)
+            w, h = img.width, img.height
+            outside, stack = set(), [(0, 0)]
+            while stack:
+                x, y = stack.pop()
+                if (x, y) in outside or not (0 <= x < w and 0 <= y < h) or img.pget(x, y) != Col.BLACK:
+                    continue
+                outside.add((x, y))
+                stack += [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+            holes = sum(1 for y in range(h) for x in range(w)
+                        if img.pget(x, y) == Col.BLACK and (x, y) not in outside)
+            assert holes == 0, (sprite, d, holes)
+            row = [img.pget(x, h // 2) for x in range(w)]
+            first = next(x for x, c in enumerate(row) if c != Col.BLACK)
+            assert row[first] == row[first + 1] == Art.OUTLINE, (sprite, d)
+
+
 Art_ = Art                      # a plain scene, for checks that only need Pyxel started
 
 
