@@ -236,18 +236,161 @@ def _person(img, ox: int, oy: int, L: Look, facing: Direction, frame: int, k: fl
     _head(u, L, facing, by)
 
 
-def _outline(flat):
-    """One outline round everything drawn on `flat`: the drawing shifted a
-    pixel each way in the outline colour, then the drawing on top."""
+def _outline(flat, t: int = 1):
+    """One outline, t pixels thick, round everything drawn on `flat`: the
+    drawing shifted up to t pixels each way in the outline colour, then the
+    drawing on top."""
     out = pyxel.Image(flat.width, flat.height)
     out.cls(Col.BLACK)
     for c in range(1, len(pyxel.colors)):
         out.pal(c, Art.OUTLINE)
-    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-        out.blt(dx, dy, flat, 0, 0, flat.width, flat.height, Col.BLACK)
+    for dx in range(-t, t + 1):
+        for dy in range(-t, t + 1):
+            if 0 < dx * dx + dy * dy <= t * t + t // 2:
+                out.blt(dx, dy, flat, 0, 0, flat.width, flat.height, Col.BLACK)
     out.pal()
     out.blt(0, 0, flat, 0, 0, flat.width, flat.height, Col.BLACK)
     return out
+
+
+# --- the intro's close-ups ------------------------------------------------------
+# The same people drawn again for the intro, where they stand 3 to 4.5 times
+# their size on campus. Blown up, the campus drawing's flat blocks of hair
+# shading and one-pixel outline look like holes in them, so here the head is
+# a little smaller, shading follows the round of the head and body, the face
+# has eyes with a glint, an ear and a mouth, and the outline is thicker.
+
+def _close_head(u: _Units, L: Look, facing: Direction) -> None:
+    sk, skd = _c(L.skin), _shade(L.skin)
+    hr, hrd, hrl = _c(L.hair), _shade(L.hair), _c(L.hair + "_LT")
+    long_hair, cap = L.style == "long", L.style == "cap"
+    front, back = facing == Direction.DOWN, facing == Direction.UP
+    if long_hair:                                       # falls behind the shoulders
+        if front or back:
+            u.rrect(2.8, 3, 13.2, 14.6, 2.5, hrd)
+        else:
+            u.rrect(7.4, 3, 13.4, 14.6, 2.5, hrd)
+    if front or back:                                   # ears, either side
+        u.oval(2.3, 5.2, 4.3, 8.2, sk)
+        u.oval(11.7, 5.2, 13.7, 8.2, skd)
+    u.oval(3, 0.8, 13, 10.2, skd)                       # the head, shaded below and behind
+    u.oval(3, 0.8, 12.3, 9.6, sk)
+    if back:
+        u.oval(2.8, 0, 13.2, 9.8, hrd)
+        u.oval(2.8, 0, 12.5, 9.2, hr)
+        if long_hair:
+            u.rrect(3.2, 5, 12.8, 14.2, 2.5, hr)
+            u.rrect(9.8, 6, 12.8, 14.2, 1.5, hrd)
+        if not cap:
+            u.oval(4.6, 1.2, 8.4, 2.6, hrl)
+    elif front:
+        u.oval(2.8, 0.2, 13.2, 6.6, hrd)                # hair, with a scalloped fringe
+        u.oval(2.8, 0.2, 12.6, 6.0, hr)
+        for cx in (4.6, 6.8, 9.0):
+            u.oval(cx - 1.4, 3.4, cx + 1.4, 6.3, hr)
+        u.oval(9.6, 3.4, 12.4, 6.3, hr)
+        u.rect(2.8, 3.5, 3.9, 8.5 if not long_hair else 12, hr)    # sides
+        u.rect(12.1, 3.5, 13.2, 8.5 if not long_hair else 12, hrd)
+        if not cap:
+            u.oval(4.4, 1.1, 8.4, 2.5, hrl)
+        for ex in (5.3, 9.4):                           # eyes, with a glint
+            u.oval(ex, 6.4, ex + 1.4, 8.6, Art.EYE)
+            u.oval(ex + 0.2, 6.6, ex + 0.75, 7.25, Art.SHIRT_W)
+        u.rect(7.7, 8.2, 8.3, 8.6, skd)                 # nose
+        u.rect(7.2, 9.0, 8.8, 9.35, skd)                # mouth
+    else:                                               # facing left (right is the mirror)
+        u.oval(3.0, 3.6, 8.6, 9.9, sk)                  # the face, fuller at the front
+        u.oval(2.5, 6.8, 3.6, 8.0, sk)                  # nose
+        u.oval(2.8, 0.2, 13.2, 6.8, hrd)                # hair, over the top and down the back
+        u.rrect(8.8, 1.5, 13.2, 9.4, 2, hrd)
+        u.oval(2.8, 0.2, 12.6, 6.2, hr)
+        u.rrect(8.8, 1.5, 12.4, 8.6, 1.8, hr)
+        u.oval(2.6, 2.4, 6.2, 5.6, hr)                  # the fringe
+        if not cap:
+            u.oval(4.6, 1.1, 8.6, 2.5, hrl)
+        u.oval(7.4, 5.6, 9.4, 8.4, sk)                  # ear
+        u.oval(8.0, 6.3, 8.9, 7.7, skd)
+        u.oval(4.0, 6.2, 5.4, 8.4, Art.EYE)             # eye, with a glint
+        u.oval(4.15, 6.4, 4.7, 7.05, Art.SHIRT_W)
+        u.rect(4.0, 8.9, 4.9, 9.25, skd)                # mouth
+    if cap:                                             # Public Safety's peaked cap
+        u.oval(3, -0.6, 13, 5.2, Art.GUARD_SH)
+        u.oval(3, -0.6, 12.4, 4.6, Art.GUARD)
+        u.rect(3, 3.6, 13, 5.0, Art.GUARD_SH)
+        if front:
+            u.oval(3.4, 4.2, 12.6, 6.0, Art.EYE)        # the peak
+            u.oval(7.1, 1.4, 8.9, 3.4, Art.BADGE)
+        elif not back:
+            u.poly(((1.0, 4.4), (5.0, 3.9), (5.0, 5.6), (1.4, 5.6)), Art.EYE)
+            u.oval(4.2, 1.4, 5.8, 3.2, Art.BADGE)
+
+
+def _close_person(img, ox: int, oy: int, L: Look, facing: Direction, frame: int, k: float) -> None:
+    """A person for the intro's close-ups, in the campus person's 16 x 23
+    units, feet at 22.5; frames 1 and 2 are the two steps."""
+    u = _Units(img, ox, oy, k)
+    sk, skd = _c(L.skin), _shade(L.skin)
+    sh, shd = _c(L.shirt), _shade(L.shirt)
+    pt, ptd = _c(L.pants), _shade(L.pants)
+    side = facing in (Direction.LEFT, Direction.RIGHT)
+    by = -0.4 if frame else 0                           # a little bob on each step
+    # legs and shoes
+    if not side:
+        lift = (0.8 if frame == 1 else 0, 0.8 if frame == 2 else 0)
+        for (x0, x1, col), up in zip(((5.2, 7.7, pt), (8.3, 10.8, ptd)), lift):
+            u.rect(x0, 16 + by, x1, 21 - up, col)
+            u.rrect(x0 - 0.4, 20.2 - up, x1 + 0.4, 22.5 - up, 0.8, Art.SHOE)
+    else:
+        near, far = {0: (0, 0), 1: (-1.6, 1.6), 2: (1.6, -1.6)}[frame]
+        u.rect(6.6 + far, 16 + by, 9.0 + far, 21, ptd)  # far leg
+        u.rrect(5.4 + far, 20.2, 9.0 + far, 22.5, 0.8, Art.SHOE)
+        u.rect(7.2 + near, 16 + by, 9.6 + near, 21, pt)  # near leg
+        u.rrect(6.0 + near, 20.4, 9.6 + near, 22.5, 0.8, Art.SHOE)
+    # neck, body and arms
+    u.rect(7, 9.4 + by, 9.2, 11.2 + by, skd)
+    if not side:
+        swing = {0: 0, 1: 0.6, 2: -0.6}[frame]
+        u.rrect(4, 10.6 + by, 12, 17 + by, 2, shd)
+        u.rrect(4, 10.6 + by, 11.2, 16.6 + by, 2, sh)
+        if L.bag and facing == Direction.UP:
+            u.rrect(4.6, 11.4 + by, 11.4, 16.8 + by, 1.4, Art.BAG)
+            u.rrect(5.2, 12 + by, 10.8, 13.2 + by, 0.6, Art.BAG_LT)
+        u.limb(4.2, 11.8 + by, 3.4, 15.4 + by + swing, 2.2, sh)
+        u.limb(11.8, 11.8 + by, 12.6, 15.4 + by - swing, 2.2, shd)
+        u.oval(2.6, 15.2 + by + swing, 4.2, 16.8 + by + swing, sk)
+        u.oval(11.8, 15.2 + by - swing, 13.4, 16.8 + by - swing, skd)
+        if facing == Direction.DOWN:
+            if L.collar:
+                u.poly(((6.4, 10.6 + by), (9.6, 10.6 + by), (8, 12.6 + by)), Art.SHIRT_W)
+            if L.badge:
+                u.oval(5, 12.4 + by, 6.6, 14 + by, Art.BADGE)
+            if L.bag:                                   # backpack straps
+                u.rect(5, 10.8 + by, 5.8, 15.4 + by, Art.BAG)
+                u.rect(10.2, 10.8 + by, 11, 15.4 + by, Art.BAG)
+            if L.lanyard:
+                u.line(6.6, 10.8 + by, 7.6, 13.6 + by, Col.MAROON)
+                u.line(9.4, 10.8 + by, 8.4, 13.6 + by, Col.MAROON)
+                u.rrect(6.8, 13.6 + by, 9.2, 15.8 + by, 0.4, Art.SHIRT_W)
+                u.rect(7, 14.2 + by, 9, 14.6 + by, Col.MAROON)
+    else:
+        swing = {0: 0, 1: 1.2, 2: -1.2}[frame]          # the near arm swings against the near leg
+        u.rrect(5, 10.6 + by, 11, 17 + by, 2, shd)
+        u.rrect(5, 10.6 + by, 10.2, 16.6 + by, 2, sh)
+        if L.collar:
+            u.poly(((5.2, 10.8 + by), (7.2, 10.8 + by), (5.6, 12.4 + by)), Art.SHIRT_W)
+        if L.bag:                                       # backpack, on the back
+            u.rrect(9.6, 11.2 + by, 13, 16.6 + by, 1.2, Art.BAG)
+            u.rect(10, 11.8 + by, 10.7, 16 + by, Art.BAG_LT)
+        if L.lanyard:
+            u.rrect(5.2, 13.6 + by, 6.6, 15.6 + by, 0.3, Art.SHIRT_W)
+        if L.badge:
+            u.oval(5.3, 12.4 + by, 6.6, 13.8 + by, Art.BADGE)
+        u.limb(8, 11.8 + by, 7.6 + swing, 15.2 + by, 2.2, shd)
+        u.oval(6.8 + swing, 14.8 + by, 8.4 + swing, 16.4 + by, sk)
+    _close_head(_Units(img, ox, oy + by * k, k), L, facing)
+
+
+CLOSE_PAD = 4                   # room round a close-up for its outline
 
 
 _close_ups: dict = {}
@@ -255,15 +398,16 @@ _close_ups: dict = {}
 
 def close_up(sprite: int, facing: Direction, frame: int, k: float):
     """A person drawn k pixels to the unit (16 units wide, 23 tall, feet at
-    22.5), outlined, for the intro's close-ups (decisions/0045). Cached."""
+    22.5), outlined, for the intro's close-ups (decisions/0045), with
+    CLOSE_PAD pixels round it. Cached."""
     key = (sprite, facing, frame, k)
     if key not in _close_ups:
-        w, h = round(16 * k) + 4, round(23 * k) + 4
+        w, h = round(16 * k) + 2 * CLOSE_PAD, round(23 * k) + 2 * CLOSE_PAD
         flat = pyxel.Image(w, h)
         flat.cls(Col.BLACK)
         side = Direction.LEFT if facing == Direction.RIGHT else facing
-        _person(flat, 2, 2, LOOKS[sprite], side, frame, k)
-        img = _outline(flat)
+        _close_person(flat, CLOSE_PAD, CLOSE_PAD, LOOKS[sprite], side, frame, k)
+        img = _outline(flat, max(1, round(k / 4)))
         if facing == Direction.RIGHT:
             flipped = pyxel.Image(w, h)
             flipped.blt(0, 0, img, 0, 0, -w, h)

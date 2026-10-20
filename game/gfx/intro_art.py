@@ -166,8 +166,8 @@ class Pen:
         its top-left at (x, y): feet on the same spot, head a little higher."""
         kp = scale * self.k
         img = people_art.close_up(sprite, facing, frame, kp)
-        X = self._v(x) - 2
-        Y = self._v(y + 16 * scale) - round(22.5 * kp) - 2
+        X = self._v(x) - people_art.CLOSE_PAD
+        Y = self._v(y + 16 * scale) - round(22.5 * kp) - people_art.CLOSE_PAD
         self.img.blt(X, Y, img, 0, 0, img.width, img.height, Col.BLACK)
 
     def tree(self, cx, cy, r) -> None:
